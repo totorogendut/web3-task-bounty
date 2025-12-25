@@ -8,10 +8,10 @@ export const relations = defineRelations({ ...userSchema, ...taskSchema }, (r) =
 			from: r.user.id,
 			to: r.task.userId,
 		}),
-		bounties: r.many.bounty({
-			from: r.user.id,
-			to: r.bounty.id.through(r.project.),
-		}),
+		// bounties: r.many.bounty({
+		// 	from: r.user.id,
+		// 	to: r.bounty.id.through(r.project.),
+		// }),
 		projects: r.many.project({
 			from: r.user.id,
 			to: r.project.ownerId,
@@ -42,6 +42,10 @@ export const relations = defineRelations({ ...userSchema, ...taskSchema }, (r) =
 				commentableType: "task",
 			},
 		}),
+		bounty: r.one.bounty({
+			from: r.task.bountyId,
+			to: r.bounty.id,
+		}),
 	},
 	project: {
 		bounties: r.many.bounty({
@@ -53,3 +57,8 @@ export const relations = defineRelations({ ...userSchema, ...taskSchema }, (r) =
 
 export type User = typeof userSchema.user.$inferSelect;
 export type Session = typeof userSchema.session.$inferSelect;
+
+export type Project = typeof taskSchema.project.$inferSelect;
+export type Bounty = typeof taskSchema.bounty.$inferSelect;
+export type Task = typeof taskSchema.task.$inferSelect;
+export type CommentType = typeof taskSchema.comment.$inferSelect;

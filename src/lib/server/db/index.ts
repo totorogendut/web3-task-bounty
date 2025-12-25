@@ -1,6 +1,7 @@
 import { drizzle } from "drizzle-orm/better-sqlite3";
 import * as userSchema from "./schemas/users";
 import * as taskSchema from "./schemas/tasks";
+import * as paymentSchema from "./schemas/payments";
 import { relations } from "./schemas";
 import { env } from "$env/dynamic/private";
 
@@ -10,6 +11,7 @@ export const db = drizzle(env.DATABASE_URL, {
 	schema: {
 		...userSchema,
 		...taskSchema,
+		...paymentSchema,
 	},
 	relations,
 });

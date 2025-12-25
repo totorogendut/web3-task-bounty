@@ -2,6 +2,7 @@ import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { nanoid } from "nanoid";
 import { user } from "./users";
 import { BASE_TABLE } from "./_shared";
+import type { COMMENTABLE_TYPE, TASK_STATE } from "$lib/api/_shared";
 
 export const project = sqliteTable("project", {
 	...BASE_TABLE,
@@ -23,7 +24,8 @@ export const bounty = sqliteTable("bounty", {
 		.notNull()
 		.references(() => project.id),
 	reward: integer("reward"),
-	isClaimed: integer("is_claimed", { mode: "boolean" }),
+	isClaimed: integer("is_claimed", { mode: "boolean" }).default(false),
+	managers: text("managers", { mode: "json" }).$type<string[]>().default([]),
 });
 
 export const task = sqliteTable("task", {
@@ -34,12 +36,18 @@ export const task = sqliteTable("task", {
 	bountyId: text("bounty_id")
 		.notNull()
 		.references(() => bounty.id),
+	content: text("content").notNull(),
+	title: text("title").notNull(),
+	submission: text("submission"),
+	state: text("state").$type<(typeof TASK_STATE)[number]>().default("in_progress"),
 });
 
 export const comment = sqliteTable("comment", {
 	...BASE_TABLE,
 	content: text("content"),
-	commentableType: text("commentable_type").$type<"task" | "bounty">().default("task"),
+	commentableType: text("commentable_type")
+		.$type<(typeof COMMENTABLE_TYPE)[number]>()
+		.default("task"),
 	commentableId: text("commentable_id"),
 	userId: text("userId")
 		.notNull()
