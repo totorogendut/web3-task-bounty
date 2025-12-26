@@ -1,6 +1,7 @@
 import { defineRelations, eq } from "drizzle-orm";
 import * as userSchema from "./users";
 import * as taskSchema from "./tasks";
+import { sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 export const relations = defineRelations({ ...userSchema, ...taskSchema }, (r) => ({
 	user: {
@@ -53,7 +54,18 @@ export const relations = defineRelations({ ...userSchema, ...taskSchema }, (r) =
 			to: r.bounty.projectId,
 		}),
 	},
+	comment: {
+		user: r.one.user({
+			from: r.comment.userId,
+			to: r.user.id,
+		}),
+	},
 }));
+
+export const keyval = sqliteTable("keyval", {
+	key: text("key").primaryKey(),
+	values: text("values", { mode: "json" }).notNull(),
+});
 
 export type User = typeof userSchema.user.$inferSelect;
 export type Session = typeof userSchema.session.$inferSelect;

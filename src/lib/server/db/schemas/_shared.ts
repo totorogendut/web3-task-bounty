@@ -14,3 +14,10 @@ export const BASE_TABLE = {
 		.$defaultFn(() => nanoid()),
 	...BASE_TABLE_DATE,
 };
+
+export const USER_CLIENT_QUERY_DATA = {
+	columns: {
+		passwordHash: false,
+		email: false,
+	},
+} as const;

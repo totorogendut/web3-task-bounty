@@ -4,10 +4,10 @@
 </script>
 
 <HeaderHero />
-<section class="flex items-center justify-between text-5xl">
+<section class="mx-auto mt-8 flex w-250 max-w-full items-center justify-between text-5xl">
 	<svelte:boundary>
 		<div class="flex flex-col gap-2">
-			<strong>{await getTotalFund()}</strong>
+			<strong>{await getTotalFund()} MNEE</strong>
 			<small>Total fund</small>
 		</div>
 		{#snippet pending()}{/snippet}

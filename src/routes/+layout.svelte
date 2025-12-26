@@ -5,5 +5,9 @@
 	let { children } = $props();
 </script>
 
-<svelte:head><link rel="icon" href={favicon} /></svelte:head>
+<svelte:head
+	><link rel="icon" href={favicon} />
+	<title>Web3 Bounty Hunter Guild</title>
+</svelte:head>
+
 {@render children()}

@@ -18,7 +18,7 @@ export const createBounty = query(
 	}),
 	async ({ projectId, title, description, reward }) => {
 		const { locals } = getRequestEvent();
-		if (!locals.user?.id) error(403, "You must login to continue.");
+		if (!locals.user?.id) return error(403, "You must login to continue.");
 
 		return db.insert(bounty).values({ projectId, title, description, reward });
 	},
@@ -33,7 +33,7 @@ export const createTask = query(
 	}),
 	async ({ bountyId, userId, title, content }) => {
 		const { locals } = getRequestEvent();
-		if (!locals.user?.id) error(403, "You must login to continue.");
+		if (!locals.user?.id) return error(403, "You must login to continue.");
 
 		await db.insert(task).values({ bountyId, userId, title, content });
 		return { success: true };
@@ -49,7 +49,7 @@ export const editTask = query(
 	async ({ id, title, content }) => {
 		const data: Partial<Task> = {};
 		const { locals } = getRequestEvent();
-		if (!locals.user?.id) error(403, "You must login to continue.");
+		if (!locals.user?.id) return error(403, "You must login to continue.");
 
 		if (title) data.title = title;
 		if (content) data.content = content;
@@ -83,22 +83,6 @@ export const submitTask = query(
 	},
 );
 
-export const createComment = query(
-	z.object({
-		commentableType: z.enum(COMMENTABLE_TYPE),
-		commentableId: z.string(),
-		userId: z.string(),
-		content: z.string(),
-	}),
-	async ({ commentableId, commentableType, userId, content }) => {
-		const { locals } = getRequestEvent();
-		if (!locals.user?.id) error(403, "You must login to continue.");
-
-		await db.insert(comment).values({ commentableId, userId, commentableType, content });
-		return { success: true };
-	},
-);
-
 export const changeTaskState = query(
 	z.object({
 		id: z.string(),
@@ -107,7 +91,7 @@ export const changeTaskState = query(
 	async ({ id, state }) => {
 		// check if manager has permision
 		const { locals } = getRequestEvent();
-		if (!locals.user?.id) error(403, "You must login to continue.");
+		if (!locals.user?.id) return error(403, "You must login to continue.");
 
 		const { changes } = await db.update(task).set({ state }).where(eq(task.id, id));
 		if (!changes) return error(404, "Update failed. Item not found.");
@@ -122,7 +106,7 @@ export const approveTask = query(
 	async ({ id }) => {
 		// check if manager has permision
 		const { locals } = getRequestEvent();
-		if (!locals.user?.id) error(403, "You must login to continue.");
+		if (!locals.user?.id) return error(403, "You must login to continue.");
 
 		const item = await db.query.task.findFirst({
 			where: { id },

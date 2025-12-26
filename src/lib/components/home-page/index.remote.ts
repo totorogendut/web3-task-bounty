@@ -3,17 +3,19 @@ import { db } from "$lib/server/db";
 import { user } from "$lib/server/db/schemas/users";
 import { getTotalFundBalance } from "$lib/server/mnee/fund";
 import { count } from "drizzle-orm";
+import z from "zod/v4";
 
-export const getTotalFund = await query(async () => {
-	return getTotalFundBalance();
+export const getTotalFund = query(async () => {
+	return 15;
+	// return getTotalFundBalance();
 });
 
-export const getTotalContributors = await query(async () => {
+export const getTotalContributors = query(async () => {
 	const [{ total }] = await db.select({ total: count() }).from(user);
 	return total;
 });
 
-export const getSpentFund = await query(async () => {
+export const getSpentFund = query(async () => {
 	const result = await db.query.bounty.findMany({
 		where: { isClaimed: true },
 		columns: { reward: true },
@@ -24,3 +26,19 @@ export const getSpentFund = await query(async () => {
 		return prev;
 	}, 0);
 });
+
+export const getBountyList = query(
+	z.object({
+		limit: z.number().optional(),
+		offset: z.number(),
+	}),
+	async ({ offset, limit }) => {
+		return db.query.bounty.findMany({
+			offset,
+			limit: limit || 10,
+			orderBy: {
+				createdAt: "desc",
+			},
+		});
+	},
+);
