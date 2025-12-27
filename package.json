@@ -43,6 +43,7 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
+    "@lucide/svelte": "^0.562.0",
     "@mnee/ts-sdk": "^1.0.3",
     "@node-rs/argon2": "^2.0.2",
     "better-sqlite3": "^12.5.0",
