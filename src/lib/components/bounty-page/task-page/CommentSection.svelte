@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { COMMENTABLE_TYPE } from "$lib/api/_shared";
 	import UserBanner from "$lib/components/UserBanner.svelte";
+	import CommentForm from "./CommentForm.svelte";
 	import { getComments } from "./index.remote";
 
 	interface Props {
@@ -20,6 +21,7 @@
 	}
 </script>
 
+<CommentForm />
 <section>
 	{#each comments as { content, user }}
 		<div>
