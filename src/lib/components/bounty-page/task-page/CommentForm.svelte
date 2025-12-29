@@ -13,10 +13,12 @@
 	onMount(() => {
 		comment.reset();
 	});
+
+	$inspect(comment);
 </script>
 
 <div
-	class="group/comment mx-auto mt-10 max-w-3xl
+	class="group/comment mx-auto w-full
 	rounded-md bg-slate-900 shadow-2xl
 	transition has-focus:-translate-y-1"
 >
@@ -38,7 +40,7 @@
 		bind:value={comment.content}
 		class="m2 min-h-55 w-full resize-y
 		border-0 bg-slate-950 p-4 font-mono text-sm text-slate-100 outline-none focus:ring-5 focus:ring-sky-500"
-		placeholder="Write your markdown here..."
+		placeholder="Write your comment..."
 	></textarea>
 
 	<!-- Actions -->

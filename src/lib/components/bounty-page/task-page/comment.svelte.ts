@@ -1,7 +1,9 @@
+import type { CommentType, User } from "$lib/server/db/schemas";
+
 class CommentState {
 	content = $state("");
 	submitted = $state("");
-	textareaEl: HTMLTextAreaElement | null = $state(null);
+	textareaEl: HTMLTextAreaElement | null = $state.raw(null);
 
 	reset() {
 		this.content = "";

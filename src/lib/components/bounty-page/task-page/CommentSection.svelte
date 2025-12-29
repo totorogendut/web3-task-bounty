@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { COMMENTABLE_TYPE } from "$lib/api/_shared";
-	import UserBanner from "$lib/components/UserBanner.svelte";
+	import CommenList from "./CommenList.svelte";
 	import CommentForm from "./CommentForm.svelte";
 	import { getComments } from "./index.remote";
 
@@ -10,28 +10,14 @@
 	}
 
 	const { commentableId, commentableType }: Props = $props();
-
-	let offset = $state(0);
-	let isFetchMoreDisabled = $state(false);
-	let comments = $state(await getComments({ offset: 0, commentableId }));
-
-	async function fetchMoreComments() {
-		offset += 10;
-		comments.concat(await getComments({ offset, commentableId }));
-	}
 </script>
 
-<CommentForm />
-<section>
-	{#each comments as { content, user }}
-		<div>
-			<UserBanner {...user!} />
-			<div>
-				{content}
-			</div>
-		</div>
-	{/each}
+<section class="sticky top-0 flex w-1/3 flex-col gap-2">
+	<svelte:boundary>
+		{#snippet pending()}
+			<div class="grow">Loading...</div>
+		{/snippet}
+		<CommenList {commentableId} {commentableType} />
+	</svelte:boundary>
+	<CommentForm />
 </section>
-<button class="rounded-md px-2 py-1" disabled={isFetchMoreDisabled} onclick={fetchMoreComments}>
-	Fetch more
-</button>

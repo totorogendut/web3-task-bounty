@@ -1,9 +1,15 @@
 <script lang="ts">
+	import type { Bounty } from "$lib/server/db/schemas";
 	import { getBountyList } from "./index.remote";
 
+	interface Props {
+		list: Bounty[];
+	}
+
+	const { list: bountyList }: Props = $props();
 	let isLoading = $state(true);
 	let offset = $state(0);
-	let list = $state(await getBountyList({ offset: 0 }));
+	let list = $state(bountyList);
 	isLoading = false;
 
 	async function fetchMoreList() {

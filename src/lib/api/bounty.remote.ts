@@ -18,7 +18,7 @@ export const createBounty = query(
 	}),
 	async ({ projectId, title, description, reward }) => {
 		const { locals } = getRequestEvent();
-		if (!locals.user?.id) return error(403, "You must login to continue.");
+		if (!locals.user?.id) throw error(403, "You must login to continue.");
 
 		return db.insert(bounty).values({ projectId, title, description, reward });
 	},
@@ -33,7 +33,7 @@ export const createTask = query(
 	}),
 	async ({ bountyId, userId, title, content }) => {
 		const { locals } = getRequestEvent();
-		if (!locals.user?.id) return error(403, "You must login to continue.");
+		if (!locals.user?.id) throw error(403, "You must login to continue.");
 
 		await db.insert(task).values({ bountyId, userId, title, content });
 		return { success: true };
@@ -49,7 +49,7 @@ export const editTask = query(
 	async ({ id, title, content }) => {
 		const data: Partial<Task> = {};
 		const { locals } = getRequestEvent();
-		if (!locals.user?.id) return error(403, "You must login to continue.");
+		if (!locals.user?.id) throw error(403, "You must login to continue.");
 
 		if (title) data.title = title;
 		if (content) data.content = content;
@@ -59,7 +59,7 @@ export const editTask = query(
 			.set(data as Task)
 			.where(and(eq(task.id, id), eq(task.userId, locals.user.id)));
 
-		if (!changes) return error(404, "Edit failed. Item not found.");
+		if (!changes) error(404, "Edit failed. Item not found.");
 
 		return { success: true };
 	},
@@ -70,14 +70,14 @@ export const submitTask = query(
 	}),
 	async ({ id }) => {
 		const { locals } = getRequestEvent();
-		if (!locals.user?.id) return error(403, "You must login to continue.");
+		if (!locals.user?.id) throw error(403, "You must login to continue.");
 
 		const { changes } = await db
 			.update(task)
 			.set({ state: "submitted" })
 			.where(and(eq(task.id, id), eq(task.userId, locals.user.id)));
 
-		if (!changes) return error(404, "Submit failed. Item not found.");
+		if (!changes) error(404, "Submit failed. Item not found.");
 
 		return { success: true };
 	},
@@ -91,10 +91,10 @@ export const changeTaskState = query(
 	async ({ id, state }) => {
 		// check if manager has permision
 		const { locals } = getRequestEvent();
-		if (!locals.user?.id) return error(403, "You must login to continue.");
+		if (!locals.user?.id) throw error(403, "You must login to continue.");
 
 		const { changes } = await db.update(task).set({ state }).where(eq(task.id, id));
-		if (!changes) return error(404, "Update failed. Item not found.");
+		if (!changes) error(404, "Update failed. Item not found.");
 		return { success: true };
 	},
 );
@@ -106,22 +106,22 @@ export const approveTask = query(
 	async ({ id }) => {
 		// check if manager has permision
 		const { locals } = getRequestEvent();
-		if (!locals.user?.id) return error(403, "You must login to continue.");
+		if (!locals.user?.id) throw error(403, "You must login to continue.");
 
 		const item = await db.query.task.findFirst({
 			where: { id },
 			with: { bounty: { columns: { managers: true } } },
 		});
-		if (!item) return error(404, "Update failed. Item not found.");
+		if (!item) error(404, "Update failed. Item not found.");
 		if (!item.bounty?.managers?.includes?.(locals.user.id))
-			return error(403, "You are not authorized to approve this task.");
+			throw error(403, "You are not authorized to approve this task.");
 
 		const [result] = await db
 			.update(task)
 			.set({ state: "approved" })
 			.where(eq(task.id, id))
 			.returning();
-		if (!result) return error(404, "Update failed. Item not found.");
+		if (!result) error(404, "Update failed. Item not found.");
 
 		await payApprovedTask(result);
 

@@ -42,3 +42,23 @@ export const getBountyList = query(
 		});
 	},
 );
+
+export const getTaskList = query(
+	z.object({
+		bountyId: z.string(),
+		offset: z.number(),
+		limit: z.number().optional(),
+	}),
+	async ({ bountyId, offset, limit }) => {
+		return db.query.task.findMany({
+			offset,
+			limit: limit || 10,
+			orderBy: {
+				createdAt: "desc",
+			},
+			where: {
+				bountyId,
+			},
+		});
+	},
+);

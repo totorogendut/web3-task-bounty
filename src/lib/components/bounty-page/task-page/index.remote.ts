@@ -15,7 +15,7 @@ export const createComment = query(
 	}),
 	async ({ commentableId, commentableType, content }) => {
 		const { locals } = getRequestEvent();
-		if (!locals.user?.id) return error(403, "You must login to continue.");
+		if (!locals.user?.id) throw error(403, "You must login to continue.");
 
 		await db
 			.insert(comment)
@@ -31,7 +31,7 @@ export const editComment = query(
 	}),
 	async ({ id, content }) => {
 		const { locals } = getRequestEvent();
-		if (!locals.user?.id) return error(403, "You must login to continue.");
+		if (!locals.user?.id) throw error(403, "You must login to continue.");
 
 		await db.update(comment).set({ content }).where(eq(comment.id, id));
 		return { success: true };
