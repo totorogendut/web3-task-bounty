@@ -17,7 +17,8 @@ export const BASE_TABLE = {
 
 export const USER_CLIENT_QUERY_DATA = {
 	columns: {
-		passwordHash: false,
-		email: false,
+		avatar: true,
+		username: true,
+		id: true,
 	},
 } as const;

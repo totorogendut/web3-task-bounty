@@ -7,10 +7,9 @@
 	}
 
 	const { list: bountyList }: Props = $props();
-	let isLoading = $state(true);
+	let isLoading = $state(false);
 	let offset = $state(0);
 	let list = $state(bountyList);
-	isLoading = false;
 
 	async function fetchMoreList() {
 		offset += 10;

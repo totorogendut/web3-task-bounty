@@ -53,3 +53,14 @@ export const comment = sqliteTable("comment", {
 		.notNull()
 		.references(() => user.id),
 });
+export const progress = sqliteTable("task", {
+	...BASE_TABLE,
+	content: text("content"),
+	commentableId: text("commentable_id"),
+	userId: text("userId")
+		.notNull()
+		.references(() => user.id),
+	taskId: text("task_id")
+		.notNull()
+		.references(() => task.id),
+});

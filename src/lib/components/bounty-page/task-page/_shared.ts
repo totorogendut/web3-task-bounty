@@ -1,0 +1,1 @@
+export const PROGRESS_CONTENT_MAX_LENGTH = 180;

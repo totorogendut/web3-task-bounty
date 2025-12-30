@@ -2,10 +2,11 @@ import { getRequestEvent, query } from "$app/server";
 import { COMMENTABLE_TYPE } from "$lib/api/_shared";
 import { db } from "$lib/server/db";
 import { USER_CLIENT_QUERY_DATA } from "$lib/server/db/schemas/_shared";
-import { comment } from "$lib/server/db/schemas/tasks";
+import { comment, progress } from "$lib/server/db/schemas/tasks";
 import { error } from "console";
 import { eq } from "drizzle-orm";
 import z from "zod/v4";
+import { PROGRESS_CONTENT_MAX_LENGTH } from "./_shared";
 
 export const createComment = query(
 	z.object({
@@ -53,6 +54,61 @@ export const getComments = query(
 			},
 			orderBy: {
 				createdAt: "desc",
+			},
+			with: {
+				user: USER_CLIENT_QUERY_DATA,
+			},
+		});
+	},
+);
+
+export const createTaskProgress = query(
+	z.object({
+		content: z.string(),
+		taskId: z.string(),
+	}),
+	async ({ content, taskId }) => {
+		const { locals } = getRequestEvent();
+		if (!locals.user?.id) throw error(403, "You must login to continue.");
+		if (content.length > PROGRESS_CONTENT_MAX_LENGTH)
+			throw error(400, "Max progress content length is 180 characters.");
+
+		await db.insert(progress).values({ taskId, userId: locals.user.id, content });
+		return { success: true };
+	},
+);
+
+export const editTaskProgress = query(
+	z.object({
+		id: z.string(),
+		content: z.string(),
+	}),
+	async ({ id, content }) => {
+		const { locals } = getRequestEvent();
+		if (!locals.user?.id) throw error(403, "You must login to continue.");
+		if (content.length > PROGRESS_CONTENT_MAX_LENGTH)
+			throw error(400, "Max progress content length is 180 characters.");
+
+		await db.update(progress).set({ content }).where(eq(progress.id, id));
+		return { success: true };
+	},
+);
+
+export const getProgress = query(
+	z.object({
+		offset: z.number(),
+		limit: z.number().optional(),
+		taskId: z.string(),
+	}),
+	async ({ offset, limit, taskId }) => {
+		return db.query.progress.findMany({
+			offset,
+			limit: limit || 10,
+			where: {
+				taskId,
+			},
+			orderBy: {
+				createdAt: "asc",
 			},
 			with: {
 				user: USER_CLIENT_QUERY_DATA,
