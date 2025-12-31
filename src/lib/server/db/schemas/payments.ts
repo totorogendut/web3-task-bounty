@@ -9,7 +9,7 @@ export const transaction = sqliteTable("transaction", {
 	userId: text("user_id")
 		.notNull()
 		.references(() => user.id),
-	amount: integer("amount").notNull(),
+	amount: text("amount").notNull().default("0.00").$type<`${number}.${number}`>(),
 	address: text("address").notNull(),
 	txHash: text("tx_hash").$type<`0x${string}`>(),
 	taskId: text("task_id")

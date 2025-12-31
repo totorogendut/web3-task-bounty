@@ -17,13 +17,13 @@ export async function payApprovedTask(taskId: string) {
 
 	if (!data || !data.bounty || !data.user) throw error(500, "Error querying task data.");
 	if (!data.user.walletAddress) throw error(500, "No wallet address to transfer to.");
-	const txHash = await transferFund(data.user.walletAddress, data.bounty.reward.toString());
+	const txHash = await transferFund(data.user.walletAddress, data.bounty.rewardAmount);
 
 	await db.insert(transaction).values({
 		bountyId: data.bountyId,
 		userId: data.userId,
 		txHash,
-		amount: data.bounty.reward,
+		amount: data.bounty.rewardAmount,
 		taskId,
 		address: data.user.walletAddress,
 	});

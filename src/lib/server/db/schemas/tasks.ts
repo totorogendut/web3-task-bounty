@@ -23,7 +23,7 @@ export const bounty = sqliteTable("bounty", {
 	projectId: text("project_id")
 		.notNull()
 		.references(() => project.id),
-	reward: integer("reward").notNull().default(0),
+	rewardAmount: text("reward_amount").notNull().default("0.00").$type<`${number}.${number}`>(),
 	isClaimed: integer("is_claimed", { mode: "boolean" }).default(false),
 	managers: text("managers", { mode: "json" }).$type<string[]>().default([]),
 });
