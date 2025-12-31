@@ -1,12 +1,16 @@
 import { query } from "$app/server";
 import { db } from "$lib/server/db";
 import { user } from "$lib/server/db/schemas/users";
+import { getPublicWalletFund } from "$lib/server/viem";
 import { count } from "drizzle-orm";
+import { formatEther, formatUnits } from "viem";
 import z from "zod/v4";
 
+const BALANCE_DECIMAL_UNIT = 2;
+
 export const getTotalFund = query(async () => {
-	return 15;
-	// return getTotalFundBalance();
+	const balance = await getPublicWalletFund();
+	return Number(formatEther(balance)).toFixed(BALANCE_DECIMAL_UNIT);
 });
 
 export const getTotalContributors = query(async () => {

@@ -1,11 +1,16 @@
 <script lang="ts">
-	let title = "Test aksad";
+	import HeaderStats from "./HeaderStats.svelte";
+
+	let title = "Web3 Bounty";
 </script>
 
-<section class="mx-auto mt-12 flex w-250 max-w-full">
+<section class="mx-auto mt-24 flex w-300 max-w-full">
 	<div class="">
 		<h1 class="text-7xl font-extrabold">{title}</h1>
 	</div>
 
-	<img class="rounded-4xl object-cover" src="/hero-image.png" alt={title} />
+	<div class="relative">
+		<img class="rounded-4xl object-cover shadow-xl" src="/hero-image.png" alt={title} />
+		<HeaderStats />
+	</div>
 </section>

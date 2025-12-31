@@ -88,14 +88,13 @@ export const relations = defineRelations(
 	}),
 );
 
-export const keyval = sqliteTable("keyval", {
+export const keyvalSchema = sqliteTable("keyval", {
 	key: text("key").primaryKey(),
 	values: text("values", { mode: "json" }).notNull(),
 });
 
 export type User = typeof userSchema.user.$inferSelect;
 export type Session = typeof userSchema.session.$inferSelect;
-
 export type Project = typeof taskSchema.project.$inferSelect;
 export type Bounty = typeof taskSchema.bounty.$inferSelect;
 export type Task = typeof taskSchema.task.$inferSelect;

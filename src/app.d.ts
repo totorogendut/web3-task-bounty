@@ -13,6 +13,11 @@ declare global {
 		// interface PageState {}
 		// interface Platform {}
 	}
+
+	interface WebAppSettings {
+		title: string;
+		description: string;
+	}
 }
 
 export {};

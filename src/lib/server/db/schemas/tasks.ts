@@ -4,28 +4,16 @@ import { user } from "./users";
 import { BASE_TABLE } from "./_shared";
 import type { COMMENTABLE_TYPE, TASK_STATE } from "$lib/api/_shared";
 
-export const project = sqliteTable("project", {
-	...BASE_TABLE,
-	ownerId: text("owner_id")
-		.notNull()
-		.references(() => user.id),
-	managersId: text("managers_id")
-		.notNull()
-		.references(() => user.id),
-	title: text("title"),
-	description: text("description"),
-});
-
 export const bounty = sqliteTable("bounty", {
 	...BASE_TABLE,
 	title: text("title"),
 	description: text("description"),
-	projectId: text("project_id")
+	content: text("content"),
+	clientId: text("client_id")
 		.notNull()
-		.references(() => project.id),
+		.references(() => user.id),
 	rewardAmount: text("reward_amount").notNull().default("0.00").$type<`${number}.${number}`>(),
 	isClaimed: integer("is_claimed", { mode: "boolean" }).default(false),
-	managers: text("managers", { mode: "json" }).$type<string[]>().default([]),
 });
 
 export const task = sqliteTable("task", {
