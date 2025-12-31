@@ -1,17 +1,13 @@
 {
   "version": "7",
   "dialect": "sqlite",
-  "id": "6ebc0d05-1f5d-477d-b554-ba97ad59bbba",
+  "id": "bab1dcc8-b03a-4763-a410-52dc6fa0038c",
   "prevIds": [
-    "191ce2ea-4ad9-4629-bd79-bb13e0302293"
+    "00000000-0000-0000-0000-000000000000"
   ],
   "ddl": [
     {
       "name": "keyval",
-      "entityType": "tables"
-    },
-    {
-      "name": "pending_payment",
       "entityType": "tables"
     },
     {
@@ -24,6 +20,10 @@
     },
     {
       "name": "comment",
+      "entityType": "tables"
+    },
+    {
+      "name": "progress",
       "entityType": "tables"
     },
     {
@@ -70,76 +70,6 @@
       "generated": null,
       "name": "id",
       "entityType": "columns",
-      "table": "pending_payment"
-    },
-    {
-      "type": "integer",
-      "notNull": false,
-      "autoincrement": false,
-      "default": null,
-      "generated": null,
-      "name": "created_at",
-      "entityType": "columns",
-      "table": "pending_payment"
-    },
-    {
-      "type": "integer",
-      "notNull": false,
-      "autoincrement": false,
-      "default": null,
-      "generated": null,
-      "name": "updated_at",
-      "entityType": "columns",
-      "table": "pending_payment"
-    },
-    {
-      "type": "text",
-      "notNull": true,
-      "autoincrement": false,
-      "default": null,
-      "generated": null,
-      "name": "user_id",
-      "entityType": "columns",
-      "table": "pending_payment"
-    },
-    {
-      "type": "text",
-      "notNull": true,
-      "autoincrement": false,
-      "default": null,
-      "generated": null,
-      "name": "task_id",
-      "entityType": "columns",
-      "table": "pending_payment"
-    },
-    {
-      "type": "text",
-      "notNull": true,
-      "autoincrement": false,
-      "default": null,
-      "generated": null,
-      "name": "bounty_id",
-      "entityType": "columns",
-      "table": "pending_payment"
-    },
-    {
-      "type": "integer",
-      "notNull": true,
-      "autoincrement": false,
-      "default": null,
-      "generated": null,
-      "name": "reward",
-      "entityType": "columns",
-      "table": "pending_payment"
-    },
-    {
-      "type": "text",
-      "notNull": false,
-      "autoincrement": false,
-      "default": null,
-      "generated": null,
-      "name": "id",
-      "entityType": "columns",
       "table": "transaction"
     },
     {
@@ -173,10 +103,10 @@
       "table": "transaction"
     },
     {
-      "type": "integer",
+      "type": "text",
       "notNull": true,
       "autoincrement": false,
-      "default": null,
+      "default": "'0.00'",
       "generated": null,
       "name": "amount",
       "entityType": "columns",
@@ -198,17 +128,27 @@
       "autoincrement": false,
       "default": null,
       "generated": null,
-      "name": "ticket_id",
+      "name": "tx_hash",
       "entityType": "columns",
       "table": "transaction"
     },
     {
       "type": "text",
-      "notNull": false,
+      "notNull": true,
       "autoincrement": false,
       "default": null,
       "generated": null,
-      "name": "rawtx",
+      "name": "task_id",
+      "entityType": "columns",
+      "table": "transaction"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "bounty_id",
       "entityType": "columns",
       "table": "transaction"
     },
@@ -219,6 +159,16 @@
       "default": "'pending'",
       "generated": null,
       "name": "state",
+      "entityType": "columns",
+      "table": "transaction"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "message",
       "entityType": "columns",
       "table": "transaction"
     },
@@ -293,12 +243,12 @@
       "table": "bounty"
     },
     {
-      "type": "integer",
-      "notNull": false,
+      "type": "text",
+      "notNull": true,
       "autoincrement": false,
-      "default": null,
+      "default": "'0.00'",
       "generated": null,
-      "name": "reward",
+      "name": "reward_amount",
       "entityType": "columns",
       "table": "bounty"
     },
@@ -391,6 +341,86 @@
       "name": "userId",
       "entityType": "columns",
       "table": "comment"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "progress"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "table": "progress"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "updated_at",
+      "entityType": "columns",
+      "table": "progress"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "content",
+      "entityType": "columns",
+      "table": "progress"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "commentable_id",
+      "entityType": "columns",
+      "table": "progress"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "userId",
+      "entityType": "columns",
+      "table": "progress"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "task_id",
+      "entityType": "columns",
+      "table": "progress"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "attachments",
+      "entityType": "columns",
+      "table": "progress"
     },
     {
       "type": "text",
@@ -593,16 +623,6 @@
       "table": "user"
     },
     {
-      "type": "integer",
-      "notNull": false,
-      "autoincrement": false,
-      "default": null,
-      "generated": null,
-      "name": "age",
-      "entityType": "columns",
-      "table": "user"
-    },
-    {
       "type": "text",
       "notNull": true,
       "autoincrement": false,
@@ -619,6 +639,16 @@
       "default": null,
       "generated": null,
       "name": "password_hash",
+      "entityType": "columns",
+      "table": "user"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "wallet_address",
       "entityType": "columns",
       "table": "user"
     },
@@ -653,9 +683,9 @@
       "onUpdate": "NO ACTION",
       "onDelete": "NO ACTION",
       "nameExplicit": false,
-      "name": "fk_pending_payment_user_id_user_id_fk",
+      "name": "fk_transaction_user_id_user_id_fk",
       "entityType": "fks",
-      "table": "pending_payment"
+      "table": "transaction"
     },
     {
       "columns": [
@@ -668,9 +698,9 @@
       "onUpdate": "NO ACTION",
       "onDelete": "NO ACTION",
       "nameExplicit": false,
-      "name": "fk_pending_payment_task_id_task_id_fk",
+      "name": "fk_transaction_task_id_task_id_fk",
       "entityType": "fks",
-      "table": "pending_payment"
+      "table": "transaction"
     },
     {
       "columns": [
@@ -683,22 +713,7 @@
       "onUpdate": "NO ACTION",
       "onDelete": "NO ACTION",
       "nameExplicit": false,
-      "name": "fk_pending_payment_bounty_id_task_id_fk",
-      "entityType": "fks",
-      "table": "pending_payment"
-    },
-    {
-      "columns": [
-        "user_id"
-      ],
-      "tableTo": "user",
-      "columnsTo": [
-        "id"
-      ],
-      "onUpdate": "NO ACTION",
-      "onDelete": "NO ACTION",
-      "nameExplicit": false,
-      "name": "fk_transaction_user_id_user_id_fk",
+      "name": "fk_transaction_bounty_id_task_id_fk",
       "entityType": "fks",
       "table": "transaction"
     },
@@ -731,6 +746,36 @@
       "name": "fk_comment_userId_user_id_fk",
       "entityType": "fks",
       "table": "comment"
+    },
+    {
+      "columns": [
+        "userId"
+      ],
+      "tableTo": "user",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "NO ACTION",
+      "nameExplicit": false,
+      "name": "fk_progress_userId_user_id_fk",
+      "entityType": "fks",
+      "table": "progress"
+    },
+    {
+      "columns": [
+        "task_id"
+      ],
+      "tableTo": "task",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "NO ACTION",
+      "nameExplicit": false,
+      "name": "fk_progress_task_id_task_id_fk",
+      "entityType": "fks",
+      "table": "progress"
     },
     {
       "columns": [
@@ -821,15 +866,6 @@
         "id"
       ],
       "nameExplicit": false,
-      "name": "pending_payment_pk",
-      "table": "pending_payment",
-      "entityType": "pks"
-    },
-    {
-      "columns": [
-        "id"
-      ],
-      "nameExplicit": false,
       "name": "transaction_pk",
       "table": "transaction",
       "entityType": "pks"
@@ -850,6 +886,15 @@
       "nameExplicit": false,
       "name": "comment_pk",
       "table": "comment",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "progress_pk",
+      "table": "progress",
       "entityType": "pks"
     },
     {

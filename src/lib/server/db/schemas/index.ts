@@ -55,22 +55,22 @@ export const relations = defineRelations(
 				to: r.bounty.id,
 			}),
 			progresses: r.many.progress({
-				from: r.progress.taskId,
-				to: r.task.id,
-			}),
-			user: r.one.user({
-				from: r.user.id,
-				to: r.task.userId,
-			}),
-		},
-		progress: {
-			task: r.one.task({
 				from: r.task.id,
 				to: r.progress.taskId,
 			}),
 			user: r.one.user({
-				from: r.user.id,
-				to: r.progress.userId,
+				from: r.task.userId,
+				to: r.user.id,
+			}),
+		},
+		progress: {
+			task: r.one.task({
+				from: r.progress.taskId,
+				to: r.task.id,
+			}),
+			user: r.one.user({
+				from: r.progress.userId,
+				to: r.user.id,
 			}),
 		},
 		project: {

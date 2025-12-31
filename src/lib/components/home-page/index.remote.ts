@@ -1,7 +1,6 @@
 import { query } from "$app/server";
 import { db } from "$lib/server/db";
 import { user } from "$lib/server/db/schemas/users";
-import { getTotalFundBalance } from "$lib/server/mnee/fund";
 import { count } from "drizzle-orm";
 import z from "zod/v4";
 
@@ -18,11 +17,11 @@ export const getTotalContributors = query(async () => {
 export const getSpentFund = query(async () => {
 	const result = await db.query.bounty.findMany({
 		where: { isClaimed: true },
-		columns: { reward: true },
+		columns: { rewardAmount: true },
 	});
 
 	return result.reduce((prev, cur) => {
-		prev += cur.reward || 0;
+		prev += parseFloat(cur.rewardAmount) || 0;
 		return prev;
 	}, 0);
 });

@@ -1,14 +1,6 @@
-CREATE TABLE `pending_payment` (
-	`id` text PRIMARY KEY,
-	`created_at` integer,
-	`updated_at` integer,
-	`user_id` text NOT NULL,
-	`task_id` text NOT NULL,
-	`bounty_id` text NOT NULL,
-	`reward` integer NOT NULL,
-	CONSTRAINT `fk_pending_payment_user_id_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `user`(`id`),
-	CONSTRAINT `fk_pending_payment_task_id_task_id_fk` FOREIGN KEY (`task_id`) REFERENCES `task`(`id`),
-	CONSTRAINT `fk_pending_payment_bounty_id_task_id_fk` FOREIGN KEY (`bounty_id`) REFERENCES `task`(`id`)
+CREATE TABLE `keyval` (
+	`key` text PRIMARY KEY,
+	`values` text NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE `transaction` (
@@ -16,13 +8,17 @@ CREATE TABLE `transaction` (
 	`created_at` integer,
 	`updated_at` integer,
 	`user_id` text NOT NULL,
-	`amount` integer NOT NULL,
+	`amount` text DEFAULT '0.00' NOT NULL,
 	`address` text NOT NULL,
-	`ticket_id` text,
-	`rawtx` text,
+	`tx_hash` text,
+	`task_id` text NOT NULL,
+	`bounty_id` text NOT NULL,
 	`state` text DEFAULT 'pending',
+	`message` text,
 	`currency` text DEFAULT 'mnee',
-	CONSTRAINT `fk_transaction_user_id_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `user`(`id`)
+	CONSTRAINT `fk_transaction_user_id_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `user`(`id`),
+	CONSTRAINT `fk_transaction_task_id_task_id_fk` FOREIGN KEY (`task_id`) REFERENCES `task`(`id`),
+	CONSTRAINT `fk_transaction_bounty_id_task_id_fk` FOREIGN KEY (`bounty_id`) REFERENCES `task`(`id`)
 );
 --> statement-breakpoint
 CREATE TABLE `bounty` (
@@ -32,7 +28,7 @@ CREATE TABLE `bounty` (
 	`title` text,
 	`description` text,
 	`project_id` text NOT NULL,
-	`reward` integer,
+	`reward_amount` text DEFAULT '0.00' NOT NULL,
 	`is_claimed` integer DEFAULT 0,
 	`managers` text DEFAULT '[]',
 	CONSTRAINT `fk_bounty_project_id_project_id_fk` FOREIGN KEY (`project_id`) REFERENCES `project`(`id`)
@@ -47,6 +43,19 @@ CREATE TABLE `comment` (
 	`commentable_id` text,
 	`userId` text NOT NULL,
 	CONSTRAINT `fk_comment_userId_user_id_fk` FOREIGN KEY (`userId`) REFERENCES `user`(`id`)
+);
+--> statement-breakpoint
+CREATE TABLE `progress` (
+	`id` text PRIMARY KEY,
+	`created_at` integer,
+	`updated_at` integer,
+	`content` text,
+	`commentable_id` text,
+	`userId` text NOT NULL,
+	`task_id` text NOT NULL,
+	`attachments` text,
+	CONSTRAINT `fk_progress_userId_user_id_fk` FOREIGN KEY (`userId`) REFERENCES `user`(`id`),
+	CONSTRAINT `fk_progress_task_id_task_id_fk` FOREIGN KEY (`task_id`) REFERENCES `task`(`id`)
 );
 --> statement-breakpoint
 CREATE TABLE `project` (
@@ -84,9 +93,9 @@ CREATE TABLE `session` (
 --> statement-breakpoint
 CREATE TABLE `user` (
 	`id` text PRIMARY KEY,
-	`age` integer,
 	`username` text NOT NULL UNIQUE,
 	`password_hash` text NOT NULL,
+	`wallet_address` text,
 	`avatar` text,
 	`email` text
 );
