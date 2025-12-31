@@ -4,20 +4,6 @@ import { user } from "./users";
 import { BASE_TABLE } from "./_shared";
 import { task } from "./tasks";
 
-export const pendingPayment = sqliteTable("pending_payment", {
-	...BASE_TABLE,
-	userId: text("user_id")
-		.notNull()
-		.references(() => user.id),
-	taskId: text("task_id")
-		.notNull()
-		.references(() => task.id),
-	bountyId: text("bounty_id")
-		.notNull()
-		.references(() => task.id),
-	reward: integer("reward").notNull(),
-});
-
 export const transaction = sqliteTable("transaction", {
 	...BASE_TABLE,
 	userId: text("user_id")
@@ -25,8 +11,14 @@ export const transaction = sqliteTable("transaction", {
 		.references(() => user.id),
 	amount: integer("amount").notNull(),
 	address: text("address").notNull(),
-	ticketId: text("ticket_id"),
-	rawtx: text("rawtx"),
+	txHash: text("tx_hash").$type<`0x${string}`>(),
+	taskId: text("task_id")
+		.notNull()
+		.references(() => task.id),
+	bountyId: text("bounty_id")
+		.notNull()
+		.references(() => task.id),
 	state: text("state").$type<"pending" | "completed" | "rejected">().default("pending"),
+	message: text("message"),
 	currency: text("currency").default("mnee"),
 });

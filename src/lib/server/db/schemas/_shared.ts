@@ -20,5 +20,6 @@ export const USER_CLIENT_QUERY_DATA = {
 		avatar: true,
 		username: true,
 		id: true,
+		walletAddress: true,
 	},
 } as const;

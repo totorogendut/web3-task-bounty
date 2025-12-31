@@ -1,0 +1,1 @@
+export const MneeTokenAddress = "0x8ccedbAe4916b79da7F3F612EfB2EB93A2bFD6cF";
