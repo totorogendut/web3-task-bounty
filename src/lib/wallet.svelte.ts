@@ -1,8 +1,7 @@
 import { createWalletClient, custom, type Hex, type WalletClient } from "viem";
 import { mainnet, sepolia } from "viem/chains";
 import { page } from "$app/state";
-import { tick } from "svelte";
-import { goto } from "$app/navigation";
+import { logout } from "./user.svelte";
 
 class WalletState {
 	address = $state<Hex | null>(null);
@@ -21,7 +20,7 @@ class WalletState {
 			//@ts-ignore
 			window.ethereum.on("accountsChanged", (accounts: Hex[]) => {
 				this.address = accounts.length > 0 ? accounts[0] : null;
-				if (!this.address) window.location.pathname = "/auth/logout/";
+				if (!this.address) logout();
 			});
 
 			//@ts-ignore
@@ -39,7 +38,7 @@ class WalletState {
 			const chainId = (await window.ethereum!.request({ method: "eth_chainId" })) as Hex;
 			this.chainId = parseInt(chainId, 16);
 		} catch (error) {
-			window.location.pathname = "/auth/logout/";
+			logout();
 		}
 	}
 

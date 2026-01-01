@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { page } from "$app/state";
+	import { logout } from "$lib/user.svelte";
 	import { wallet } from "$lib/wallet.svelte";
 </script>
 
@@ -23,6 +24,7 @@
 				>
 			{:else}
 				{page.data.user.walletAddress}
+				<button onclick={logout}>Logout</button>
 			{/if}
 		</div>
 	</nav>
