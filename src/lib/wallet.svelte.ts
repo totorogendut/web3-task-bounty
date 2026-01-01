@@ -1,6 +1,8 @@
 import { createWalletClient, custom, type Hex, type WalletClient } from "viem";
 import { mainnet, sepolia } from "viem/chains";
-import { issueNonce, verifySignedMessage } from "./user.remote";
+import { page } from "$app/state";
+import { tick } from "svelte";
+import { goto } from "$app/navigation";
 
 class WalletState {
 	address = $state<Hex | null>(null);
@@ -9,32 +11,35 @@ class WalletState {
 	client = $state<WalletClient | null>(null);
 
 	constructor() {
-		if (typeof window !== "undefined" && (window as any).ethereum) {
+		if (typeof window !== "undefined" && window.ethereum) {
 			this.init();
 		}
 	}
 
 	private async init() {
-		const ethereum = (window as any).ethereum;
+		if (window.ethereum) {
+			//@ts-ignore
+			window.ethereum.on("accountsChanged", (accounts: Hex[]) => {
+				this.address = accounts.length > 0 ? accounts[0] : null;
+				if (!this.address) window.location.pathname = "/auth/logout/";
+			});
 
-		ethereum.on("accountsChanged", (accounts: string[]) => {
-			this.address = accounts.length > 0 ? (accounts[0] as `0x${string}`) : null;
-		});
-
-		ethereum.on("chainChanged", (chainId: string) => {
-			this.chainId = parseInt(chainId, 16);
-		});
+			//@ts-ignore
+			window.ethereum.on("chainChanged", (chainId: string) => {
+				this.chainId = parseInt(chainId, 16);
+			});
+		}
 
 		// Check if already connected
-		const accounts = await ethereum.request({ method: "eth_accounts" });
-		if (accounts.length > 0) {
-			this.address = accounts[0] as `0x${string}`;
-			const chainId = await ethereum.request({ method: "eth_chainId" });
+
+		if (!page.data.user) return;
+		try {
+			const { address } = await setupClient(this);
+			this.address = address;
+			const chainId = (await window.ethereum!.request({ method: "eth_chainId" })) as Hex;
 			this.chainId = parseInt(chainId, 16);
-			this.client = createWalletClient({
-				chain: this.chainId === 11155111 ? sepolia : mainnet,
-				transport: custom(ethereum),
-			});
+		} catch (error) {
+			window.location.pathname = "/auth/logout/";
 		}
 	}
 
@@ -43,28 +48,17 @@ class WalletState {
 			throw new Error("No ethereum provider found");
 		}
 
-		const ethereum = (window as any).ethereum;
-		const accounts = await ethereum.request({ method: "eth_requestAccounts" });
-		this.address = accounts[0] as `0x${string}`;
+		const { address, ethereum } = await setupClient(this);
 
-		const chainId = await ethereum.request({ method: "eth_chainId" });
-		this.chainId = parseInt(chainId, 16);
+		try {
+			await signAccount(this.client, address);
+		} catch (error) {
+			console.error(error);
+			console.error("Sign in failed");
+			return;
+		}
 
-		this.client = createWalletClient({
-			account: this.address,
-			chain: this.chainId === 11155111 ? sepolia : mainnet,
-			transport: custom(ethereum),
-		});
-
-		const nonce = await issueNonce(this.address);
-		// Sign message
-		const message = `Sign this message to login:\nNonce: ${nonce}`;
-		const signature = await this.client.signMessage({
-			account: this.address,
-			message,
-		});
-		const { token } = await verifySignedMessage({ address: this.address, signature });
-		console.log(token);
+		window.location.pathname = "/";
 	}
 
 	async disconnect() {
@@ -74,3 +68,47 @@ class WalletState {
 }
 
 export const wallet = new WalletState();
+
+async function setupClient(thisWallet: WalletState) {
+	const ethereum = window.ethereum;
+	if (!ethereum) throw new Error("Error initializing web3 wallet.");
+	const accounts = (await ethereum.request({ method: "eth_requestAccounts" })) as Hex[];
+	if (accounts?.length < 1) throw new Error("No web3 wallet account found.");
+	const address = accounts[0] as Hex;
+	thisWallet.client = createWalletClient({
+		account: address,
+		chain: thisWallet.chainId === 11155111 ? sepolia : mainnet,
+		transport: custom(ethereum),
+	});
+
+	return {
+		address,
+		ethereum,
+	};
+}
+
+async function signAccount(client: typeof wallet.client, address: Hex) {
+	if (!client) throw new Error("Wallet client has not yet initialized.");
+	const nonceRes = await fetch("/auth/nonce/", {
+		method: "POST",
+		body: JSON.stringify({
+			address,
+		}),
+	});
+	if (!nonceRes.ok) throw new Error("Error issuing nonce.");
+	const nonce = await nonceRes.text();
+	// Sign message
+	const message = `Sign this message to login:\nNonce: ${nonce}`;
+	const signature = await client.signMessage({
+		account: address,
+		message,
+	});
+
+	const verifyRes = await fetch("/auth/verify/", {
+		method: "POST",
+		body: JSON.stringify({
+			address,
+			signature,
+		}),
+	});
+}

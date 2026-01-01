@@ -1,8 +1,9 @@
 // src/lib/server/jwt.ts
+import { JWT_SECRET } from "$env/static/private";
 import { SignJWT, jwtVerify } from "jose";
 import type { Hex } from "viem";
 
-const secret = new TextEncoder().encode(process.env.JWT_SECRET!);
+const secret = new TextEncoder().encode(JWT_SECRET);
 
 export type JwtPayload = {
 	userId: string;

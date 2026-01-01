@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { page } from "$app/state";
 	import { wallet } from "$lib/wallet.svelte";
 </script>
 
@@ -14,14 +15,14 @@
 			</small>
 		</strong>
 		<div>
-			{#if !wallet.address}
+			{#if !page.data.user}
 				<button
 					class="cursor-pointer rounded-sm bg-amber-200 px-4 py-1
 					text-black/90 hover:brightness-95"
 					onclick={wallet.connect}>Connect wallet</button
 				>
 			{:else}
-				{wallet.address}
+				{page.data.user.walletAddress}
 			{/if}
 		</div>
 	</nav>

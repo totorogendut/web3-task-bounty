@@ -4,7 +4,6 @@ import type { Handle } from "@sveltejs/kit";
 
 export const handle: Handle = async ({ event, resolve }) => {
 	const token = event.cookies.get("session");
-	console.log(token);
 
 	if (token) {
 		try {
@@ -14,8 +13,6 @@ export const handle: Handle = async ({ event, resolve }) => {
 				id: payload.userId,
 				walletAddress: payload.walletAddress,
 			};
-
-			console.log(payload.walletAddress);
 		} catch {
 			event.cookies.delete("session", { path: "/" });
 			event.locals.user = null;
@@ -23,6 +20,8 @@ export const handle: Handle = async ({ event, resolve }) => {
 	} else {
 		event.locals.user = null;
 	}
+
+	console.log(event.locals.user);
 
 	return resolve(event);
 };
