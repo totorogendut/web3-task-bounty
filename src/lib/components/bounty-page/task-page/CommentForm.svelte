@@ -13,8 +13,6 @@
 	onMount(() => {
 		comment.reset();
 	});
-
-	$inspect(comment);
 </script>
 
 <div

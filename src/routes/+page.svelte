@@ -1,12 +1,12 @@
 <script lang="ts">
 	import BountyList from "$lib/components/home-page/BountyList.svelte";
-	import HeaderSection from "$lib/components/home-page/HeaderSection.svelte";
+	import MainSection from "$lib/components/home-page/MainSection.svelte";
 	import { setContext } from "svelte";
 
 	const { data } = $props();
 </script>
 
-<HeaderSection />
+<MainSection />
 
 <style>
 	:global(body) {

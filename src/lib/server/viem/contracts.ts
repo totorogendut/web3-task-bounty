@@ -1,9 +1,10 @@
 import { erc20Abi, createPublicClient, http, type Hex } from "viem";
 import { sepolia } from "viem/chains";
+import { ethChain } from "./_shared";
 
 // Server-side public client for Sepolia
 export const publicClient = createPublicClient({
-	chain: sepolia,
+	chain: ethChain,
 	transport: http(),
 });
 

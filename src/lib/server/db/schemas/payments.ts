@@ -3,6 +3,7 @@ import { nanoid } from "nanoid";
 import { user } from "./users";
 import { BASE_TABLE } from "./_shared";
 import { task } from "./tasks";
+import type { Hex } from "viem";
 
 export const transaction = sqliteTable("transaction", {
 	...BASE_TABLE,
@@ -11,7 +12,7 @@ export const transaction = sqliteTable("transaction", {
 		.references(() => user.id),
 	amount: text("amount").notNull().default("0.00").$type<`${number}.${number}`>(),
 	address: text("address").notNull(),
-	txHash: text("tx_hash").$type<`0x${string}`>(),
+	txHash: text("tx_hash").$type<Hex>(),
 	taskId: text("task_id")
 		.notNull()
 		.references(() => task.id),

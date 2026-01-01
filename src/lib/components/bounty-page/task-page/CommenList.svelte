@@ -28,7 +28,6 @@
 
 	let comments = $state(await getComments({ offset: 0, commentableId }));
 	isLoading = false;
-	$inspect(isLoading);
 </script>
 
 <section class="flex grow flex-col gap-2">

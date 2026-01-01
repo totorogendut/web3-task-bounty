@@ -1,7 +1,7 @@
 {
   "version": "7",
   "dialect": "sqlite",
-  "id": "bab1dcc8-b03a-4763-a410-52dc6fa0038c",
+  "id": "68c0af57-e017-4a5c-8c2c-349280d4024c",
   "prevIds": [
     "00000000-0000-0000-0000-000000000000"
   ],
@@ -24,10 +24,6 @@
     },
     {
       "name": "progress",
-      "entityType": "tables"
-    },
-    {
-      "name": "project",
       "entityType": "tables"
     },
     {
@@ -234,11 +230,21 @@
     },
     {
       "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "content",
+      "entityType": "columns",
+      "table": "bounty"
+    },
+    {
+      "type": "text",
       "notNull": true,
       "autoincrement": false,
       "default": null,
       "generated": null,
-      "name": "project_id",
+      "name": "client_id",
       "entityType": "columns",
       "table": "bounty"
     },
@@ -259,16 +265,6 @@
       "default": "0",
       "generated": null,
       "name": "is_claimed",
-      "entityType": "columns",
-      "table": "bounty"
-    },
-    {
-      "type": "text",
-      "notNull": false,
-      "autoincrement": false,
-      "default": "'[]'",
-      "generated": null,
-      "name": "managers",
       "entityType": "columns",
       "table": "bounty"
     },
@@ -430,76 +426,6 @@
       "generated": null,
       "name": "id",
       "entityType": "columns",
-      "table": "project"
-    },
-    {
-      "type": "integer",
-      "notNull": false,
-      "autoincrement": false,
-      "default": null,
-      "generated": null,
-      "name": "created_at",
-      "entityType": "columns",
-      "table": "project"
-    },
-    {
-      "type": "integer",
-      "notNull": false,
-      "autoincrement": false,
-      "default": null,
-      "generated": null,
-      "name": "updated_at",
-      "entityType": "columns",
-      "table": "project"
-    },
-    {
-      "type": "text",
-      "notNull": true,
-      "autoincrement": false,
-      "default": null,
-      "generated": null,
-      "name": "owner_id",
-      "entityType": "columns",
-      "table": "project"
-    },
-    {
-      "type": "text",
-      "notNull": true,
-      "autoincrement": false,
-      "default": null,
-      "generated": null,
-      "name": "managers_id",
-      "entityType": "columns",
-      "table": "project"
-    },
-    {
-      "type": "text",
-      "notNull": false,
-      "autoincrement": false,
-      "default": null,
-      "generated": null,
-      "name": "title",
-      "entityType": "columns",
-      "table": "project"
-    },
-    {
-      "type": "text",
-      "notNull": false,
-      "autoincrement": false,
-      "default": null,
-      "generated": null,
-      "name": "description",
-      "entityType": "columns",
-      "table": "project"
-    },
-    {
-      "type": "text",
-      "notNull": false,
-      "autoincrement": false,
-      "default": null,
-      "generated": null,
-      "name": "id",
-      "entityType": "columns",
       "table": "task"
     },
     {
@@ -624,21 +550,11 @@
     },
     {
       "type": "text",
-      "notNull": true,
+      "notNull": false,
       "autoincrement": false,
       "default": null,
       "generated": null,
       "name": "username",
-      "entityType": "columns",
-      "table": "user"
-    },
-    {
-      "type": "text",
-      "notNull": true,
-      "autoincrement": false,
-      "default": null,
-      "generated": null,
-      "name": "password_hash",
       "entityType": "columns",
       "table": "user"
     },
@@ -669,6 +585,26 @@
       "default": null,
       "generated": null,
       "name": "email",
+      "entityType": "columns",
+      "table": "user"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "nonce",
+      "entityType": "columns",
+      "table": "user"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "last_login_at",
       "entityType": "columns",
       "table": "user"
     },
@@ -719,16 +655,16 @@
     },
     {
       "columns": [
-        "project_id"
+        "client_id"
       ],
-      "tableTo": "project",
+      "tableTo": "user",
       "columnsTo": [
         "id"
       ],
       "onUpdate": "NO ACTION",
       "onDelete": "NO ACTION",
       "nameExplicit": false,
-      "name": "fk_bounty_project_id_project_id_fk",
+      "name": "fk_bounty_client_id_user_id_fk",
       "entityType": "fks",
       "table": "bounty"
     },
@@ -776,36 +712,6 @@
       "name": "fk_progress_task_id_task_id_fk",
       "entityType": "fks",
       "table": "progress"
-    },
-    {
-      "columns": [
-        "owner_id"
-      ],
-      "tableTo": "user",
-      "columnsTo": [
-        "id"
-      ],
-      "onUpdate": "NO ACTION",
-      "onDelete": "NO ACTION",
-      "nameExplicit": false,
-      "name": "fk_project_owner_id_user_id_fk",
-      "entityType": "fks",
-      "table": "project"
-    },
-    {
-      "columns": [
-        "managers_id"
-      ],
-      "tableTo": "user",
-      "columnsTo": [
-        "id"
-      ],
-      "onUpdate": "NO ACTION",
-      "onDelete": "NO ACTION",
-      "nameExplicit": false,
-      "name": "fk_project_managers_id_user_id_fk",
-      "entityType": "fks",
-      "table": "project"
     },
     {
       "columns": [
@@ -895,15 +801,6 @@
       "nameExplicit": false,
       "name": "progress_pk",
       "table": "progress",
-      "entityType": "pks"
-    },
-    {
-      "columns": [
-        "id"
-      ],
-      "nameExplicit": false,
-      "name": "project_pk",
-      "table": "project",
       "entityType": "pks"
     },
     {

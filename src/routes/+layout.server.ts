@@ -5,12 +5,11 @@ import { eq } from "drizzle-orm";
 
 /** @type {import('./$types').PageLoad} */
 export async function load({ params, url }) {
-	const data = await keyval.get("settings");
-	if (!data && !url.pathname.startsWith("/setup")) {
-		return redirect(303, "/setup/");
-	}
-
-	return {
-		settings: data.values as WebAppSettings,
-	};
+	// const data = await keyval.get("settings");
+	// if (!data && !url.pathname.startsWith("/setup")) {
+	// 	return redirect(303, "/setup/");
+	// }
+	// return {
+	// 	settings: data.values as WebAppSettings,
+	// };
 }

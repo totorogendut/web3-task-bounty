@@ -1,18 +1,17 @@
 import { PUBLIC_WALLET_ADDRESS } from "$env/static/public";
 import { createPublicClient, createWalletClient, erc20Abi, http, parseEther } from "viem";
-import { mainnet } from "viem/chains";
-import { MneeTokenAddress } from "./_shared";
+import { ethChain, MneeTokenAddress } from "./_shared";
 import { privateKeyToAccount } from "viem/accounts";
 import { WALLET_PRIVATE_KEY } from "$env/static/private";
 
 const client = createPublicClient({
-	chain: mainnet,
+	chain: ethChain,
 	transport: http(),
 });
 
 const projectWallet = createWalletClient({
 	account: privateKeyToAccount(`0x${WALLET_PRIVATE_KEY}`),
-	chain: mainnet,
+	chain: ethChain,
 	transport: http(),
 });
 

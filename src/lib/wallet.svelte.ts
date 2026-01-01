@@ -1,8 +1,9 @@
-import { createWalletClient, custom, type WalletClient } from "viem";
+import { createWalletClient, custom, type Hex, type WalletClient } from "viem";
 import { mainnet, sepolia } from "viem/chains";
+import { issueNonce, verifySignedMessage } from "./user.remote";
 
 class WalletState {
-	address = $state<`0x${string}` | null>(null);
+	address = $state<Hex | null>(null);
 	chainId = $state<number | null>(null);
 	isConnected = $derived(this.address !== null);
 	client = $state<WalletClient | null>(null);
@@ -54,6 +55,16 @@ class WalletState {
 			chain: this.chainId === 11155111 ? sepolia : mainnet,
 			transport: custom(ethereum),
 		});
+
+		const nonce = await issueNonce(this.address);
+		// Sign message
+		const message = `Sign this message to login:\nNonce: ${nonce}`;
+		const signature = await this.client.signMessage({
+			account: this.address,
+			message,
+		});
+		const { token } = await verifySignedMessage({ address: this.address, signature });
+		console.log(token);
 	}
 
 	async disconnect() {

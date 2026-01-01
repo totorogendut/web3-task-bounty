@@ -12,13 +12,9 @@ export const relations = defineRelations(
 				from: r.user.id,
 				to: r.task.userId,
 			}),
-			// bounties: r.many.bounty({
-			// 	from: r.user.id,
-			// 	to: r.bounty.id.through(r.project.),
-			// }),
-			projects: r.many.project({
+			bounties: r.many.bounty({
 				from: r.user.id,
-				to: r.project.ownerId,
+				to: r.bounty.clientId,
 			}),
 			transactions: r.many.transaction({
 				from: r.user.id,
@@ -26,10 +22,6 @@ export const relations = defineRelations(
 			}),
 		},
 		bounty: {
-			parentProject: r.one.project({
-				from: r.bounty.id,
-				to: r.project.id,
-			}),
 			comments: r.many.comment({
 				from: r.bounty.id,
 				to: r.comment.commentableId,
@@ -73,12 +65,6 @@ export const relations = defineRelations(
 				to: r.user.id,
 			}),
 		},
-		project: {
-			bounties: r.many.bounty({
-				from: r.project.id,
-				to: r.bounty.projectId,
-			}),
-		},
 		comment: {
 			user: r.one.user({
 				from: r.comment.userId,
@@ -95,7 +81,6 @@ export const keyvalSchema = sqliteTable("keyval", {
 
 export type User = typeof userSchema.user.$inferSelect;
 export type Session = typeof userSchema.session.$inferSelect;
-export type Project = typeof taskSchema.project.$inferSelect;
 export type Bounty = typeof taskSchema.bounty.$inferSelect;
 export type Task = typeof taskSchema.task.$inferSelect;
 export type CommentType = typeof taskSchema.comment.$inferSelect;

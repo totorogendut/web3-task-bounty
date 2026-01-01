@@ -1,28 +1,28 @@
+import { db } from "$lib/server/db";
+import { verifyJwt } from "$lib/server/jwt";
 import type { Handle } from "@sveltejs/kit";
-import * as auth from "$lib/server/auth";
 
-const handleAuth: Handle = async ({ event, resolve }) => {
-	const sessionToken = event.cookies.get(auth.sessionCookieName);
+export const handle: Handle = async ({ event, resolve }) => {
+	const token = event.cookies.get("session");
+	console.log(token);
 
-	if (!sessionToken) {
-		event.locals.user = null;
-		event.locals.session = null;
+	if (token) {
+		try {
+			const payload = await verifyJwt(token);
 
-		return resolve(event);
-	}
+			event.locals.user = {
+				id: payload.userId,
+				walletAddress: payload.walletAddress,
+			};
 
-	const { session, user } = await auth.validateSessionToken(sessionToken);
-
-	if (session) {
-		auth.setSessionTokenCookie(event, sessionToken, session.expiresAt);
+			console.log(payload.walletAddress);
+		} catch {
+			event.cookies.delete("session", { path: "/" });
+			event.locals.user = null;
+		}
 	} else {
-		auth.deleteSessionTokenCookie(event);
+		event.locals.user = null;
 	}
-
-	event.locals.user = user;
-	event.locals.session = session;
 
 	return resolve(event);
 };
-
-export const handle: Handle = handleAuth;

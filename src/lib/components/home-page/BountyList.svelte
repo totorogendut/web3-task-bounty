@@ -24,7 +24,7 @@
 </script>
 
 <svelte:boundary>
-	<section class="mt-8 flex flex-col gap-4">
+	<section class="mx-auto mt-8 flex w-300 max-w-full flex-col gap-4">
 		{#if list.length === 0}
 			<div class="rounded-xl border border-white/10 bg-white/5 p-8 text-center text-white/50">
 				No bounties found.

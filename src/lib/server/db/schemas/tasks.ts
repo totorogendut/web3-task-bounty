@@ -3,6 +3,7 @@ import { nanoid } from "nanoid";
 import { user } from "./users";
 import { BASE_TABLE } from "./_shared";
 import type { COMMENTABLE_TYPE, TASK_STATE } from "$lib/api/_shared";
+import type { Hex } from "viem";
 
 export const bounty = sqliteTable("bounty", {
 	...BASE_TABLE,
@@ -12,6 +13,8 @@ export const bounty = sqliteTable("bounty", {
 	clientId: text("client_id")
 		.notNull()
 		.references(() => user.id),
+	escrowContractAddress: text("escrow_contract_address").$type<Hex>(),
+	factoryContractAddress: text("factory_contract_address").$type<Hex>(),
 	rewardAmount: text("reward_amount").notNull().default("0.00").$type<`${number}.${number}`>(),
 	isClaimed: integer("is_claimed", { mode: "boolean" }).default(false),
 });

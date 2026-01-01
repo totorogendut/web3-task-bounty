@@ -27,11 +27,11 @@ CREATE TABLE `bounty` (
 	`updated_at` integer,
 	`title` text,
 	`description` text,
-	`project_id` text NOT NULL,
+	`content` text,
+	`client_id` text NOT NULL,
 	`reward_amount` text DEFAULT '0.00' NOT NULL,
 	`is_claimed` integer DEFAULT 0,
-	`managers` text DEFAULT '[]',
-	CONSTRAINT `fk_bounty_project_id_project_id_fk` FOREIGN KEY (`project_id`) REFERENCES `project`(`id`)
+	CONSTRAINT `fk_bounty_client_id_user_id_fk` FOREIGN KEY (`client_id`) REFERENCES `user`(`id`)
 );
 --> statement-breakpoint
 CREATE TABLE `comment` (
@@ -58,18 +58,6 @@ CREATE TABLE `progress` (
 	CONSTRAINT `fk_progress_task_id_task_id_fk` FOREIGN KEY (`task_id`) REFERENCES `task`(`id`)
 );
 --> statement-breakpoint
-CREATE TABLE `project` (
-	`id` text PRIMARY KEY,
-	`created_at` integer,
-	`updated_at` integer,
-	`owner_id` text NOT NULL,
-	`managers_id` text NOT NULL,
-	`title` text,
-	`description` text,
-	CONSTRAINT `fk_project_owner_id_user_id_fk` FOREIGN KEY (`owner_id`) REFERENCES `user`(`id`),
-	CONSTRAINT `fk_project_managers_id_user_id_fk` FOREIGN KEY (`managers_id`) REFERENCES `user`(`id`)
-);
---> statement-breakpoint
 CREATE TABLE `task` (
 	`id` text PRIMARY KEY,
 	`created_at` integer,
@@ -93,9 +81,10 @@ CREATE TABLE `session` (
 --> statement-breakpoint
 CREATE TABLE `user` (
 	`id` text PRIMARY KEY,
-	`username` text NOT NULL UNIQUE,
-	`password_hash` text NOT NULL,
+	`username` text UNIQUE,
 	`wallet_address` text,
 	`avatar` text,
-	`email` text
+	`email` text,
+	`nonce` text,
+	`last_login_at` integer
 );

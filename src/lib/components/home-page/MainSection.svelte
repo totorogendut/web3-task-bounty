@@ -1,10 +1,10 @@
 <script lang="ts">
-	import HeaderHero from "./HeaderHero.svelte";
+	import Hero from "./Hero.svelte";
 	import MainTab from "./MainTab.svelte";
 </script>
 
 <section class="relative isolate">
-	<HeaderHero />
+	<Hero />
 </section>
 
 <MainTab />
