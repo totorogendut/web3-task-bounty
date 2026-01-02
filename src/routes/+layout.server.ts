@@ -1,18 +1,23 @@
 import { db, keyval } from "$lib/server/db";
 import { keyvalSchema } from "$lib/server/db/schemas";
+import { USER_CLIENT_QUERY_DATA } from "$lib/server/db/schemas/_shared.js";
 import { redirect } from "@sveltejs/kit";
 import { eq } from "drizzle-orm";
 
 /** @type {import('./$types').PageLoad} */
 export async function load({ params, url, locals }) {
-	// const data = await keyval.get("settings");
-	// if (!data && !url.pathname.startsWith("/setup")) {
-	// 	return redirect(303, "/setup/");
-	// }
-	// return {
-	// 	settings: data.values as WebAppSettings,
-	// };
+	const user = await db.query.user.findFirst({
+		where: {
+			id: locals.user.id,
+		},
+		...USER_CLIENT_QUERY_DATA,
+	});
+
+	if (!user?.username && !url.pathname.startsWith("/onboarding")) {
+		redirect(303, "/onboarding/");
+	}
+
 	return {
-		user: locals.user,
+		user,
 	};
 }

@@ -23,7 +23,7 @@
 					onclick={wallet.connect}>Connect wallet</button
 				>
 			{:else}
-				{page.data.user.walletAddress}
+				{page.data.user.username}
 				<button onclick={logout}>Logout</button>
 			{/if}
 		</div>
