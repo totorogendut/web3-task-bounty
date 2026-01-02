@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from "$app/state";
-	import CommentSection from "$lib/components/bounty-page/task-page/CommentSection.svelte";
+	import CommentSection from "$lib/components/task-page/CommentSection.svelte";
 	import TaskList from "$lib/components/bounty-page/TaskList.svelte";
 
 	const { data } = $props();

@@ -13,11 +13,3 @@ export const user = sqliteTable("user", {
 	nonce: text("nonce"),
 	lastLoginAt: integer("last_login_at", { mode: "timestamp" }).$default(() => new Date()),
 });
-
-export const session = sqliteTable("session", {
-	id: text("id").primaryKey(),
-	userId: text("user_id")
-		.notNull()
-		.references(() => user.id),
-	expiresAt: integer("expires_at", { mode: "timestamp" }).notNull(),
-});
