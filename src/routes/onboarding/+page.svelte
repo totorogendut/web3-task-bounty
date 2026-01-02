@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { ArrowRight } from "@lucide/svelte";
 	import { usernameSchema } from "./_shared";
+	import TextInput from "$lib/components/TextInput.svelte";
 
 	let username = $state("");
 	const nameSchema = $derived(usernameSchema.safeParse(username));
@@ -29,10 +30,8 @@
 
 		<label class="flex flex-col gap-2">
 			<strong class="text-shadow-lg"> Username </strong>
-			<input
+			<TextInput
 				bind:value={username}
-				class="border-2! border-amber-700! font-semibold text-amber-800
-					 ring-0! outline-2! outline-white! placeholder:font-medium"
 				placeholder="e.g. CatGunslingerX88"
 				type="text"
 				name="username"

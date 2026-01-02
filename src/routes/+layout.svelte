@@ -1,15 +1,18 @@
 <script lang="ts">
-	import "./layout.css";
+	import "./styles/app.css";
 	import favicon from "$lib/assets/favicon.svg";
 	import HeaderContainer from "$lib/components/header/HeaderContainer.svelte";
-	import { wallet } from "$lib/wallet.svelte.js";
 
 	let { children, data } = $props();
+	const fonts = "Rye";
 </script>
 
 <svelte:head
 	><link rel="icon" href={favicon} />
 	<title>Web3 Bounty</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+	<link href="https://fonts.googleapis.com/css2?family={fonts}&display=swap" rel="stylesheet" />
 </svelte:head>
 
 <HeaderContainer />

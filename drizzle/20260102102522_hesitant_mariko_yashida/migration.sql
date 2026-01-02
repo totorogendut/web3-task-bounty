@@ -29,8 +29,12 @@ CREATE TABLE `bounty` (
 	`description` text,
 	`content` text,
 	`client_id` text NOT NULL,
+	`escrow_contract_address` text,
+	`factory_contract_address` text,
 	`reward_amount` text DEFAULT '0.00' NOT NULL,
-	`is_claimed` integer DEFAULT 0,
+	`is_claimed` integer DEFAULT false,
+	`deadline` integer,
+	`can_refund` integer DEFAULT true,
 	CONSTRAINT `fk_bounty_client_id_user_id_fk` FOREIGN KEY (`client_id`) REFERENCES `user`(`id`)
 );
 --> statement-breakpoint
@@ -70,13 +74,6 @@ CREATE TABLE `task` (
 	`state` text DEFAULT 'in_progress',
 	CONSTRAINT `fk_task_user_id_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `user`(`id`),
 	CONSTRAINT `fk_task_bounty_id_bounty_id_fk` FOREIGN KEY (`bounty_id`) REFERENCES `bounty`(`id`)
-);
---> statement-breakpoint
-CREATE TABLE `session` (
-	`id` text PRIMARY KEY,
-	`user_id` text NOT NULL,
-	`expires_at` integer NOT NULL,
-	CONSTRAINT `fk_session_user_id_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `user`(`id`)
 );
 --> statement-breakpoint
 CREATE TABLE `user` (

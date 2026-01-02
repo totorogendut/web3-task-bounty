@@ -80,7 +80,6 @@ export const keyvalSchema = sqliteTable("keyval", {
 });
 
 export type User = typeof userSchema.user.$inferSelect;
-export type Session = typeof userSchema.session.$inferSelect;
 export type Bounty = typeof taskSchema.bounty.$inferSelect;
 export type Task = typeof taskSchema.task.$inferSelect;
 export type CommentType = typeof taskSchema.comment.$inferSelect;

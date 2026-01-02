@@ -1,12 +1,20 @@
-import { getTaskList } from "$lib/components/home-page/index.remote.js";
+import { db } from "$lib/server/db/index.js";
 
 /** @type {import('./$types').PageLoad} */
 export async function load({ params }) {
 	// Add additional logic here, if needed
-	const taskQ = getTaskList({ offset: 0, bountyId: params.bountyId });
+	const bounty = await db.query.bounty.findFirst({
+		where: {
+			id: params.bountyId,
+		},
+		with: {
+			tasks: {
+				limit: 20,
+			},
+		},
+	});
 
-	const [taskList] = await Promise.all([taskQ]);
 	return {
-		taskList,
+		bounty,
 	};
 }

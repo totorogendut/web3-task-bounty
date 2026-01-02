@@ -17,6 +17,8 @@ export const bounty = sqliteTable("bounty", {
 	factoryContractAddress: text("factory_contract_address").$type<Hex>(),
 	rewardAmount: text("reward_amount").notNull().default("0.00").$type<`${number}.${number}`>(),
 	isClaimed: integer("is_claimed", { mode: "boolean" }).default(false),
+	deadline: integer("deadline", { mode: "timestamp" }),
+	canRefund: integer("can_refund", { mode: "boolean" }).default(true),
 });
 
 export const task = sqliteTable("task", {
@@ -44,6 +46,7 @@ export const comment = sqliteTable("comment", {
 		.notNull()
 		.references(() => user.id),
 });
+
 export const progress = sqliteTable("progress", {
 	...BASE_TABLE,
 	content: text("content"),

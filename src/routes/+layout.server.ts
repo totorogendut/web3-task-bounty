@@ -13,7 +13,7 @@ export async function load({ params, url, locals }) {
 		...USER_CLIENT_QUERY_DATA,
 	});
 
-	if (locals.user && !user?.username && !url.pathname.startsWith("/onboarding")) {
+	if (locals.user && user && !user?.username && !url.pathname.startsWith("/onboarding")) {
 		redirect(303, "/onboarding/");
 	}
 

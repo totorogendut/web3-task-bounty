@@ -1,8 +1,11 @@
 @import "tailwindcss";
+@import "./fonts";
 @plugin "@tailwindcss/forms";
 @plugin "@tailwindcss/typography";
 
 body {
 	background-color: var(--color-violet-400);
 	color: var(--color-violet-50);
+	scrollbar-gutter: stable;
+	overflow: auto;
 }

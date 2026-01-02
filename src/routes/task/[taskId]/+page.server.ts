@@ -1,4 +1,5 @@
 import { db } from "$lib/server/db/index.js";
+import type { Actions } from "@sveltejs/kit";
 import { error } from "@sveltejs/kit";
 
 export const load = async ({ params, url }) => {
@@ -16,4 +17,8 @@ export const load = async ({ params, url }) => {
 	return {
 		...task,
 	};
+};
+
+export const actions: Actions = {
+	default: async (event) => {},
 };

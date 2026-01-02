@@ -7,6 +7,11 @@
 </script>
 
 <div class="flex w-full">
-	<TaskList bountyId={page.params.bountyId || ""} list={data.taskList} />
-	<CommentSection commentableType="bounty" commentableId={page.params.bountyId || ""} />
+	<div class="sticky top-0">
+		<h1>{data.bounty?.title}</h1>
+		<div>
+			{data.bounty?.description}
+		</div>
+	</div>
+	<TaskList bountyId={page.params.bountyId || ""} list={data.bounty?.tasks || []} />
 </div>

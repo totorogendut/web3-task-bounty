@@ -1,7 +1,7 @@
 {
   "version": "7",
   "dialect": "sqlite",
-  "id": "68c0af57-e017-4a5c-8c2c-349280d4024c",
+  "id": "283a28cd-4c8f-4a88-af8a-6130351c3f6d",
   "prevIds": [
     "00000000-0000-0000-0000-000000000000"
   ],
@@ -28,10 +28,6 @@
     },
     {
       "name": "task",
-      "entityType": "tables"
-    },
-    {
-      "name": "session",
       "entityType": "tables"
     },
     {
@@ -250,6 +246,26 @@
     },
     {
       "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "escrow_contract_address",
+      "entityType": "columns",
+      "table": "bounty"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "factory_contract_address",
+      "entityType": "columns",
+      "table": "bounty"
+    },
+    {
+      "type": "text",
       "notNull": true,
       "autoincrement": false,
       "default": "'0.00'",
@@ -262,9 +278,29 @@
       "type": "integer",
       "notNull": false,
       "autoincrement": false,
-      "default": "0",
+      "default": "false",
       "generated": null,
       "name": "is_claimed",
+      "entityType": "columns",
+      "table": "bounty"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "deadline",
+      "entityType": "columns",
+      "table": "bounty"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": false,
+      "default": "true",
+      "generated": null,
+      "name": "can_refund",
       "entityType": "columns",
       "table": "bounty"
     },
@@ -516,36 +552,6 @@
       "generated": null,
       "name": "id",
       "entityType": "columns",
-      "table": "session"
-    },
-    {
-      "type": "text",
-      "notNull": true,
-      "autoincrement": false,
-      "default": null,
-      "generated": null,
-      "name": "user_id",
-      "entityType": "columns",
-      "table": "session"
-    },
-    {
-      "type": "integer",
-      "notNull": true,
-      "autoincrement": false,
-      "default": null,
-      "generated": null,
-      "name": "expires_at",
-      "entityType": "columns",
-      "table": "session"
-    },
-    {
-      "type": "text",
-      "notNull": false,
-      "autoincrement": false,
-      "default": null,
-      "generated": null,
-      "name": "id",
-      "entityType": "columns",
       "table": "user"
     },
     {
@@ -745,21 +751,6 @@
     },
     {
       "columns": [
-        "user_id"
-      ],
-      "tableTo": "user",
-      "columnsTo": [
-        "id"
-      ],
-      "onUpdate": "NO ACTION",
-      "onDelete": "NO ACTION",
-      "nameExplicit": false,
-      "name": "fk_session_user_id_user_id_fk",
-      "entityType": "fks",
-      "table": "session"
-    },
-    {
-      "columns": [
         "key"
       ],
       "nameExplicit": false,
@@ -810,15 +801,6 @@
       "nameExplicit": false,
       "name": "task_pk",
       "table": "task",
-      "entityType": "pks"
-    },
-    {
-      "columns": [
-        "id"
-      ],
-      "nameExplicit": false,
-      "name": "session_pk",
-      "table": "session",
       "entityType": "pks"
     },
     {

@@ -7,19 +7,18 @@
 		bountyId: string;
 	}
 
-	const { list: taskList }: Props = $props();
+	const { list: taskList, bountyId }: Props = $props();
 	let isLoading = $state(true);
-	let offset = $state(0);
+	let offset = $state(20);
 	let list = $state(taskList);
 	isLoading = false;
 
 	async function fetchMoreList() {
 		isLoading = true;
 		try {
-			const nextOffset = offset + 10;
-			const more = await getTaskList({ bountyId, offset: nextOffset });
+			const more = await getTaskList({ bountyId, offset });
 			list = [...list, ...more];
-			offset = nextOffset;
+			offset += 20;
 		} catch (error) {
 			console.error("Failed to fetch more tasks:", error);
 		} finally {
@@ -35,13 +34,13 @@
 		</div>
 	{:else}
 		<div class="flex flex-col gap-3">
-			{#each list as { title, description, id }}
+			{#each list as { title, content, id }}
 				<a
 					href="/task/{id}"
 					class="flex flex-col gap-1 rounded-xl bg-white/5 p-4 transition hover:bg-white/10"
 				>
 					<strong class="text-lg">{title}</strong>
-					<p class="text-sm text-white/70">{description}</p>
+					<p class="line-clamp-2 text-sm text-white/70">{content}</p>
 				</a>
 			{/each}
 		</div>

@@ -4,6 +4,7 @@
 	import { getBountyList } from "./index.remote";
 	import type { bounty } from "$lib/server/db/schemas/tasks";
 	import SkeletonShell from "../task-page/SkeletonShell.svelte";
+	import BountyListItem from "./BountyListItem.svelte";
 
 	let isLoading = $state(false);
 	let offset = $state(0);
@@ -32,20 +33,8 @@
 			</div>
 		{:else}
 			<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-				{#each list as { title, description, id, rewardAmount }}
-					<a
-						href="/bounty/{id}"
-						class="relative flex flex-col gap-2 rounded-2xl
-						 bg-black/15 p-6 transition hover:bg-black/10"
-					>
-						<strong class="text-xl">{title} </strong>
-						<p class="line-clamp-2 text-sm text-white/70">{description}</p>
-						<span
-							class="absolute top-2 right-4 font-extrabold
-						 text-green-300"
-							>${rewardAmount}
-						</span>
-					</a>
+				{#each list as data}
+					<BountyListItem {...data} />
 				{/each}
 				{#snippet pending()}
 					{#each Array(10) as item}

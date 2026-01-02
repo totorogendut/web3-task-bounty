@@ -18,6 +18,10 @@ await seed(db, { bounty, user, task, comment }).refine((f) => ({
 		columns: {
 			title: f.valuesFromArray({ values: ["Bounty 1", "Test"] }),
 			description: f.loremIpsum({ sentencesCount: 8 }),
+			rewardAmount: f.valuesFromArray({
+				values: ["10.00", "5.00", "25.00", "3000.00", "500.00", "65.00"],
+			}),
+			deadline: f.timestamp(),
 		},
 	},
 	task: {
