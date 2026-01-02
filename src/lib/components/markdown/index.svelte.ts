@@ -1,6 +1,6 @@
 import type { CommentType, User } from "$lib/server/db/schemas";
 
-class CommentState {
+export class MarkdownFormState {
 	content = $state("");
 	submitted = $state("");
 	textareaEl: HTMLTextAreaElement | null = $state.raw(null);
@@ -10,5 +10,3 @@ class CommentState {
 		this.submitted = "";
 	}
 }
-
-export let comment = new CommentState();

@@ -1,17 +1,18 @@
 <script lang="ts">
 	import { onMount } from "svelte";
-	import { comment } from "./comment.svelte";
-	import CommentFormToolbar from "./CommentFormToolbar.svelte";
+	import CommentFormToolbar from "./MarkdownFormToolbar.svelte";
 	import { Bold, Italic, Code, Link } from "@lucide/svelte";
+	import { MarkdownFormState } from "./index.svelte";
 
-	const isSubmitDisabled = $derived(!comment?.content?.length);
+	const mdState = new MarkdownFormState();
+	const isSubmitDisabled = $derived(!mdState?.content?.length);
 
 	function submit(): void {
-		comment.submitted = comment.content;
+		mdState.submitted = mdState.content;
 	}
 
 	onMount(() => {
-		comment.reset();
+		mdState.reset();
 	});
 </script>
 
@@ -25,17 +26,17 @@
 	bg-slate-700
 	 px-4 pt-6 pb-2 group-has-focus/comment:border-transparent"
 	>
-		<CommentFormToolbar type="bold"><Bold size="18" /></CommentFormToolbar>
-		<CommentFormToolbar type="italic"><Italic size="18" /></CommentFormToolbar>
-		<CommentFormToolbar type="code"><Code size="18" /></CommentFormToolbar>
-		<CommentFormToolbar type="link"><Link size="18" /></CommentFormToolbar>
+		<CommentFormToolbar {mdState} type="bold"><Bold size="18" /></CommentFormToolbar>
+		<CommentFormToolbar {mdState} type="italic"><Italic size="18" /></CommentFormToolbar>
+		<CommentFormToolbar {mdState} type="code"><Code size="18" /></CommentFormToolbar>
+		<CommentFormToolbar {mdState} type="link"><Link size="18" /></CommentFormToolbar>
 		<small class="ml-auto self-center text-white/70">Markdown</small>
 	</div>
 
 	<!-- Editor -->
 	<textarea
-		bind:this={comment.textareaEl}
-		bind:value={comment.content}
+		bind:this={mdState.textareaEl}
+		bind:value={mdState.content}
 		class="m2 min-h-55 w-full resize-y
 		border-0 bg-slate-950 p-4 font-mono text-sm text-slate-100 outline-none focus:ring-5 focus:ring-sky-500"
 		placeholder="Write your comment..."

@@ -1,7 +1,7 @@
 <script lang="ts">
-	import type { HTMLInputAttributes } from "svelte/elements";
+	import type { HTMLInputAttributes, HTMLTextareaAttributes } from "svelte/elements";
 
-	interface Props extends HTMLInputAttributes {
+	interface Props extends HTMLTextareaAttributes {
 		label?: string;
 	}
 

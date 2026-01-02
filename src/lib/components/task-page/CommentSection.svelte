@@ -1,8 +1,7 @@
 <script lang="ts">
 	import type { COMMENTABLE_TYPE } from "$lib/api/_shared";
+	import MarkdownForm from "../markdown/MarkdownForm.svelte";
 	import CommenList from "./CommenList.svelte";
-	import CommentForm from "./CommentForm.svelte";
-	import { getComments } from "./index.remote";
 
 	interface Props {
 		commentableId: string;
@@ -19,5 +18,5 @@
 		{/snippet}
 		<CommenList {commentableId} {commentableType} />
 	</svelte:boundary>
-	<CommentForm />
+	<MarkdownForm />
 </section>

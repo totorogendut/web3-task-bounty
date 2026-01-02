@@ -1,26 +1,27 @@
 <script lang="ts">
 	import { tick, type Snippet } from "svelte";
-	import { comment } from "./comment.svelte";
+	import type { MarkdownFormState } from "./index.svelte";
 
 	type FormatType = "bold" | "italic" | "code" | "link";
 
 	interface Props {
 		type: FormatType;
+		mdState: MarkdownFormState;
 		children?: Snippet;
 	}
 
-	const { type, children }: Props = $props();
+	const { type, mdState, children }: Props = $props();
 
 	let buttonEl: HTMLButtonElement;
 	let index = $state(0);
 
 	function wrap(before: string, after: string = before): void {
-		const { selectionStart, selectionEnd, value } = comment.textareaEl!;
+		const { selectionStart, selectionEnd, value } = mdState.textareaEl!;
 		const hasSelection = selectionStart !== selectionEnd;
 
 		const selected = value.slice(selectionStart, selectionEnd);
 
-		comment.content =
+		mdState.content =
 			value.slice(0, selectionStart) + before + selected + after + value.slice(selectionEnd);
 
 		// Calculate cursor position
@@ -30,8 +31,8 @@
 
 		// Wait for DOM update, then restore cursor
 		tick().then(() => {
-			comment.textareaEl?.focus();
-			comment.textareaEl?.setSelectionRange(cursorPos, cursorPos);
+			mdState.textareaEl?.focus();
+			mdState.textareaEl?.setSelectionRange(cursorPos, cursorPos);
 		});
 	}
 

@@ -1,6 +1,6 @@
 import { db } from "$lib/server/db";
 import { bounty, task } from "$lib/server/db/schemas/tasks";
-import { bountyInsertSchema } from "$lib/server/db/schemas/types";
+import { bountyInsertSchema } from "$lib/server/db/schemas/_types";
 import { error } from "@sveltejs/kit";
 import type { Actions } from "@sveltejs/kit";
 import { ZodError } from "zod/v4";
@@ -15,7 +15,7 @@ export const actions: Actions = {
 			title: formData.get("title") as string,
 			rewardAmount: formData.get("rewardAmount") as `${number}.${number}`,
 			clientId: event.locals.user.id,
-			deadline: formData.get("deadline") as Date,
+			deadline: new Date(formData.get("deadline") as string),
 		};
 
 		try {

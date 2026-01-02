@@ -1,7 +1,7 @@
 import { db } from "$lib/server/db";
 import type { Bounty } from "$lib/server/db/schemas";
 import { bounty, task } from "$lib/server/db/schemas/tasks";
-import { taskInsertSchema } from "$lib/server/db/schemas/types";
+import { taskInsertSchema } from "$lib/server/db/schemas/_types";
 import { error } from "@sveltejs/kit";
 import type { Actions } from "@sveltejs/kit";
 import { ZodError } from "zod/v4";
