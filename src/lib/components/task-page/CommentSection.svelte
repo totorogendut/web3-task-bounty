@@ -12,7 +12,7 @@
 	const { commentableId, commentableType }: Props = $props();
 </script>
 
-<section class="sticky top-0 flex w-1/3 flex-col gap-2">
+<section class="sticky top-0 flex w-1/3 flex-col gap-2 pt-14">
 	<svelte:boundary>
 		{#snippet pending()}
 			<div class="grow">Loading...</div>

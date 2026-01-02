@@ -2,6 +2,7 @@ import { query } from "$app/server";
 import { db } from "$lib/server/db";
 import { user } from "$lib/server/db/schemas/users";
 import { getPublicWalletFund } from "$lib/server/viem";
+import { delay } from "$lib/utils/misc";
 import { count } from "drizzle-orm";
 import { formatEther, formatUnits } from "viem";
 import z from "zod/v4";

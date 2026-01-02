@@ -1,6 +1,4 @@
 <script lang="ts">
-	import Stats from "./Stats.svelte";
-
 	let title = "Web3 Bounty";
 </script>
 
@@ -16,6 +14,5 @@
 
 	<div class="relative">
 		<img class="rounded-4xl object-cover shadow-xl" src="/hero-image.png" alt={title} />
-		<Stats />
 	</div>
 </section>

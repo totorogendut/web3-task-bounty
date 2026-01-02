@@ -9,9 +9,9 @@
 <div class="fixed top-0 z-40 w-full">
 	<nav
 		class="mx-auto mt-2 flex w-308 max-w-full items-center justify-between
-		rounded-md bg-amber-800/50 px-4 py-2"
+		rounded-md bg-amber-800/50 px-4 py-2 backdrop-blur-md"
 	>
-		<strong>Web3 Bounty </strong>
+		<a href="/" class="font-extrabold">Web3 Bounty </a>
 		<div class="group/usernav relative isolate flex items-center gap-3">
 			{#if !page.data.user}
 				<button

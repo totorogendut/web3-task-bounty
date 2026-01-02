@@ -7,7 +7,7 @@
 </script>
 
 <div class="flex min-h-screen w-full p-4">
-	<main class="grow">
+	<main class="mt-12 grow">
 		<strong>{data.state?.replace("_", " ")}</strong>
 		<h1>{data.bounty?.title}</h1>
 		<h2>{data.title}</h2>

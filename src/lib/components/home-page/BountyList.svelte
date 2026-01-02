@@ -3,6 +3,7 @@
 	import { getContext } from "svelte";
 	import { getBountyList } from "./index.remote";
 	import type { bounty } from "$lib/server/db/schemas/tasks";
+	import SkeletonShell from "../task-page/SkeletonShell.svelte";
 
 	let isLoading = $state(false);
 	let offset = $state(0);
@@ -26,20 +27,31 @@
 <svelte:boundary>
 	<section class="mx-auto mt-8 flex w-300 max-w-full flex-col gap-4">
 		{#if list.length === 0}
-			<div class="rounded-xl border border-white/10 bg-white/5 p-8 text-center text-white/50">
+			<div class="rounded-xl border border-white/10 bg-black/15 p-8 text-center text-white/50">
 				No bounties found.
 			</div>
 		{:else}
 			<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-				{#each list as { title, description, id }}
+				{#each list as { title, description, id, rewardAmount }}
 					<a
 						href="/bounty/{id}"
-						class="flex flex-col gap-2 rounded-2xl bg-white/5 p-6 transition hover:bg-white/10"
+						class="relative flex flex-col gap-2 rounded-2xl
+						 bg-black/15 p-6 transition hover:bg-black/10"
 					>
-						<strong class="text-xl">{title}</strong>
+						<strong class="text-xl">{title} </strong>
 						<p class="line-clamp-2 text-sm text-white/70">{description}</p>
+						<span
+							class="absolute top-2 right-4 font-extrabold
+						 text-green-300"
+							>${rewardAmount}
+						</span>
 					</a>
 				{/each}
+				{#snippet pending()}
+					{#each Array(10) as item}
+						<SkeletonShell />
+					{/each}
+				{/snippet}
 			</div>
 			<button
 				onclick={fetchMoreList}
@@ -50,7 +62,4 @@
 			</button>
 		{/if}
 	</section>
-	{#snippet pending()}
-		Test
-	{/snippet}
 </svelte:boundary>

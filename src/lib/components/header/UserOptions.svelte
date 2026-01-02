@@ -20,7 +20,7 @@
 	>
 	<button
 		class="-mb-2 flex cursor-pointer gap-2 bg-red-600 px-2 py-3
-		text-white/90 hover:brightness-110"
+		text-white/90 hover:brightness-90"
 		onclick={logout}
 	>
 		<CirclePower />
