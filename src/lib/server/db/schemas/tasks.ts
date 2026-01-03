@@ -13,6 +13,7 @@ export const bounty = sqliteTable("bounty", {
 	clientId: text("client_id")
 		.notNull()
 		.references(() => user.id),
+	skills: text("skills", { mode: "json" }).$type<string[]>().default([]),
 	escrowContractAddress: text("escrow_contract_address").$type<Hex>(),
 	factoryContractAddress: text("factory_contract_address").$type<Hex>(),
 	rewardAmount: text("reward_amount").notNull().default("0.00").$type<`${number}.${number}`>(),

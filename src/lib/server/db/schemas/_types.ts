@@ -8,6 +8,11 @@ export const bountyInsertSchema = createInsertSchema(bounty, {
 });
 export const taskInsertSchema = createInsertSchema(task, {
 	content: (schema) => schema.min(100, "Content is too short").max(5000, "Content is too long"),
+	submission: (schema) =>
+		schema.regex(
+			/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/,
+			"Submission must be an URL",
+		),
 });
 export const commentInsertSchema = createInsertSchema(comment, {
 	content: (schema) => schema.min(1, "Content is too short").max(5000, "Content is too long"),

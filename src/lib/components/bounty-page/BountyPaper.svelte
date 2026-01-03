@@ -10,9 +10,12 @@
 
 <div class="flex flex-col gap-4">
 	<div
-		class="flex w-75 flex-col gap-2 self-start rounded-sm
-		 bg-linear-to-b/oklch from-amber-200 to-amber-300
-			p-4 text-black/90"
+		class={[
+			`flex w-75 flex-col gap-2 self-start rounded-sm
+			p-4 text-black/90`,
+			// "bg-linear-to-b/oklch from-amber-200 to-amber-300",
+			"bg-amber-300 shadow-[4px_4px_var(--color-amber-500)]",
+		]}
 	>
 		<span class="text-center rye-regular text-amber-800">reward</span>
 		<strong

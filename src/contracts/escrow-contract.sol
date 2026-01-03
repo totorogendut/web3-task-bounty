@@ -7,9 +7,9 @@ import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 
 /**
  * @title FreelanceEscrowEIP712
- * @notice An optimized escrow contract for freelance tasks.
+ * @notice An optimized escrow contract for freelance bountys.
  * @dev Optimized for gas and storage:
- * - Bit packed Task struct to fit in 2 slots (3 total with freelancer).
+ * - Bit packed Bounty struct to fit in 2 slots (3 total with freelancer).
  * - Removed workUri from storage, only emitted in events.
  * - Used custom errors for gas-efficient reverts.
  * - Follows CEI pattern to remove ReentrancyGuard overhead.
@@ -42,30 +42,30 @@ contract FreelanceEscrowEIP712 is EIP712 {
 		Refunded
 	}
 
-	struct Task {
+	struct Bounty {
 		// Slot 1: 160 + 48 + 40 + 8 = 256 bits
 		address client; // 160
 		uint48 deadline; // 48
-		uint40 taskId; // 40
+		uint40 bountyId; // 40
 		Status status; // 8
 		// Slot 2: 160 + 96 = 256 bits
 		IERC20 token; // 160
 		uint96 reward; // 96
 	}
 
-	Task public task;
+	Bounty public bounty;
 	address public freelancer; // Slot 3
 
 	bytes32 private constant SUBMISSION_TYPEHASH =
-		keccak256("Submission(uint256 taskId,address freelancer,string workUri,uint256 nonce)");
+		keccak256("Submission(uint256 bountyId,address freelancer,string workUri,uint256 nonce)");
 
 	mapping(address => uint256) public nonces;
 
 	/* ================= EVENTS ================= */
 
-	event TaskAwarded(address indexed freelancer, string workUri);
+	event BountyAwarded(address indexed freelancer, string workUri);
 	event PaymentReleased(address indexed freelancer, uint256 payout);
-	event TaskRefunded(address indexed client);
+	event BountyRefunded(address indexed client);
 
 	/* ================= CONSTRUCTOR ================= */
 
@@ -78,19 +78,19 @@ contract FreelanceEscrowEIP712 is EIP712 {
 
 	/// called once by factory
 	function init(
-		uint256 _taskId,
+		uint256 _bountyId,
 		address _client,
 		IERC20 _token,
 		uint128 _reward,
 		uint64 _deadline
 	) external {
-		if (task.client != address(0)) revert AlreadyInitialized();
+		if (bounty.client != address(0)) revert AlreadyInitialized();
 		if (_deadline <= block.timestamp) revert InvalidDeadline();
 
-		task = Task({
+		bounty = Bounty({
 			client: _client,
 			deadline: uint48(_deadline),
-			taskId: uint40(_taskId),
+			bountyId: uint40(_bountyId),
 			status: Status.Open,
 			token: _token,
 			reward: uint96(_reward)
@@ -105,7 +105,7 @@ contract FreelanceEscrowEIP712 is EIP712 {
 		string calldata workUri,
 		bytes calldata signature
 	) external {
-		Task storage t = task;
+		Bounty storage t = bounty;
 
 		if (msg.sender != t.client) revert NotClient();
 		if (t.status != Status.Open) revert NotOpen();
@@ -115,7 +115,7 @@ contract FreelanceEscrowEIP712 is EIP712 {
 			keccak256(
 				abi.encode(
 					SUBMISSION_TYPEHASH,
-					uint256(t.taskId),
+					uint256(t.bountyId),
 					_freelancer,
 					keccak256(bytes(workUri)),
 					nonces[_freelancer]++
@@ -129,11 +129,11 @@ contract FreelanceEscrowEIP712 is EIP712 {
 		t.status = Status.Awarded;
 		freelancer = _freelancer;
 
-		emit TaskAwarded(_freelancer, workUri);
+		emit BountyAwarded(_freelancer, workUri);
 	}
 
 	function releasePayment() external {
-		Task storage t = task;
+		Bounty storage t = bounty;
 		if (t.status != Status.Awarded) revert NotAwarded();
 
 		// Effects
@@ -160,7 +160,7 @@ contract FreelanceEscrowEIP712 is EIP712 {
 
 	/// Anyone can trigger refund after deadline
 	function autoRefund() external {
-		Task storage t = task;
+		Bounty storage t = bounty;
 		if (t.status != Status.Open) revert NotOpen();
 		if (block.timestamp <= t.deadline) revert TooEarly();
 
@@ -173,6 +173,6 @@ contract FreelanceEscrowEIP712 is EIP712 {
 		// Interactions
 		token.safeTransfer(client, reward);
 
-		emit TaskRefunded(client);
+		emit BountyRefunded(client);
 	}
 }

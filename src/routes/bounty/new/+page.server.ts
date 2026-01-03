@@ -3,7 +3,7 @@ import { bounty, task } from "$lib/server/db/schemas/tasks";
 import { bountyInsertSchema } from "$lib/server/db/schemas/_types";
 import { error, redirect } from "@sveltejs/kit";
 import type { Actions } from "@sveltejs/kit";
-import { ZodError } from "zod/v4";
+import { z, ZodError } from "zod/v4";
 
 export const actions: Actions = {
 	default: async (event) => {

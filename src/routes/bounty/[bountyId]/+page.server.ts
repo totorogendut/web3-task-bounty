@@ -1,4 +1,5 @@
 import { db } from "$lib/server/db/index.js";
+import { error } from "@sveltejs/kit";
 
 /** @type {import('./$types').PageLoad} */
 export async function load({ params }) {
@@ -14,7 +15,10 @@ export async function load({ params }) {
 		},
 	});
 
+	if (!bounty) throw error(404, "No bounty post found");
+
 	return {
 		bounty,
+		// contentHTML: await parseMarkdown(bounty.content || ""),
 	};
 }

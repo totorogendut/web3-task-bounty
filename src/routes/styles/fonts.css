@@ -5,5 +5,37 @@
 }
 
 @utility cowboy-text {
-	@apply rye-regular text-amber-300 text-shadow-amber-700 text-shadow-md;
+	@apply rye-regular leading-none text-amber-300 text-shadow-amber-700 text-shadow-md;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	@apply font-bold;
+}
+
+h1 {
+	@apply mt-8 mb-4 text-5xl leading-none;
+}
+h2 {
+	@apply mt-7 mb-4 text-4xl leading-none;
+}
+h3 {
+	@apply mt-6 mb-4 text-3xl leading-none;
+}
+h4 {
+	@apply mt-3 mb-2 text-2xl leading-none;
+}
+h5 {
+	@apply mt-3 mb-2 text-xl leading-none;
+}
+h6 {
+	@apply mt-3 mb-2 text-lg leading-none;
+}
+
+p {
+	@apply mb-3 leading-[1.1];
 }

@@ -3,7 +3,7 @@
 	import TabButton from "../TabButton.svelte";
 	import BountyList from "./BountyList.svelte";
 	import { setTabState } from "../_shared.svelte";
-	import UnderConstruction from "../UnderConstruction.svelte";
+	import UnderConstruction from "../NotAvailableMessage.svelte";
 
 	const homePageState: {
 		selectedTab: "bounty" | "leaderboard" | "transaction";
@@ -26,5 +26,7 @@
 {#if homePageState.selectedTab === "bounty"}
 	<BountyList />
 {:else}
-	<UnderConstruction />
+	<UnderConstruction title="Not available">
+		This is an advanced feature meant for beyond hackaton and currently not available in this demo
+	</UnderConstruction>
 {/if}
