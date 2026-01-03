@@ -2,6 +2,7 @@ import { seed } from "drizzle-seed";
 import { drizzle } from "drizzle-orm/better-sqlite3";
 import { relations } from "../src/lib/server/db/schemas";
 import { user } from "../src/lib/server/db/schemas/users";
+import { skills } from "../src/lib/components/skills/skills-template";
 import { task, bounty, comment } from "../src/lib/server/db/schemas/tasks";
 import "dotenv/config";
 import { jobPostings } from "./demo";
@@ -13,6 +14,10 @@ await seed(db, { bounty, user, task, comment }).refine((f) => ({
 		columns: {
 			walletAddress: f.bitString(),
 			avatar: f.default({ defaultValue: "" }),
+			skills: f.valuesFromArray({
+				values: skills,
+				arraySize: 5,
+			}),
 		},
 	},
 	bounty: {
@@ -26,6 +31,10 @@ await seed(db, { bounty, user, task, comment }).refine((f) => ({
 				values: ["10.00", "5.00", "25.00", "3000.00", "500.00", "65.00"],
 			}),
 			deadline: f.timestamp(),
+			skills: f.valuesFromArray({
+				values: skills,
+				arraySize: 5,
+			}),
 		},
 	},
 	task: {

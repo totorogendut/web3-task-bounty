@@ -32,6 +32,14 @@
 							? DOMpurify.sanitize(await parseMarkdown(data.bounty.content || ""))
 							: ""}
 					</div>
+					<div class="mt-8 flex gap-2">
+						{#each data.bounty?.skills || [] as skill}
+							<span
+								class="rounded-sm bg-amber-400/90 px-2 py-1
+							text-sm font-semibold text-amber-900/70">{skill}</span
+							>
+						{/each}
+					</div>
 					{#snippet pending()}
 						...
 					{/snippet}

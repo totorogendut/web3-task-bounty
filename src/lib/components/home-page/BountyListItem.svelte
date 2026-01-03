@@ -3,7 +3,7 @@
 	import { format, formatDistance, formatRelative, subDays } from "date-fns";
 
 	interface Props extends Bounty {}
-	const { id, title, rewardAmount, description, deadline }: Props = $props();
+	const { id, title, rewardAmount, description, deadline, skills }: Props = $props();
 
 	const expiredAt = deadline
 		? formatDistance(deadline, new Date(), { addSuffix: true })
@@ -20,11 +20,21 @@
 	<p class="line-clamp-2 text-sm text-white/70">{description}</p>
 	<span
 		class={[
-			"reward rye-regular absolute top-2 right-4 font-extrabold text-green-300",
+			"reward absolute top-2 right-4 rye-regular font-extrabold text-green-300",
 			isExpired && "line-through grayscale-50 saturate-70",
 		]}
 		>${rewardAmount}
 	</span>
+	<div class="mb-2 flex flex-wrap items-start gap-1">
+		{#each skills || [] as skill}
+			<div
+				class="rounded-sm bg-amber-400/90 px-2
+							text-sm font-semibold text-amber-900/70"
+			>
+				{skill}
+			</div>
+		{/each}
+	</div>
 	<small class={[isExpired ? "text-red-300/80" : "mt-2 text-white/60"]}>
 		{isExpired ? "Expired..." : expiredAt}
 	</small>
