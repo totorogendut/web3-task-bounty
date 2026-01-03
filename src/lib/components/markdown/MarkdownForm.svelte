@@ -3,9 +3,23 @@
 	import CommentFormToolbar from "./MarkdownFormToolbar.svelte";
 	import { Bold, Italic, Code, Link } from "@lucide/svelte";
 	import { MarkdownFormState } from "./index.svelte";
+	import type { HTMLAreaAttributes } from "svelte/elements";
+
+	interface Props {
+		name?: string;
+		placeholder?: string;
+		canSubmit?: boolean;
+		class?: string;
+	}
 
 	const mdState = new MarkdownFormState();
 	const isSubmitDisabled = $derived(!mdState?.content?.length);
+	let {
+		name,
+		canSubmit = true,
+		class: className = "",
+		placeholder = "Write your comment...",
+	}: Props = $props();
 
 	function submit(): void {
 		mdState.submitted = mdState.content;
@@ -19,7 +33,7 @@
 <div
 	class="group/comment mx-auto w-full
 	rounded-md bg-slate-900 shadow-2xl
-	transition has-focus:-translate-y-1"
+	transition has-focus:-translate-y-1 {className}"
 >
 	<div
 		class="flex gap-2 border-t-4 border-cyan-500
@@ -38,19 +52,24 @@
 		bind:this={mdState.textareaEl}
 		bind:value={mdState.content}
 		class="m2 min-h-55 w-full resize-y
-		border-0 bg-slate-950 p-4 font-mono text-sm text-slate-100 outline-none focus:ring-5 focus:ring-sky-500"
-		placeholder="Write your comment..."
+		border-0 bg-slate-950 p-4 font-mono text-sm
+		 text-slate-100 outline-none focus:ring-5
+		 focus:ring-sky-500"
+		{placeholder}
+		{name}
 	></textarea>
 
 	<!-- Actions -->
-	<div class="flex justify-end border-t border-slate-800 px-6 py-4">
-		<button
-			disabled={isSubmitDisabled}
-			onclick={submit}
-			class="rounded-md from-sky-500 to-indigo-600 px-5 py-2 font-semibold text-slate-100/85 transition not-disabled:cursor-pointer
-			 not-disabled:bg-linear-to-r not-disabled:hover:brightness-110 disabled:bg-sky-500 disabled:grayscale-25 disabled:saturate-70"
-		>
-			Submit
-		</button>
-	</div>
+	{#if canSubmit}
+		<div class="flex justify-end border-t border-slate-800 px-6 py-4">
+			<button
+				disabled={isSubmitDisabled}
+				onclick={submit}
+				class="rounded-md from-sky-500 to-indigo-600 px-5 py-2 font-semibold text-slate-100/85 transition not-disabled:cursor-pointer
+					not-disabled:bg-linear-to-r not-disabled:hover:brightness-110 disabled:bg-sky-500 disabled:grayscale-25 disabled:saturate-70"
+			>
+				Submit
+			</button>
+		</div>
+	{/if}
 </div>

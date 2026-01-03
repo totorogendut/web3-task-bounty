@@ -1,7 +1,7 @@
 import { db } from "$lib/server/db";
 import { bounty, task } from "$lib/server/db/schemas/tasks";
 import { bountyInsertSchema } from "$lib/server/db/schemas/_types";
-import { error } from "@sveltejs/kit";
+import { error, redirect } from "@sveltejs/kit";
 import type { Actions } from "@sveltejs/kit";
 import { ZodError } from "zod/v4";
 
@@ -20,7 +20,9 @@ export const actions: Actions = {
 
 		try {
 			bountyInsertSchema.parse(data);
-			await db.insert(bounty).values(data);
+			const [result] = await db.insert(bounty).values(data).returning();
+
+			return redirect(303, `/bounty/${result.id}/`);
 		} catch (err) {
 			if (err instanceof ZodError) throw error(500, err.message);
 			throw error(500, "Failed to insert bounty");

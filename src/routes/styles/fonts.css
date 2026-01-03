@@ -3,3 +3,7 @@
 	font-weight: 400;
 	font-style: normal;
 }
+
+@utility cowboy-text {
+	@apply rye-regular text-amber-300 text-shadow-amber-700 text-shadow-md;
+}

@@ -9,6 +9,7 @@ export const user = sqliteTable("user", {
 	// passwordHash: text("password_hash").notNull(),
 	walletAddress: text("wallet_address").$type<`0x${string}`>(),
 	avatar: text("avatar"),
+	skills: text("skills", { mode: "json" }).$type<string[]>().default([]),
 	email: text("email"),
 	nonce: text("nonce"),
 	lastLoginAt: integer("last_login_at", { mode: "timestamp" }).$default(() => new Date()),
