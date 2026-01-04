@@ -3,9 +3,10 @@
 	import type { CommentType, User } from "$lib/server/db/schemas";
 	import type { Snippet } from "svelte";
 	import Avatar from "../user/Avatar.svelte";
+	import type { UserClient } from "$lib/user.svelte";
 
 	interface Props extends CommentType {
-		user: Pick<User, "id" | "walletAddress" | "avatar" | "username"> | null;
+		user: UserClient;
 	}
 
 	const { id, user, content }: Props = $props();

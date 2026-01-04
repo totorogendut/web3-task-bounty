@@ -2,8 +2,7 @@
 	import type { Bounty } from "$lib/server/db/schemas";
 	import { getContext } from "svelte";
 	import { getBountyList } from "./index.remote";
-	import type { bounty } from "$lib/server/db/schemas/tasks";
-	import SkeletonShell from "../task-page/SkeletonShell.svelte";
+	import SkeletonShell from "../bid-page/SkeletonShell.svelte";
 	import BountyListItem from "./BountyListItem.svelte";
 
 	let isLoading = $state(false);

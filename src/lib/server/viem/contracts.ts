@@ -16,14 +16,14 @@ export const FACTORY_ABI = [
 			{ name: "reward", type: "uint128" },
 			{ name: "deadline", type: "uint64" },
 		],
-		name: "createTask",
+		name: "createBounty",
 		outputs: [{ name: "escrow", type: "address" }],
 		stateMutability: "external",
 		type: "function",
 	},
 	{
 		inputs: [],
-		name: "taskCount",
+		name: "bountyCount",
 		outputs: [{ name: "", type: "uint256" }],
 		stateMutability: "view",
 		type: "function",
@@ -31,7 +31,7 @@ export const FACTORY_ABI = [
 	{
 		anonymous: false,
 		inputs: [
-			{ indexed: true, name: "taskId", type: "uint256" },
+			{ indexed: true, name: "bountyId", type: "uint256" },
 			{ indexed: false, name: "escrow", type: "address" },
 			{ indexed: false, name: "client", type: "address" },
 			{ indexed: false, name: "token", type: "address" },
@@ -44,12 +44,12 @@ export const FACTORY_ABI = [
 ] as const;
 
 /**
- * Server-side helper to get factory task count.
+ * Server-side helper to get factory bounty count.
  */
-export async function getTaskCount(factoryAddress: Hex) {
+export async function getBountyCount(factoryAddress: Hex) {
 	return publicClient.readContract({
 		address: factoryAddress,
 		abi: FACTORY_ABI,
-		functionName: "taskCount",
+		functionName: "bountyCount",
 	});
 }

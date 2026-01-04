@@ -2,7 +2,6 @@ import { query } from "$app/server";
 import { db } from "$lib/server/db";
 import { user } from "$lib/server/db/schemas/users";
 import { getPublicWalletFund } from "$lib/server/viem";
-import { delay } from "$lib/utils/misc";
 import { count } from "drizzle-orm";
 import { formatEther, formatUnits } from "viem";
 import z from "zod/v4";
@@ -42,26 +41,6 @@ export const getBountyList = query(
 			limit: limit || 10,
 			orderBy: {
 				createdAt: "desc",
-			},
-		});
-	},
-);
-
-export const getTaskList = query(
-	z.object({
-		bountyId: z.string(),
-		offset: z.number(),
-		limit: z.number().optional(),
-	}),
-	async ({ bountyId, offset, limit }) => {
-		return db.query.task.findMany({
-			offset,
-			limit: limit || 10,
-			orderBy: {
-				createdAt: "desc",
-			},
-			where: {
-				bountyId,
 			},
 		});
 	},

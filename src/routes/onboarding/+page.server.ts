@@ -18,7 +18,7 @@ export const actions: Actions = {
 		// TODO - properly make avatar later on
 		// await uploadAvatar(formData.get("avatar") as File, user.id);
 
-		return redirect(303, "/");
+		return redirect(302, "/");
 	},
 };
 

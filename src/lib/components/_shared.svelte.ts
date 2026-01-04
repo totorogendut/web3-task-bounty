@@ -5,4 +5,3 @@ export type TabState = {
 };
 
 export const getTabState = () => getContext("tabState") as TabState;
-export const setTabState = (tabState: TabState) => setContext("tabState", tabState);

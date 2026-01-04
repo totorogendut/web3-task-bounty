@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { Bounty } from "$lib/server/db/schemas";
 	import { format, formatDistance, formatRelative, subDays } from "date-fns";
+	import SkillTag from "../skills/SkillTag.svelte";
 
 	interface Props extends Bounty {}
 	const { id, title, rewardAmount, description, deadline, skills }: Props = $props();
@@ -27,12 +28,7 @@
 	</span>
 	<div class="mb-2 flex flex-wrap items-start gap-1">
 		{#each skills || [] as skill}
-			<div
-				class="rounded-sm bg-amber-400/90 px-2
-							text-sm font-semibold text-amber-900/70"
-			>
-				{skill}
-			</div>
+			<SkillTag {skill} />
 		{/each}
 	</div>
 	<small class={[isExpired ? "text-red-300/80" : "mt-2 text-white/60"]}>

@@ -1,15 +1,22 @@
-<script>
+<script lang="ts">
 	import { X } from "@lucide/svelte";
 
-	const { skill, onRemove } = $props();
+	interface Props {
+		skill: string;
+		canRemove?: boolean;
+		onRemove?: (skill: string) => void;
+	}
+
+	const { skill, canRemove = false, onRemove }: Props = $props();
 </script>
 
 <button
-	onclick={() => onRemove(skill)}
-	class="flex items-center gap-2 rounded-full
-   bg-indigo-100 px-3 py-1 text-sm text-indigo-700
-   transition hover:bg-indigo-200"
->
-	{skill}
-	<X />
+	onclick={() => onRemove?.(skill)}
+	class="rounded-sm bg-amber-400/90 px-2
+	text-sm font-semibold text-amber-900/70"
+	>{skill}
+	{#if canRemove}
+		<X />
+		<!-- content here -->
+	{/if}
 </button>

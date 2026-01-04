@@ -1,70 +1,37 @@
 import { getRequestEvent, query } from "$app/server";
 import { db } from "$lib/server/db";
-import { bounty, comment, task } from "$lib/server/db/schemas/tasks";
+import { bid } from "$lib/server/db/schemas/tasks";
 import z from "zod/v4";
-import { COMMENTABLE_TYPE, TASK_STATE } from "./_shared";
+import { COMMENTABLE_TYPE, BID_STATE } from "./_shared";
 import { and, eq } from "drizzle-orm";
-import type { Task } from "$lib/server/db/schemas";
+import type { Bid } from "$lib/server/db/schemas";
 import { error } from "@sveltejs/kit";
-import { payApprovedTask } from "$lib/server/payment";
+import { payApprovedBid } from "$lib/server/payment";
 
-export const createBounty = query(
-	z.object({
-		projectId: z.string(),
-		title: z.string(),
-		description: z.string(),
-		managersId: z.string().array(),
-		reward: z.number(),
-	}),
-	async ({ projectId, title, description, reward }) => {
-		const { locals } = getRequestEvent();
-		if (!locals.user?.id) throw error(403, "You must login to continue.");
-
-		return db.insert(bounty).values({ projectId, title, description, reward });
-	},
-);
-
-export const createTask = query(
-	z.object({
-		bountyId: z.string(),
-		userId: z.string(),
-		title: z.string(),
-		content: z.string(),
-	}),
-	async ({ bountyId, userId, title, content }) => {
-		const { locals } = getRequestEvent();
-		if (!locals.user?.id) throw error(403, "You must login to continue.");
-
-		await db.insert(task).values({ bountyId, userId, title, content });
-		return { success: true };
-	},
-);
-
-export const editTask = query(
+export const editBid = query(
 	z.object({
 		id: z.string(),
 		title: z.string().optional(),
 		content: z.string().optional(),
 	}),
 	async ({ id, title, content }) => {
-		const data: Partial<Task> = {};
+		const data: Partial<Bid> = {};
 		const { locals } = getRequestEvent();
 		if (!locals.user?.id) throw error(403, "You must login to continue.");
 
-		if (title) data.title = title;
 		if (content) data.content = content;
 
 		const { changes } = await db
-			.update(task)
-			.set(data as Task)
-			.where(and(eq(task.id, id), eq(task.userId, locals.user.id)));
+			.update(bid)
+			.set(data as Bid)
+			.where(and(eq(bid.id, id), eq(bid.userId, locals.user.id)));
 
 		if (!changes) error(404, "Edit failed. Item not found.");
 
 		return { success: true };
 	},
 );
-export const submitTask = query(
+export const submitBid = query(
 	z.object({
 		id: z.string(),
 	}),
@@ -73,9 +40,9 @@ export const submitTask = query(
 		if (!locals.user?.id) throw error(403, "You must login to continue.");
 
 		const { changes } = await db
-			.update(task)
+			.update(bid)
 			.set({ state: "submitted" })
-			.where(and(eq(task.id, id), eq(task.userId, locals.user.id)));
+			.where(and(eq(bid.id, id), eq(bid.userId, locals.user.id)));
 
 		if (!changes) error(404, "Submit failed. Item not found.");
 
@@ -83,23 +50,23 @@ export const submitTask = query(
 	},
 );
 
-export const changeTaskState = query(
+export const changeBidState = query(
 	z.object({
 		id: z.string(),
-		state: z.enum(TASK_STATE),
+		state: z.enum(BID_STATE),
 	}),
 	async ({ id, state }) => {
 		// check if manager has permision
 		const { locals } = getRequestEvent();
 		if (!locals.user?.id) throw error(403, "You must login to continue.");
 
-		const { changes } = await db.update(task).set({ state }).where(eq(task.id, id));
+		const { changes } = await db.update(bid).set({ state }).where(eq(bid.id, id));
 		if (!changes) error(404, "Update failed. Item not found.");
 		return { success: true };
 	},
 );
 
-export const approveTask = query(
+export const approveBid = query(
 	z.object({
 		id: z.string(),
 	}),
@@ -108,22 +75,23 @@ export const approveTask = query(
 		const { locals } = getRequestEvent();
 		if (!locals.user?.id) throw error(403, "You must login to continue.");
 
-		const item = await db.query.task.findFirst({
+		const item = await db.query.bid.findFirst({
 			where: { id },
-			with: { bounty: { columns: { managers: true } } },
+			with: { bounty: { columns: { clientId: true } } },
 		});
+
 		if (!item) error(404, "Update failed. Item not found.");
-		if (!item.bounty?.managers?.includes?.(locals.user.id))
-			throw error(403, "You are not authorized to approve this task.");
+		if (item.bounty?.clientId && item.bounty.clientId !== locals.user.id)
+			throw error(403, "You are not authorized to approve this bid.");
 
 		const [result] = await db
-			.update(task)
+			.update(bid)
 			.set({ state: "approved" })
-			.where(eq(task.id, id))
+			.where(eq(bid.id, id))
 			.returning();
 		if (!result) error(404, "Update failed. Item not found.");
 
-		await payApprovedTask(result);
+		await payApprovedBid(result.id);
 
 		return { success: true };
 	},

@@ -14,7 +14,7 @@
 	 group-hover/usernav:flex"
 >
 	<strong>{user?.name}</strong>
-	<a class="flex gap-2 px-2 py-1 hover:bg-orange-100" href="/user/{user?.id}">
+	<a class="flex gap-2 px-2 py-1 hover:bg-orange-100" href="/u/{user?.id}">
 		<User />
 		Profile</a
 	>

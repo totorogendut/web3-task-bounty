@@ -1,9 +1,9 @@
 {
   "version": "7",
   "dialect": "sqlite",
-  "id": "455b730a-f20c-478b-b4a2-e9c4902900e3",
+  "id": "91d72ba4-1131-48b9-a052-92383835e622",
   "prevIds": [
-    "283a28cd-4c8f-4a88-af8a-6130351c3f6d"
+    "00000000-0000-0000-0000-000000000000"
   ],
   "ddl": [
     {
@@ -12,6 +12,10 @@
     },
     {
       "name": "transaction",
+      "entityType": "tables"
+    },
+    {
+      "name": "bid",
       "entityType": "tables"
     },
     {
@@ -24,10 +28,6 @@
     },
     {
       "name": "progress",
-      "entityType": "tables"
-    },
-    {
-      "name": "task",
       "entityType": "tables"
     },
     {
@@ -130,7 +130,7 @@
       "autoincrement": false,
       "default": null,
       "generated": null,
-      "name": "task_id",
+      "name": "bid_id",
       "entityType": "columns",
       "table": "transaction"
     },
@@ -173,6 +173,86 @@
       "name": "currency",
       "entityType": "columns",
       "table": "transaction"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "bid"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "table": "bid"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "updated_at",
+      "entityType": "columns",
+      "table": "bid"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "user_id",
+      "entityType": "columns",
+      "table": "bid"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "bounty_id",
+      "entityType": "columns",
+      "table": "bid"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "content",
+      "entityType": "columns",
+      "table": "bid"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "submission",
+      "entityType": "columns",
+      "table": "bid"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": "'in_progress'",
+      "generated": null,
+      "name": "state",
+      "entityType": "columns",
+      "table": "bid"
     },
     {
       "type": "text",
@@ -358,7 +438,7 @@
       "type": "text",
       "notNull": false,
       "autoincrement": false,
-      "default": "'task'",
+      "default": "'bid'",
       "generated": null,
       "name": "commentable_type",
       "entityType": "columns",
@@ -450,7 +530,7 @@
       "autoincrement": false,
       "default": null,
       "generated": null,
-      "name": "task_id",
+      "name": "bid_id",
       "entityType": "columns",
       "table": "progress"
     },
@@ -463,96 +543,6 @@
       "name": "attachments",
       "entityType": "columns",
       "table": "progress"
-    },
-    {
-      "type": "text",
-      "notNull": false,
-      "autoincrement": false,
-      "default": null,
-      "generated": null,
-      "name": "id",
-      "entityType": "columns",
-      "table": "task"
-    },
-    {
-      "type": "integer",
-      "notNull": false,
-      "autoincrement": false,
-      "default": null,
-      "generated": null,
-      "name": "created_at",
-      "entityType": "columns",
-      "table": "task"
-    },
-    {
-      "type": "integer",
-      "notNull": false,
-      "autoincrement": false,
-      "default": null,
-      "generated": null,
-      "name": "updated_at",
-      "entityType": "columns",
-      "table": "task"
-    },
-    {
-      "type": "text",
-      "notNull": true,
-      "autoincrement": false,
-      "default": null,
-      "generated": null,
-      "name": "user_id",
-      "entityType": "columns",
-      "table": "task"
-    },
-    {
-      "type": "text",
-      "notNull": true,
-      "autoincrement": false,
-      "default": null,
-      "generated": null,
-      "name": "bounty_id",
-      "entityType": "columns",
-      "table": "task"
-    },
-    {
-      "type": "text",
-      "notNull": true,
-      "autoincrement": false,
-      "default": null,
-      "generated": null,
-      "name": "content",
-      "entityType": "columns",
-      "table": "task"
-    },
-    {
-      "type": "text",
-      "notNull": true,
-      "autoincrement": false,
-      "default": null,
-      "generated": null,
-      "name": "title",
-      "entityType": "columns",
-      "table": "task"
-    },
-    {
-      "type": "text",
-      "notNull": false,
-      "autoincrement": false,
-      "default": null,
-      "generated": null,
-      "name": "submission",
-      "entityType": "columns",
-      "table": "task"
-    },
-    {
-      "type": "text",
-      "notNull": false,
-      "autoincrement": false,
-      "default": "'in_progress'",
-      "generated": null,
-      "name": "state",
-      "entityType": "columns",
-      "table": "task"
     },
     {
       "type": "text",
@@ -651,16 +641,16 @@
     },
     {
       "columns": [
-        "task_id"
+        "bid_id"
       ],
-      "tableTo": "task",
+      "tableTo": "bid",
       "columnsTo": [
         "id"
       ],
       "onUpdate": "NO ACTION",
       "onDelete": "NO ACTION",
       "nameExplicit": false,
-      "name": "fk_transaction_task_id_task_id_fk",
+      "name": "fk_transaction_bid_id_bid_id_fk",
       "entityType": "fks",
       "table": "transaction"
     },
@@ -668,16 +658,46 @@
       "columns": [
         "bounty_id"
       ],
-      "tableTo": "task",
+      "tableTo": "bid",
       "columnsTo": [
         "id"
       ],
       "onUpdate": "NO ACTION",
       "onDelete": "NO ACTION",
       "nameExplicit": false,
-      "name": "fk_transaction_bounty_id_task_id_fk",
+      "name": "fk_transaction_bounty_id_bid_id_fk",
       "entityType": "fks",
       "table": "transaction"
+    },
+    {
+      "columns": [
+        "user_id"
+      ],
+      "tableTo": "user",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "NO ACTION",
+      "nameExplicit": false,
+      "name": "fk_bid_user_id_user_id_fk",
+      "entityType": "fks",
+      "table": "bid"
+    },
+    {
+      "columns": [
+        "bounty_id"
+      ],
+      "tableTo": "bounty",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "NO ACTION",
+      "nameExplicit": false,
+      "name": "fk_bid_bounty_id_bounty_id_fk",
+      "entityType": "fks",
+      "table": "bid"
     },
     {
       "columns": [
@@ -726,48 +746,18 @@
     },
     {
       "columns": [
-        "task_id"
+        "bid_id"
       ],
-      "tableTo": "task",
+      "tableTo": "bid",
       "columnsTo": [
         "id"
       ],
       "onUpdate": "NO ACTION",
       "onDelete": "NO ACTION",
       "nameExplicit": false,
-      "name": "fk_progress_task_id_task_id_fk",
+      "name": "fk_progress_bid_id_bid_id_fk",
       "entityType": "fks",
       "table": "progress"
-    },
-    {
-      "columns": [
-        "user_id"
-      ],
-      "tableTo": "user",
-      "columnsTo": [
-        "id"
-      ],
-      "onUpdate": "NO ACTION",
-      "onDelete": "NO ACTION",
-      "nameExplicit": false,
-      "name": "fk_task_user_id_user_id_fk",
-      "entityType": "fks",
-      "table": "task"
-    },
-    {
-      "columns": [
-        "bounty_id"
-      ],
-      "tableTo": "bounty",
-      "columnsTo": [
-        "id"
-      ],
-      "onUpdate": "NO ACTION",
-      "onDelete": "NO ACTION",
-      "nameExplicit": false,
-      "name": "fk_task_bounty_id_bounty_id_fk",
-      "entityType": "fks",
-      "table": "task"
     },
     {
       "columns": [
@@ -785,6 +775,15 @@
       "nameExplicit": false,
       "name": "transaction_pk",
       "table": "transaction",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "bid_pk",
+      "table": "bid",
       "entityType": "pks"
     },
     {
@@ -812,15 +811,6 @@
       "nameExplicit": false,
       "name": "progress_pk",
       "table": "progress",
-      "entityType": "pks"
-    },
-    {
-      "columns": [
-        "id"
-      ],
-      "nameExplicit": false,
-      "name": "task_pk",
-      "table": "task",
       "entityType": "pks"
     },
     {

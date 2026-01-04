@@ -3,13 +3,13 @@ import { drizzle } from "drizzle-orm/better-sqlite3";
 import { relations } from "../src/lib/server/db/schemas";
 import { user } from "../src/lib/server/db/schemas/users";
 import { skills } from "../src/lib/components/skills/skills-template";
-import { task, bounty, comment } from "../src/lib/server/db/schemas/tasks";
+import { bid, bounty, comment } from "../src/lib/server/db/schemas/tasks";
 import "dotenv/config";
 import { jobPostings } from "./demo";
 
 export const db = drizzle(process.env.DATABASE_URL!, { relations });
 
-await seed(db, { bounty, user, task, comment }).refine((f) => ({
+await seed(db, { bounty, user, bid, comment }).refine((f) => ({
 	user: {
 		columns: {
 			walletAddress: f.bitString(),
@@ -37,10 +37,9 @@ await seed(db, { bounty, user, task, comment }).refine((f) => ({
 			}),
 		},
 	},
-	task: {
+	bid: {
 		columns: {
-			title: f.valuesFromArray({ values: ["Bounty 1", "Test"] }),
-			description: f.loremIpsum({ sentencesCount: 8 }),
+			content: f.loremIpsum({ sentencesCount: 8 }),
 		},
 	},
 	comment: {

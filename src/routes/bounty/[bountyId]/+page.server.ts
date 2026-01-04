@@ -1,4 +1,5 @@
 import { db } from "$lib/server/db/index.js";
+import { USER_CLIENT_QUERY_DATA } from "$lib/user.svelte";
 import { error } from "@sveltejs/kit";
 
 /** @type {import('./$types').PageLoad} */
@@ -9,9 +10,10 @@ export async function load({ params }) {
 			id: params.bountyId,
 		},
 		with: {
-			tasks: {
+			bids: {
 				limit: 20,
 			},
+			client: USER_CLIENT_QUERY_DATA,
 		},
 	});
 

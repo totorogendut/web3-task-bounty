@@ -1,13 +1,13 @@
 import { error } from "@sveltejs/kit";
 import { db } from "./db";
-import type { Task, User } from "./db/schemas";
+import type { Bid, User } from "./db/schemas";
 import { transferFund } from "./viem";
 import { transaction } from "./db/schemas/payments";
 
-export async function payApprovedTask(taskId: string) {
-	const data = await db.query.task.findFirst({
+export async function payApprovedBid(bidId: string) {
+	const data = await db.query.bid.findFirst({
 		where: {
-			id: taskId,
+			id: bidId,
 		},
 		with: {
 			bounty: true,
@@ -15,7 +15,7 @@ export async function payApprovedTask(taskId: string) {
 		},
 	});
 
-	if (!data || !data.bounty || !data.user) throw error(500, "Error querying task data.");
+	if (!data || !data.bounty || !data.user) throw error(500, "Error querying bid data.");
 	if (!data.user.walletAddress) throw error(500, "No wallet address to transfer to.");
 	const txHash = await transferFund(data.user.walletAddress, data.bounty.rewardAmount);
 
@@ -24,7 +24,7 @@ export async function payApprovedTask(taskId: string) {
 		userId: data.userId,
 		txHash,
 		amount: data.bounty.rewardAmount,
-		taskId,
+		bidId,
 		address: data.user.walletAddress,
 	});
 }

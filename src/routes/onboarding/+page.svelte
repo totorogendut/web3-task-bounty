@@ -19,12 +19,12 @@
 
 <form
 	method="post"
-	class="relative isolate mx-auto mt-80
+	class="relative isolate mx-auto mt-60
 	w-124 rounded-md bg-linear-to-br/oklch from-red-600/60 to-amber-700
 	 p-4 backdrop-brightness-10"
 >
-	<h1 class="mb-8 text-4xl font-extrabold text-shadow-lg">Choose your nickname</h1>
-	<img class="absolute -right-50 bottom-0 z-0 h-100 w-auto" src="/cat-cowboy.webp" alt="Cowboy" />
+	<h1 class="mt-1! text-4xl text-shadow-lg">Choose your nickname</h1>
+	<img class="absolute -right-30 bottom-0 z-0 h-100 w-auto" src="/cat-cowboy.webp" alt="Cowboy" />
 	<div class="relative z-10 flex w-100 flex-col gap-4">
 		<!-- <input type="file" name="avatar" /> -->
 

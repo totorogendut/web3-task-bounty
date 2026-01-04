@@ -1,6 +1,6 @@
 import { db, keyval } from "$lib/server/db";
 import { keyvalSchema } from "$lib/server/db/schemas";
-import { USER_CLIENT_QUERY_DATA } from "$lib/server/db/schemas/_shared.js";
+import { USER_CLIENT_QUERY_DATA } from "$lib/user.svelte";
 import { redirect } from "@sveltejs/kit";
 import { eq } from "drizzle-orm";
 
@@ -14,7 +14,7 @@ export async function load({ params, url, locals }) {
 	});
 
 	if (locals.user && user && !user?.username && !url.pathname.startsWith("/onboarding")) {
-		redirect(303, "/onboarding/");
+		redirect(302, "/onboarding/");
 	}
 
 	return {

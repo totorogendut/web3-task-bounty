@@ -4,12 +4,12 @@
 	import type { Snippet } from "svelte";
 
 	interface Props {
-		taskId: string;
+		bidId: string;
 	}
 
-	const { taskId }: Props = $props();
+	const { bidId }: Props = $props();
 	// svelte-ignore state_referenced_locally
-	const list = await getProgress({ taskId, offset: 0, limit: 100 });
+	const list = await getProgress({ bidId, offset: 0, limit: 100 });
 </script>
 
 <div class="mt-4 flex flex-col gap-2">

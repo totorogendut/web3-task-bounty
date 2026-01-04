@@ -1,5 +1,20 @@
 import { page } from "$app/state";
-import Cookies from "js-cookie";
+import type { User } from "./server/db/schemas";
+
+export type UserClient = Pick<User, "id" | "avatar" | "username" | "walletAddress">;
+export const USER_CLIENT_QUERY_DATA = {
+	columns: {
+		avatar: true,
+		username: true,
+		id: true,
+		walletAddress: true,
+		skills: true,
+	},
+} as const;
+
+export function isLocalUser(userId: string) {
+	return !!userId && page.data?.user?.id === userId;
+}
 
 export function logout() {
 	// Cookies.remove("session", { path: "/" });

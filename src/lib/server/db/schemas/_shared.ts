@@ -14,12 +14,3 @@ export const BASE_TABLE = {
 		.$defaultFn(() => nanoid()),
 	...BASE_TABLE_DATE,
 };
-
-export const USER_CLIENT_QUERY_DATA = {
-	columns: {
-		avatar: true,
-		username: true,
-		id: true,
-		walletAddress: true,
-	},
-} as const;

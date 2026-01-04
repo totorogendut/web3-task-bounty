@@ -52,11 +52,12 @@
 		<div class="flex items-center gap-2">
 			<a
 				class="flex grow items-center justify-center
-				 rounded-md bg-amber-600 p-2 font-extrabold
-				 	shadow-2xl"
-				href="/task/new/{bounty?.id}"
+				 rounded-md border-3 border-amber-500 bg-white
+				 	p-2 font-extrabold text-black/80 shadow-2xl
+					hover:bg-amber-50"
+				href="/bid/new/{bounty?.id}"
 			>
-				💰 Take the bounty
+				💰 Bid for bounty
 			</a>
 		</div>
 	{:else}

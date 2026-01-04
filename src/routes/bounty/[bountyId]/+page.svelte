@@ -1,20 +1,27 @@
 <script lang="ts">
 	import { page } from "$app/state";
-	import CommentSection from "$lib/components/task-page/CommentSection.svelte";
-	import TaskList from "$lib/components/bounty-page/TaskList.svelte";
+	import CommentSection from "$lib/components/bid-page/CommentSection.svelte";
+	import BidList from "$lib/components/bounty-page/BidList.svelte";
 	import TabButton from "$lib/components/TabButton.svelte";
-	import { setTabState } from "$lib/components/_shared.svelte.js";
 	import BountyPaper from "$lib/components/bounty-page/BountyPaper.svelte";
 	import { parseMarkdown } from "$lib/utils/content";
 	import DOMpurify from "dompurify";
 	import { browser } from "$app/environment";
+	import Avatar from "$lib/components/user/Avatar.svelte";
+	import UserBanner from "$lib/components/UserBanner.svelte";
+	import SkillTag from "$lib/components/skills/SkillTag.svelte";
+	import { setContext } from "svelte";
 
 	const { data } = $props();
 	const tabState = $state({
 		selectedTab: "description",
-	}) as { selectedTab: "description" | "taskList" };
+	}) as { selectedTab: "description" | "bids" };
 
-	setTabState(tabState);
+	setContext("tabState", tabState);
+	function tabClick(name: typeof tabState.selectedTab) {
+		console.log(name);
+		tabState.selectedTab = name;
+	}
 </script>
 
 <div class="mx-auto mt-40 flex w-300 gap-4">
@@ -22,8 +29,14 @@
 		<div class="">
 			<h1 class="mt-0! cowboy-text text-5xl">{data.bounty?.title}</h1>
 			<div class="mt-8 mb-5 flex gap-2">
-				<TabButton class="rounded-md! px-4! py-1!" name="description">Description</TabButton>
-				<TabButton class="rounded-md! px-4! py-1!" name="taskList">Hunters</TabButton>
+				<TabButton
+					onclick={() => tabClick("description")}
+					class="rounded-md! px-4! py-1!"
+					name="description">Description</TabButton
+				>
+				<TabButton onclick={() => tabClick("bids")} class="rounded-md! px-4! py-1!" name="bids"
+					>Bids</TabButton
+				>
 			</div>
 			{#if tabState.selectedTab === "description"}
 				<svelte:boundary>
@@ -32,20 +45,23 @@
 							? DOMpurify.sanitize(await parseMarkdown(data.bounty.content || ""))
 							: ""}
 					</div>
-					<div class="mt-8 flex gap-2">
+					<div class="mt-8 flex gap-1">
 						{#each data.bounty?.skills || [] as skill}
-							<span
-								class="rounded-sm bg-amber-400/90 px-2 py-1
-							text-sm font-semibold text-amber-900/70">{skill}</span
-							>
+							<SkillTag {skill} />
 						{/each}
+					</div>
+					<div class="mt-4 flex items-center gap-2">
+						<strong class="mr-2 cowboy-text">Client:</strong>
+						{#if data.bounty?.client}
+							<UserBanner user={data.bounty?.client} />
+						{/if}
 					</div>
 					{#snippet pending()}
 						...
 					{/snippet}
 				</svelte:boundary>
-			{:else if tabState.selectedTab === "taskList"}
-				<TaskList bountyId={page.params.bountyId || ""} list={data.bounty?.tasks || []} />
+			{:else if tabState.selectedTab === "bids"}
+				<BidList bountyId={page.params.bountyId || ""} />
 			{/if}
 		</div>
 	</div>

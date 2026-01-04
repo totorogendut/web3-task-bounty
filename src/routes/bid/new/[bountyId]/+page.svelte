@@ -6,16 +6,15 @@
 </script>
 
 <form class="mx-auto mt-50 flex w-250 flex-col gap-4" method="post">
-	<h1 class=" cowboy-text text-5xl">Write a new bounty</h1>
-	<TextInput label="Title" name="title" autocomplete="off" />
+	<h1 class=" cowboy-text text-5xl">Hunt this bounty</h1>
 	<MarkdownForm
 		class="mt-4"
 		name="content"
-		placeholder="Write what's your bounty is about"
+		placeholder="Try to convice the client why you should the one who claim the reward"
 		canSubmit={false}
 	/>
 
 	<div class="cta gap2 mt-4 flex justify-end">
-		<button class="rounded-md bg-amber-700 px-4 py-2" type="submit"> Post bounty </button>
+		<button class="rounded-md bg-amber-700 px-4 py-2" type="submit"> Claim bounty </button>
 	</div>
 </form>

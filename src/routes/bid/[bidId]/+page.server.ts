@@ -3,19 +3,19 @@ import type { Actions } from "@sveltejs/kit";
 import { error } from "@sveltejs/kit";
 
 export const load = async ({ params, url }) => {
-	const task = await db.query.task.findFirst({
+	const bid = await db.query.bid.findFirst({
 		where: {
-			id: params.taskId,
+			id: params.bidId,
 		},
 		with: {
 			bounty: true,
 		},
 	});
 
-	if (!task) throw error(404, "Task not found.");
+	if (!bid) throw error(404, "Bid not found.");
 
 	return {
-		...task,
+		...bid,
 	};
 };
 

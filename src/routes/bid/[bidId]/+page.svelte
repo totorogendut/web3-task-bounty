@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from "$app/state";
-	import CommentSection from "$lib/components/task-page/CommentSection.svelte";
-	import ProgressList from "$lib/components/task-page/ProgressList.svelte";
+	import CommentSection from "$lib/components/bid-page/CommentSection.svelte";
+	import ProgressList from "$lib/components/bid-page/ProgressList.svelte";
 
 	const { data } = $props();
 </script>
@@ -15,11 +15,11 @@
 			{data.content}
 		</div>
 		<svelte:boundary>
-			<ProgressList taskId={page.params.taskId || ""} />
+			<ProgressList bidId={page.params.bidId || ""} />
 			{#snippet pending()}
 				Loading...
 			{/snippet}
 		</svelte:boundary>
 	</main>
-	<CommentSection commentableType="task" commentableId={page.params.taskId || ""} />
+	<CommentSection commentableType="bid" commentableId={page.params.bidId || ""} />
 </div>

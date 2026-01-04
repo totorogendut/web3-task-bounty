@@ -2,7 +2,7 @@ import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { nanoid } from "nanoid";
 import { user } from "./users";
 import { BASE_TABLE } from "./_shared";
-import type { COMMENTABLE_TYPE, TASK_STATE } from "$lib/api/_shared";
+import type { COMMENTABLE_TYPE, BID_STATE } from "$lib/api/_shared";
 import type { Hex } from "viem";
 
 export const bounty = sqliteTable("bounty", {
@@ -22,7 +22,7 @@ export const bounty = sqliteTable("bounty", {
 	canRefund: integer("can_refund", { mode: "boolean" }).default(true),
 });
 
-export const task = sqliteTable("task", {
+export const bid = sqliteTable("bid", {
 	...BASE_TABLE,
 	userId: text("user_id")
 		.notNull()
@@ -31,9 +31,8 @@ export const task = sqliteTable("task", {
 		.notNull()
 		.references(() => bounty.id),
 	content: text("content").notNull(),
-	title: text("title").notNull(),
 	submission: text("submission"),
-	state: text("state").$type<(typeof TASK_STATE)[number]>().default("in_progress"),
+	state: text("state").$type<(typeof BID_STATE)[number]>().default("in_progress"),
 });
 
 export const comment = sqliteTable("comment", {
@@ -41,7 +40,7 @@ export const comment = sqliteTable("comment", {
 	content: text("content"),
 	commentableType: text("commentable_type")
 		.$type<(typeof COMMENTABLE_TYPE)[number]>()
-		.default("task"),
+		.default("bid"),
 	commentableId: text("commentable_id"),
 	userId: text("userId")
 		.notNull()
@@ -55,8 +54,8 @@ export const progress = sqliteTable("progress", {
 	userId: text("userId")
 		.notNull()
 		.references(() => user.id),
-	taskId: text("task_id")
+	bidId: text("bid_id")
 		.notNull()
-		.references(() => task.id),
+		.references(() => bid.id),
 	attachments: text("attachments").$type<string[]>(),
 });

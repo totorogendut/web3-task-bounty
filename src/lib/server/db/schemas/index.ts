@@ -8,9 +8,9 @@ export const relations = defineRelations(
 	{ ...userSchema, ...taskSchema, ...paymentSchema },
 	(r) => ({
 		user: {
-			tasks: r.many.task({
+			bids: r.many.bid({
 				from: r.user.id,
-				to: r.task.userId,
+				to: r.bid.userId,
 			}),
 			bounties: r.many.bounty({
 				from: r.user.id,
@@ -29,36 +29,40 @@ export const relations = defineRelations(
 					commentableType: "bounty",
 				},
 			}),
-			tasks: r.many.task({
+			bids: r.many.bid({
 				from: r.bounty.id,
-				to: r.task.bountyId,
+				to: r.bid.bountyId,
+			}),
+			client: r.one.user({
+				from: r.bounty.clientId,
+				to: r.user.id,
 			}),
 		},
-		task: {
+		bid: {
 			comments: r.many.comment({
-				from: r.task.id,
+				from: r.bid.id,
 				to: r.comment.commentableId,
 				where: {
-					commentableType: "task",
+					commentableType: "bid",
 				},
 			}),
 			bounty: r.one.bounty({
-				from: r.task.bountyId,
+				from: r.bid.bountyId,
 				to: r.bounty.id,
 			}),
 			progresses: r.many.progress({
-				from: r.task.id,
-				to: r.progress.taskId,
+				from: r.bid.id,
+				to: r.progress.bidId,
 			}),
 			user: r.one.user({
-				from: r.task.userId,
+				from: r.bid.userId,
 				to: r.user.id,
 			}),
 		},
 		progress: {
-			task: r.one.task({
-				from: r.progress.taskId,
-				to: r.task.id,
+			bid: r.one.bid({
+				from: r.progress.bidId,
+				to: r.bid.id,
 			}),
 			user: r.one.user({
 				from: r.progress.userId,
@@ -81,5 +85,5 @@ export const keyvalSchema = sqliteTable("keyval", {
 
 export type User = typeof userSchema.user.$inferSelect;
 export type Bounty = typeof taskSchema.bounty.$inferSelect;
-export type Task = typeof taskSchema.task.$inferSelect;
+export type Bid = typeof taskSchema.bid.$inferSelect;
 export type CommentType = typeof taskSchema.comment.$inferSelect;
