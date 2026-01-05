@@ -57,7 +57,7 @@ class WalletState {
 			return;
 		}
 
-		window.location.pathname = "/";
+		window.location.reload();
 	}
 
 	async disconnect() {

@@ -5,15 +5,15 @@
 	import UnderConstruction from "../NotAvailableMessage.svelte";
 
 	const homePageState: {
-		selectedTab: "bounty" | "leaderboard" | "transaction";
+		tab: "bounty" | "leaderboard" | "transaction";
 	} = $state({
-		selectedTab: "bounty",
+		tab: "bounty",
 	});
 
 	setContext("tabState", homePageState);
 
-	function select(name: typeof homePageState.selectedTab) {
-		homePageState.selectedTab = name;
+	function select(name: typeof homePageState.tab) {
+		homePageState.tab = name;
 	}
 </script>
 
@@ -26,7 +26,7 @@
 	<TabButton onclick={() => select("transaction")} name="transaction">💸 Transaction</TabButton>
 </div>
 
-{#if homePageState.selectedTab === "bounty"}
+{#if homePageState.tab === "bounty"}
 	<BountyList />
 {:else}
 	<UnderConstruction title="Not available">

@@ -2,7 +2,7 @@ import { db } from "$lib/server/db";
 import type { Bounty } from "$lib/server/db/schemas";
 import { bounty, bid } from "$lib/server/db/schemas/tasks";
 import { bidInsertSchema } from "$lib/server/db/schemas/_types";
-import { error, redirect } from "@sveltejs/kit";
+import { error, fail, redirect } from "@sveltejs/kit";
 import type { Actions } from "@sveltejs/kit";
 import { ZodError } from "zod/v4";
 
@@ -20,10 +20,10 @@ export const actions: Actions = {
 		try {
 			bidInsertSchema.parse(data);
 			const [result] = await db.insert(bid).values(data).returning();
-			return redirect(302, `/bid/${result.id}`);
+			return result;
 		} catch (err) {
-			if (err instanceof ZodError) throw error(500, err.message);
-			throw error(500, (err as any)?.message || err);
+			if (err instanceof ZodError) return { error: err.cause };
+			return { error: (err as any)?.message || err };
 		}
 	},
 };

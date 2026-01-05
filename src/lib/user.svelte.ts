@@ -12,7 +12,7 @@ export const USER_CLIENT_QUERY_DATA = {
 	},
 } as const;
 
-export function isLocalUser(userId: string) {
+export function isLocalUser(userId: string | undefined | null) {
 	return !!userId && page.data?.user?.id === userId;
 }
 

@@ -14,13 +14,19 @@
 
 	const { data } = $props();
 	const tabState = $state({
-		selectedTab: "description",
-	}) as { selectedTab: "description" | "bids" };
+		tab: "description",
+	}) as { tab: "description" | "bids" };
+	let contentHTML = $state("");
 
 	setContext("tabState", tabState);
-	function tabClick(name: typeof tabState.selectedTab) {
-		console.log(name);
-		tabState.selectedTab = name;
+	function tabClick(name: typeof tabState.tab) {
+		tabState.tab = name;
+		console.log(tabState.tab);
+	}
+
+	async function parseContent() {
+		if (contentHTML) return contentHTML;
+		return DOMpurify.sanitize(await parseMarkdown(data.bounty.content || ""));
 	}
 </script>
 
@@ -38,12 +44,10 @@
 					>Bids</TabButton
 				>
 			</div>
-			{#if tabState.selectedTab === "description"}
+			{#if tabState.tab === "description"}
 				<svelte:boundary>
 					<div class="max-w-180 text-lg leading-[1.1]">
-						{@html browser
-							? DOMpurify.sanitize(await parseMarkdown(data.bounty.content || ""))
-							: ""}
+						{@html browser ? await parseContent() : ""}
 					</div>
 					<div class="mt-8 flex gap-1">
 						{#each data.bounty?.skills || [] as skill}
@@ -53,14 +57,14 @@
 					<div class="mt-4 flex items-center gap-2">
 						<strong class="mr-2 cowboy-text">Client:</strong>
 						{#if data.bounty?.client}
-							<UserBanner user={data.bounty?.client} />
+							<UserBanner user={data.bounty.client} />
 						{/if}
 					</div>
 					{#snippet pending()}
 						...
 					{/snippet}
 				</svelte:boundary>
-			{:else if tabState.selectedTab === "bids"}
+			{:else if tabState.tab === "bids"}
 				<BidList bountyId={page.params.bountyId || ""} />
 			{/if}
 		</div>

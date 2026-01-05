@@ -3,30 +3,34 @@
 	import CommentFormToolbar from "./MarkdownFormToolbar.svelte";
 	import { Bold, Italic, Code, Link } from "@lucide/svelte";
 	import { MarkdownFormState } from "./index.svelte";
-	import type { HTMLAreaAttributes } from "svelte/elements";
 
 	interface Props {
 		name?: string;
 		placeholder?: string;
 		canSubmit?: boolean;
 		class?: string;
+		content?: string;
+		onSubmit?: (content: string) => void;
 	}
 
 	const mdState = new MarkdownFormState();
 	const isSubmitDisabled = $derived(!mdState?.content?.length);
 	let {
 		name,
+		content = "",
 		canSubmit = true,
 		class: className = "",
 		placeholder = "Write your comment...",
+		onSubmit,
 	}: Props = $props();
 
 	function submit(): void {
 		mdState.submitted = mdState.content;
+		onSubmit?.(mdState.content);
 	}
 
 	onMount(() => {
-		mdState.reset();
+		mdState.content = content;
 	});
 </script>
 

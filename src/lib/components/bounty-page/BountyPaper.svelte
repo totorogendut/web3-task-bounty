@@ -10,7 +10,7 @@
 	const { bounty }: Props = $props();
 </script>
 
-<div class="flex flex-col gap-4">
+<div class="sticky top-20 flex flex-col gap-4 self-start">
 	<div
 		class={[
 			`flex w-75 flex-col gap-2 self-start rounded-sm

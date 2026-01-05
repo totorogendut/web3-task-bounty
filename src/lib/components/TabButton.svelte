@@ -9,7 +9,7 @@
 	}
 
 	let { name, class: className, children, onclick }: Props = $props();
-	const active = $derived((getContext("tabState") as any)?.selectedTab === name);
+	const active = $derived((getContext("tabState") as any)?.tab === name);
 </script>
 
 <svelte:boundary>

@@ -1,13 +1,27 @@
 <script lang="ts">
-	import { skills as skillsDemo } from "$lib/components/skills/skills-template.js";
-	import SkillTag from "$lib/components/skills/SkillTag.svelte";
+	import { getBidList } from "$lib/components/bid-page/index.remote";
+	import BidListItem from "$lib/components/bounty-page/BidListItem.svelte";
+	import Masonry from "$lib/components/Masonry.svelte";
+
+	import TabButton from "$lib/components/TabButton.svelte";
+	import UserSkills from "$lib/components/user-page/UserSkills.svelte";
 	import Avatar from "$lib/components/user/Avatar.svelte";
-	import { isLocalUser } from "$lib/user.svelte.js";
-	import { CircleFadingPlus, PlusCircle, PlusSquare } from "@lucide/svelte";
+	import { setContext } from "svelte";
 
 	const banner = $state("/sunset-bg.webp");
 	const { data } = $props();
-	const skills = $derived(skillsDemo.slice(5, 10));
+
+	const tabState: {
+		tab: "bids" | "bounties";
+	} = $state({
+		tab: "bids",
+	});
+
+	setContext("tabState", tabState);
+
+	async function getBidListForUser() {
+		return await getBidList({ offset: 0, limit: 100, userId: data.user.id });
+	}
 </script>
 
 <div class="mx-auto mt-20 flex w-240 flex-col">
@@ -22,24 +36,32 @@
 		<Avatar user={data.user} />
 		<strong>{data.user.username}</strong>
 	</div>
+
 	<div class="mt-8 flex gap-4">
-		<div class="w-72">
-			<strong class="cowboy-text text-2xl">Skills</strong>
-			<div class="mt-3 flex min-h-8 flex-wrap gap-1">
-				{#each skills as skill}
-					<SkillTag {skill} />
-				{/each}
-			</div>
-			{#if isLocalUser(data.user.id)}
-				<button
-					class="mx-auto mt-4 flex cursor-pointer flex-col
-					items-center gap-1 text-amber-100
-					hover:text-amber-300"
+		<UserSkills user={data.user} />
+		<div>
+			<div class="flex gap-1">
+				<TabButton
+					class="rounded-md! py-2! pr-8! pl-4! leading-none"
+					onclick={() => (tabState.tab = "bids")}
+					name="bids">Bids</TabButton
 				>
-					<CircleFadingPlus size={32} />
-					add skills
-				</button>
+				<TabButton
+					class="rounded-md! py-2! pr-8! pl-4! leading-none"
+					onclick={() => (tabState.tab = "bounties")}
+					name="bounties">Bounties</TabButton
+				>
+			</div>
+			{#if tabState.tab === "bids"}
+				<Masonry class="gap4 mt-8 grow grid-cols-2 gap-x-4 gap-y-8 text-amber-900">
+					{#each await getBidListForUser() as bidData}
+						<BidListItem {...bidData} />
+					{/each}
+				</Masonry>
+			{:else if tabState.tab === "bounties"}
+				...
 			{/if}
+			<svelte:boundary></svelte:boundary>
 		</div>
 	</div>
 </div>

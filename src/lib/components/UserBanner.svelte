@@ -15,8 +15,10 @@
 	href="/u/{user.id}/"
 	class={[
 		`flex items-center gap-2 rounded-md
-	  decoration-2 underline-offset-3
-	 hover:underline hover:[&_.avatar-img]:outline-2 hover:[&_.avatar-img]:outline-white`,
+	  text-white/90 decoration-2
+	 underline-offset-3 hover:underline`,
+		"hover:[&_.avatar-img]:outline-2 hover:[&_.avatar-img]:outline-amber-200",
+		"hover:[&_.avatar-img]:text-amber-200!",
 		className,
 	]}
 >

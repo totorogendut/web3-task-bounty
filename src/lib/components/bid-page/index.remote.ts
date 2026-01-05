@@ -7,23 +7,24 @@ import { error } from "console";
 import { eq } from "drizzle-orm";
 import z from "zod/v4";
 import { PROGRESS_CONTENT_MAX_LENGTH } from "./_shared";
+import { fail } from "@sveltejs/kit";
 
 export const getBidList = query(
 	z.object({
-		bountyId: z.string(),
 		offset: z.number(),
 		limit: z.number().optional(),
+		bountyId: z.string().optional(),
+		userId: z.string().optional(),
 	}),
-	async ({ bountyId, offset, limit }) => {
+	async ({ bountyId, userId, offset, limit }) => {
+		if (!userId && !bountyId) throw fail(400, "Must provide userId or bountyId");
 		return db.query.bid.findMany({
 			offset,
 			limit: limit || 10,
 			orderBy: {
 				createdAt: "desc",
 			},
-			where: {
-				bountyId,
-			},
+			where: userId ? { userId } : { bountyId },
 			with: {
 				user: USER_CLIENT_QUERY_DATA,
 			},

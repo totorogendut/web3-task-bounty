@@ -7,26 +7,27 @@ import { and, eq } from "drizzle-orm";
 import type { Bid } from "$lib/server/db/schemas";
 import { error } from "@sveltejs/kit";
 import { payApprovedBid } from "$lib/server/payment";
+import { bidInsertSchema } from "$lib/server/db/schemas/_types";
 
 export const editBid = query(
 	z.object({
 		id: z.string(),
-		title: z.string().optional(),
 		content: z.string().optional(),
 	}),
-	async ({ id, title, content }) => {
+	async ({ id, content }) => {
 		const data: Partial<Bid> = {};
 		const { locals } = getRequestEvent();
 		if (!locals.user?.id) throw error(403, "You must login to continue.");
 
 		if (content) data.content = content;
+		bidInsertSchema.pick({ content: true }).parse(data);
 
 		const { changes } = await db
 			.update(bid)
 			.set(data as Bid)
 			.where(and(eq(bid.id, id), eq(bid.userId, locals.user.id)));
 
-		if (!changes) error(404, "Edit failed. Item not found.");
+		if (!changes) throw error(404, "Edit failed. Item not found.");
 
 		return { success: true };
 	},
@@ -62,6 +63,27 @@ export const changeBidState = query(
 
 		const { changes } = await db.update(bid).set({ state }).where(eq(bid.id, id));
 		if (!changes) error(404, "Update failed. Item not found.");
+		return { success: true };
+	},
+);
+
+export const downloadBidAttachment = query(
+	z.object({
+		id: z.string(),
+	}),
+	async ({ id }) => {
+		// check if manager has permision
+		const { locals } = getRequestEvent();
+		if (!locals.user?.id) throw error(403, "You must login to continue.");
+		const item = await db.query.bid.findFirst({
+			where: { id },
+			with: { bounty: { columns: { clientId: true } } },
+		});
+		if (!item) error(404, "Update failed. Item not found.");
+		if (item.bounty?.clientId && item.bounty.clientId !== locals.user.id)
+			throw error(403, "You are not authorized to approve this bid.");
+
+		// DOWNLOAD attachment
 		return { success: true };
 	},
 );
