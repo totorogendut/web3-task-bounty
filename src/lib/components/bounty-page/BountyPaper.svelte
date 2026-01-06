@@ -2,12 +2,18 @@
 	import { page } from "$app/state";
 	import type { Bounty } from "$lib/server/db/schemas";
 	import { Link, Link2 } from "@lucide/svelte";
+	import { formatDistance } from "date-fns";
 
 	interface Props {
 		bounty: Bounty;
 	}
 
 	const { bounty }: Props = $props();
+
+	const expiredAt = bounty.deadline
+		? formatDistance(bounty.deadline, new Date(), { addSuffix: true })
+		: "Indefinitely";
+	const isExpired = $derived(bounty.deadline && Date.now() > bounty.deadline?.getTime());
 </script>
 
 <div class="sticky top-20 flex flex-col gap-4 self-start">
@@ -22,7 +28,9 @@
 		<div class="flex flex-col leading-[1.2] text-amber-950/90">
 			<div class="flex justify-between">
 				<strong>Deadline:</strong>
-				in 13 days
+				<span class={[isExpired ? "font-bold text-red-800/90" : "font-semibold"]}>
+					{isExpired ? "Expired" : expiredAt}
+				</span>
 			</div>
 			<div class="flex justify-between">
 				<strong>Can refund:</strong>

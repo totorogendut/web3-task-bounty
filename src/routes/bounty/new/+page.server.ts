@@ -15,9 +15,13 @@ export const actions: Actions = {
 			title: formData.get("title") as string,
 			rewardAmount: formData.get("rewardAmount") as `${number}.${number}`,
 			clientId: event.locals.user.id,
-			deadline: new Date(formData.get("deadline") as string),
 			rewardCurrency: formData.get("rewardCurrency") as string,
 		};
+
+		const deadline = parseInt(formData.get("deadline") as string); // in days
+		const date = new Date();
+		date.setDate(date.getDate() + deadline);
+		data.deadline = date;
 
 		try {
 			bountyInsertSchema.parse(data);

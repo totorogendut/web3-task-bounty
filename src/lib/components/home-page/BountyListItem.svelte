@@ -31,7 +31,7 @@
 			<SkillTag {skill} />
 		{/each}
 	</div>
-	<small class={[isExpired ? "text-red-300/80" : "mt-2 text-white/60"]}>
+	<small class={[isExpired ? "text-red-300/80" : "mt-2 text-green-200/80"]}>
 		{isExpired ? "Expired..." : expiredAt}
 	</small>
 </a>
