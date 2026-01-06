@@ -14,11 +14,11 @@
 
 <a
 	href="/bounty/{id}"
-	class="relative flex flex-col gap-2 rounded-2xl
+	class="relative flex flex-col gap-2 self-start rounded-2xl
 		   bg-black/15 p-6 pb-3 transition hover:bg-black/10"
 >
 	<strong class="text-xl">{title} </strong>
-	<p class="line-clamp-2 text-sm text-white/70">{description}</p>
+	<p class="line-clamp-3 text-sm text-white/70">{description}</p>
 	<span
 		class={[
 			"reward absolute top-2 right-4 rye-regular font-extrabold text-green-300",

@@ -6,8 +6,20 @@
 	import MarkdownForm from "$lib/components/markdown/MarkdownForm.svelte";
 	import TextArea from "$lib/components/TextArea.svelte";
 	import TextInput from "$lib/components/TextInput.svelte";
+	import prettyBytes from "pretty-bytes";
 
 	const { data, form } = $props();
+	let files: FileList | undefined = $state();
+	let fileNames = $derived.by(() => {
+		const names = [];
+		if (!files) return [];
+		for (const file of files) {
+			names.push(file.name);
+		}
+		return names;
+	});
+
+	$inspect({ files, fileNames });
 
 	$effect(() => {
 		if (form?.id) goto(`/bid/${form.id}`);
@@ -29,7 +41,34 @@
 		canSubmit={false}
 	/>
 
-	<div class="cta gap2 mt-4 flex justify-end">
-		<button class="rounded-md bg-amber-700 px-4 py-2" type="submit"> Claim bounty </button>
+	<div class="cta gap2 mt-4 flex items-end justify-between">
+		<div>
+			<label class="flex flex-col gap-2 font-semibold">
+				Attachment
+				<input
+					bind:files
+					class="font-medium text-white/80 file:mr-4 file:cursor-pointer
+					file:rounded-md file:bg-amber-50 file:px-4 file:py-1 file:text-black"
+					type="file"
+					multiple
+					name="attachment"
+				/>
+			</label>
+		</div>
+		<button
+			class="shadow-2l cursor-pointer rounded-md bg-amber-700 px-4 py-2
+			font-bold hover:-translate-y-0.5 hover:bg-amber-600 active:translate-y-0"
+			type="submit"
+		>
+			Post bounty
+		</button>
+	</div>
+	<div class="flex flex-col gap-2">
+		{#each files as file}
+			<div class="flex items-center gap-3 leading-none">
+				<strong>{file.name}</strong>
+				<small class="translate-y-0.5">({prettyBytes(file.size)})</small>
+			</div>
+		{/each}
 	</div>
 </form>

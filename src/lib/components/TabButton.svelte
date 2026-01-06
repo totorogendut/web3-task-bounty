@@ -16,7 +16,7 @@
 	<button
 		{onclick}
 		class={[
-			"rounded-2xl bg-amber-700 py-3 pr-10 pl-4",
+			"rounded-md bg-amber-700 py-1 pr-4 pl-2",
 			active ? "" : "cursor-pointer bg-amber-700/60! hover:bg-amber-600/80!",
 			className,
 		]}

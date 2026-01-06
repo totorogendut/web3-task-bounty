@@ -27,6 +27,8 @@
 		onClose={() => (openApproveModal = false)}
 	>
 		<strong class="text-xl leading-none">Are you sure you want to grant bounty?</strong>
-		<p class="mt-4 text-lg">This will end your bounty and release the payment.</p>
+		<p class="mt-4 text-lg">
+			This will end your bounty and release the payment. Might requires a gas fee.
+		</p>
 	</Modal>
 {/if}

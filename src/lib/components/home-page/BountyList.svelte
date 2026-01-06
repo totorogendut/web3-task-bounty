@@ -4,6 +4,7 @@
 	import { getBountyList } from "./index.remote";
 	import SkeletonShell from "../bid-page/SkeletonShell.svelte";
 	import BountyListItem from "./BountyListItem.svelte";
+	import Masonry from "../Masonry.svelte";
 
 	let isLoading = $state(false);
 	let offset = $state(0);
@@ -31,7 +32,7 @@
 				No bounties found.
 			</div>
 		{:else}
-			<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+			<Masonry class="grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
 				{#each list as data}
 					<BountyListItem {...data} />
 				{/each}
@@ -40,7 +41,7 @@
 						<SkeletonShell />
 					{/each}
 				{/snippet}
-			</div>
+			</Masonry>
 			<button
 				onclick={fetchMoreList}
 				disabled={isLoading}
