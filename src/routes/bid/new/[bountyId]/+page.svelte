@@ -4,12 +4,14 @@
 	import { page } from "$app/state";
 	import DeadlinePicker from "$lib/components/DeadlinePicker.svelte";
 	import MarkdownForm from "$lib/components/markdown/MarkdownForm.svelte";
+	import ModalDialog from "$lib/components/ModalDialog.svelte";
 	import TextArea from "$lib/components/TextArea.svelte";
 	import TextInput from "$lib/components/TextInput.svelte";
 	import prettyBytes from "pretty-bytes";
 
 	const { data, form } = $props();
 	let files: FileList | undefined = $state();
+
 	let fileNames = $derived.by(() => {
 		const names = [];
 		if (!files) return [];
@@ -19,14 +21,21 @@
 		return names;
 	});
 
-	$inspect({ files, fileNames });
+	let formEl: HTMLFormElement;
+	let openModal = $state(false);
 
 	$effect(() => {
 		if (form?.id) goto(`/bid/${form.id}`);
 	});
 </script>
 
-<form use:enhance class="mx-auto mt-50 flex w-250 flex-col gap-4" method="post">
+<form
+	use:enhance
+	enctype="multipart/form-data"
+	bind:this={formEl}
+	class="mx-auto mt-50 flex w-250 flex-col gap-4"
+	method="post"
+>
 	{#if form?.error}
 		<div class="w-full rounded-md bg-red-800 p-4 text-white/90">
 			Error {form.error}
@@ -58,7 +67,10 @@
 		<button
 			class="shadow-2l cursor-pointer rounded-md bg-amber-700 px-4 py-2
 			font-bold hover:-translate-y-0.5 hover:bg-amber-600 active:translate-y-0"
-			type="submit"
+			onclick={(e) => {
+				e.preventDefault();
+				openModal = true;
+			}}
 		>
 			Post bounty
 		</button>
@@ -72,3 +84,9 @@
 		{/each}
 	</div>
 </form>
+
+{#if openModal}
+	<ModalDialog onClose={() => (openModal = false)} onYes={() => formEl.submit()}>
+		Bidding for bounty. Are you sure?
+	</ModalDialog>
+{/if}

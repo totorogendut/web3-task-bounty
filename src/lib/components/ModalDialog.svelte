@@ -7,15 +7,20 @@
 	interface Props {
 		children?: Snippet;
 		onClose: () => void;
-		onYes: () => void;
+		onYes?: () => void;
 		onCancel?: () => void;
 		hasOptions?: boolean;
+		width?: number;
 	}
 
-	let { children, onClose, onYes, onCancel, hasOptions = true }: Props = $props();
+	let { children, onClose, onYes, onCancel, hasOptions = true, width = 400 }: Props = $props();
 </script>
 
-<dialog open class="fixed inset-0 top-[15%] isolate z-50 mx-auto w-100 bg-transparent">
+<dialog
+	open
+	style="width:{width}px;"
+	class="fixed inset-0 top-[15%] isolate z-50 mx-auto bg-transparent"
+>
 	<button
 		in:fade={{ duration: 126 }}
 		out:fade={{ duration: 65 }}
@@ -46,7 +51,7 @@
 						 px-4 py-1 font-semibold hover:bg-green-300"
 					onclick={() => {
 						onClose();
-						onYes();
+						onYes?.();
 					}}>Yes</button
 				>
 			</div>

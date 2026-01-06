@@ -16,6 +16,7 @@ export const actions: Actions = {
 			rewardAmount: formData.get("rewardAmount") as `${number}.${number}`,
 			clientId: event.locals.user.id,
 			deadline: new Date(formData.get("deadline") as string),
+			rewardCurrency: formData.get("rewardCurrency") as string,
 		};
 
 		try {
@@ -24,8 +25,8 @@ export const actions: Actions = {
 
 			return redirect(302, `/bounty/${result.id}/`);
 		} catch (err) {
-			if (err instanceof ZodError) throw error(500, err.message);
-			throw error(500, "Failed to insert bounty");
+			if (err instanceof ZodError) return { error: err.cause };
+			return { error: (err as any)?.message || err };
 		}
 	},
 };

@@ -17,6 +17,9 @@ export const bounty = sqliteTable("bounty", {
 	escrowContractAddress: text("escrow_contract_address").$type<Hex>(),
 	factoryContractAddress: text("factory_contract_address").$type<Hex>(),
 	rewardAmount: text("reward_amount").notNull().default("0.00").$type<`${number}.${number}`>(),
+	rewardCurrency: text("reward_currency")
+		.default("MNEE")
+		.$type<(typeof AVAILABLE_CURRENCIES)[number]>(),
 	isClaimed: integer("is_claimed", { mode: "boolean" }).default(false),
 	deadline: integer("deadline", { mode: "timestamp" }),
 	canRefund: integer("can_refund", { mode: "boolean" }).default(true),
@@ -32,6 +35,7 @@ export const bid = sqliteTable("bid", {
 		.references(() => bounty.id),
 	content: text("content").notNull(),
 	submission: text("submission"),
+	attachments: text("attachments", { mode: "json" }).default([]).$type<string[]>(),
 	state: text("state").$type<(typeof BID_STATE)[number]>().default("in_progress"),
 });
 

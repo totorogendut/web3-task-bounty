@@ -1,0 +1,1 @@
+ALTER TABLE `bid` ADD `attachments` text DEFAULT '[]';

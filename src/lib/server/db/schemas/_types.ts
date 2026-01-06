@@ -1,4 +1,4 @@
-import { createSelectSchema, createInsertSchema } from "drizzle-zod";
+import { createInsertSchema } from "drizzle-zod";
 import { bounty, comment, progress, bid } from "./tasks";
 
 export const bountyInsertSchema = createInsertSchema(bounty, {

@@ -1,6 +1,9 @@
 import { db } from "$lib/server/db/index.js";
+import { bountyInsertSchema } from "$lib/server/db/schemas/_types";
+import { bounty } from "$lib/server/db/schemas/tasks";
 import type { Actions } from "@sveltejs/kit";
 import { error } from "@sveltejs/kit";
+import { ZodError } from "zod/v4";
 
 export const load = async ({ params, url }) => {
 	const bid = await db.query.bid.findFirst({

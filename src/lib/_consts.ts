@@ -1,0 +1,1 @@
+const AVAILABLE_CURRENCIES = ["MNEE", "ETH"];

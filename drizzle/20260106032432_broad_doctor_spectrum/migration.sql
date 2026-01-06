@@ -1,0 +1,1 @@
+ALTER TABLE `bounty` ADD `reward_currency` text DEFAULT 'MNEE';

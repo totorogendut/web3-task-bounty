@@ -7,15 +7,18 @@
 	interface Props {
 		children?: Snippet;
 		onClose: () => void;
-		onYes: () => void;
-		onCancel?: () => void;
 		hasOptions?: boolean;
+		width?: number;
 	}
 
-	let { children, onClose, onYes, onCancel, hasOptions = true }: Props = $props();
+	let { children, onClose, hasOptions = true, width = 600 }: Props = $props();
 </script>
 
-<dialog open class="fixed inset-0 top-[15%] isolate z-50 mx-auto w-150 bg-transparent">
+<dialog
+	open
+	style="width:{width}px;"
+	class="fixed inset-0 top-[15%] isolate z-50 mx-auto bg-transparent"
+>
 	<button
 		in:fade={{ duration: 126 }}
 		out:fade={{ duration: 65 }}
