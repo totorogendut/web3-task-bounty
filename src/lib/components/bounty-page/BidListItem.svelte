@@ -33,7 +33,7 @@
 				{content}
 			/>
 		{/if}
-		{#if !isLocalUser(bounty?.clientId)}
+		{#if isLocalUser(bounty?.clientId)}
 			<BidCTAClient bid={{ id, content, ...data }} {id} />
 		{/if}
 	</div>
