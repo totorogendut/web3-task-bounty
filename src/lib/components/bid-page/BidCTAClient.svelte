@@ -2,7 +2,7 @@
 	import { Check, Download, DownloadCloud } from "@lucide/svelte";
 	import BidCTAButton from "./BidCTAButton.svelte";
 	import { approveBid, downloadBidAttachment } from "$lib/api/bounty.remote";
-	import Modal from "../Modal.svelte";
+	import Modal from "../ModalDialog.svelte";
 
 	interface Props {
 		id: string;
