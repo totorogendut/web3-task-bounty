@@ -1,4 +1,4 @@
-import { PUBLIC_WALLET_ADDRESS } from "$env/static/public";
+import { PUBLIC_PLATFORM_ADDRESS } from "$env/static/public";
 import { createPublicClient, createWalletClient, erc20Abi, http, parseEther } from "viem";
 import { ethChain, MneeTokenAddress } from "../../_eth-shared";
 import { privateKeyToAccount } from "viem/accounts";
@@ -20,7 +20,7 @@ export const getPublicWalletFund = async () =>
 		address: MneeTokenAddress,
 		abi: erc20Abi,
 		functionName: "balanceOf",
-		args: [PUBLIC_WALLET_ADDRESS as `0x${string}`],
+		args: [PUBLIC_PLATFORM_ADDRESS as `0x${string}`],
 	});
 
 export const transferFund = async (to: `0x${string}`, amount: string) => {

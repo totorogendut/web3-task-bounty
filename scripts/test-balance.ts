@@ -26,7 +26,7 @@ const balance = await client.readContract({
 	address: MneeTokenAddress,
 	abi: erc20Abi,
 	functionName: "balanceOf",
-	args: [Bun.env.PUBLIC_WALLET_ADDRESS as `0x${string}`],
+	args: [Bun.env.PUBLIC_PLATFORM_ADDRESS as `0x${string}`],
 });
 
 const walletAddress = await walletClient.getAddresses();
