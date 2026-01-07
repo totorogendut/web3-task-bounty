@@ -21,6 +21,15 @@ export const actions: Actions = {
 
 		const files = formData.getAll("attachment").filter((f): f is File => f instanceof File);
 
+		const exist = await db.query.bid.findFirst({
+			where: {
+				bountyId: data.bountyId,
+				userId: event.locals.user.id,
+			},
+		});
+
+		if (exist) throw error(400, "User can't bid multiple times");
+
 		try {
 			bidInsertSchema.parse(data);
 			const [result] = await db.insert(bid).values(data).returning();

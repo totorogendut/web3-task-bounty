@@ -1,6 +1,6 @@
 import { PUBLIC_WALLET_ADDRESS } from "$env/static/public";
 import { createPublicClient, createWalletClient, erc20Abi, http, parseEther } from "viem";
-import { ethChain, MneeTokenAddress } from "./_shared";
+import { ethChain, MneeTokenAddress } from "../../_eth-shared";
 import { privateKeyToAccount } from "viem/accounts";
 import { WALLET_PRIVATE_KEY } from "$env/static/private";
 

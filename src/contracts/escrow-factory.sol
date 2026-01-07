@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
 interface IEscrowInit {
 	function init(
-		uint256 bountyId,
+		bytes32 bountyId,
 		address client,
 		IERC20 token,
 		uint128 reward,
@@ -18,10 +18,9 @@ contract FreelanceEscrowFactory {
 	using SafeERC20 for IERC20;
 
 	address public immutable implementation;
-	uint256 public bountyCount;
 
 	event EscrowCreated(
-		uint256 indexed bountyId,
+		bytes32 indexed bountyId,
 		address escrow,
 		address client,
 		address token,
@@ -35,14 +34,14 @@ contract FreelanceEscrowFactory {
 
 	function createBounty(
 		IERC20 token,
+		bytes32 bountyId,
 		uint128 reward,
 		uint64 deadline
 	) external returns (address escrow) {
 		require(reward > 0, "Zero reward");
-		uint256 id = bountyCount++;
 		escrow = Clones.clone(implementation);
-		IEscrowInit(escrow).init(id, msg.sender, token, reward, deadline);
+		IEscrowInit(escrow).init(bountyId, msg.sender, token, reward, deadline);
 		token.safeTransferFrom(msg.sender, escrow, reward);
-		emit EscrowCreated(id, escrow, msg.sender, address(token), reward, deadline);
+		emit EscrowCreated(bountyId, escrow, msg.sender, address(token), reward, deadline);
 	}
 }

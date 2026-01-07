@@ -2,11 +2,14 @@
 	import { enhance } from "$app/forms";
 	import { goto } from "$app/navigation";
 	import { page } from "$app/state";
+	import { getBountyEscrowData } from "$lib/components/bid-page/index.remote.js";
 	import DeadlinePicker from "$lib/components/DeadlinePicker.svelte";
 	import MarkdownForm from "$lib/components/markdown/MarkdownForm.svelte";
 	import ModalDialog from "$lib/components/ModalDialog.svelte";
 	import TextArea from "$lib/components/TextArea.svelte";
 	import TextInput from "$lib/components/TextInput.svelte";
+	import { signSubmission } from "$lib/contracts.svelte.js";
+	import { error } from "@sveltejs/kit";
 	import prettyBytes from "pretty-bytes";
 
 	const { data, form } = $props();
@@ -20,6 +23,9 @@
 		}
 		return names;
 	});
+
+	if (!page.params.bountyId) throw error(404, "No bountyId found");
+	const escrowData = await getBountyEscrowData({ id: page.params.bountyId });
 
 	let formEl: HTMLFormElement;
 	let openModal = $state(false);
@@ -35,6 +41,20 @@
 	bind:this={formEl}
 	class="mx-auto mt-50 flex w-250 flex-col gap-4"
 	method="post"
+	onsubmit={async (e) => {
+		e.preventDefault();
+
+		if (!escrowData?.escrowAddress || !escrowData?.escrowBountyId) return;
+		const formData = new FormData(formEl);
+
+		const { signature, submittedAt } = await signSubmission({
+			escrowAddress: escrowData.escrowAddress,
+			bountyId: escrowData.escrowBountyId,
+		});
+		formData.append("signature", signature);
+		formData.append("submittedAt", submittedAt.toString());
+		formEl.submit();
+	}}
 >
 	{#if form?.error}
 		<div class="w-full rounded-md bg-red-800 p-4 text-white/90">
