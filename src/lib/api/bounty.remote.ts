@@ -7,7 +7,7 @@ import { and, eq } from "drizzle-orm";
 import type { Bid } from "$lib/server/db/schemas";
 import { error } from "@sveltejs/kit";
 import { payApprovedBid } from "$lib/server/payment";
-import { bidInsertSchema } from "$lib/server/db/schemas/_types";
+import { bidSchemas } from "$lib/schemas";
 
 export const editBid = query(
 	z.object({
@@ -20,7 +20,7 @@ export const editBid = query(
 		if (!locals.user?.id) throw error(403, "You must login to continue.");
 
 		if (content) data.content = content;
-		bidInsertSchema.pick({ content: true }).parse(data);
+		bidSchemas.pick({ content: true }).parse(data);
 
 		const { changes } = await db
 			.update(bid)

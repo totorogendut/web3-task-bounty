@@ -9,16 +9,16 @@
 </script>
 
 {#snippet input()}
-	<input
+	<textarea
 		class={[
-			`border-2! border-amber-700! font-semibold 
-  text-amber-800 	ring-0! outline-2! outline-white! 
-    placeholder:font-medium`,
+			`min-h-24 border-2! border-amber-700! 
+  font-semibold 	text-amber-800 ring-0! outline-2! 
+    outline-white! placeholder:font-medium`,
 			className,
 		]}
 		bind:value
 		{...data}
-	/>
+	></textarea>
 {/snippet}
 
 {#if label}

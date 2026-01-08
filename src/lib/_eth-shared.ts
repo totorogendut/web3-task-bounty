@@ -23,14 +23,16 @@ const tokenIcons = import.meta.glob(
 const getIcon = (token: keyof typeof tokens.mainnet) =>
 	(tokenIcons[`/src/lib/assets/token/${token}.png`] as any)?.default as string;
 
-export const tokens: {
+interface Tokens {
 	mainnet: {
 		[token: string]: ERC20Token;
 	};
 	testnet: {
 		[token: string]: ERC20Token;
 	};
-} = {
+}
+
+export const tokens: Tokens = {
 	mainnet: {
 		mnee: {
 			address: "0x8ccedbAe4916b79da7F3F612EfB2EB93A2bFD6cF",

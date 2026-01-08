@@ -17,7 +17,7 @@
 		bind:value
 		class={[
 			`border-2! border-amber-700! font-semibold 
-  text-amber-800 	ring-0! outline-2! outline-white! 
+  text-amber-800! ring-0! outline-2! outline-white! 
     placeholder:font-medium`,
 			data.class,
 		]}

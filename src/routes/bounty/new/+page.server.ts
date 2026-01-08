@@ -1,14 +1,13 @@
 import { db } from "$lib/server/db";
 import { bounty, bid } from "$lib/server/db/schemas/tasks";
-import { bountyInsertSchema } from "$lib/server/db/schemas/_types";
 import { error, redirect } from "@sveltejs/kit";
 import type { Actions } from "@sveltejs/kit";
 import { z, ZodError } from "zod/v4";
-import type { Bounty } from "$lib/server/db/schemas";
 import { daysAfter } from "$lib/utils/date";
 import type { Hex } from "viem";
 import { publicClient } from "$lib/server/viem/contracts";
 import { eq } from "drizzle-orm";
+import { bountySchemas } from "$lib/schemas";
 
 export const actions: Actions = {
 	default: async (event) => {
@@ -26,7 +25,7 @@ export const actions: Actions = {
 		};
 
 		try {
-			bountyInsertSchema.parse(data);
+			bountySchemas.parse(data);
 			const [result] = await db.insert(bounty).values(data).returning();
 			if (!result) throw error(500, "Error inserting bounty data");
 			applyEscrowContract(result.id, formData.get("txHash") as Hex);

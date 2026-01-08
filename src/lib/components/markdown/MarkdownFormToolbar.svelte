@@ -6,23 +6,24 @@
 
 	interface Props {
 		type: FormatType;
-		mdState: MarkdownFormState;
+		textAreaEl: HTMLTextAreaElement;
 		children?: Snippet;
+		onWrap: (text: string) => void;
 	}
 
-	const { type, mdState, children }: Props = $props();
+	const { type, textAreaEl, onWrap, children }: Props = $props();
 
 	let buttonEl: HTMLButtonElement;
 	let index = $state(0);
 
 	function wrap(before: string, after: string = before): void {
-		const { selectionStart, selectionEnd, value } = mdState.textareaEl!;
+		const { selectionStart, selectionEnd, value } = textAreaEl!;
 		const hasSelection = selectionStart !== selectionEnd;
 
 		const selected = value.slice(selectionStart, selectionEnd);
-
-		mdState.content =
+		const newContent =
 			value.slice(0, selectionStart) + before + selected + after + value.slice(selectionEnd);
+		onWrap(newContent);
 
 		// Calculate cursor position
 		const cursorPos = hasSelection
@@ -31,8 +32,8 @@
 
 		// Wait for DOM update, then restore cursor
 		tick().then(() => {
-			mdState.textareaEl?.focus();
-			mdState.textareaEl?.setSelectionRange(cursorPos, cursorPos);
+			textAreaEl?.focus();
+			textAreaEl?.setSelectionRange(cursorPos, cursorPos);
 		});
 	}
 
@@ -50,6 +51,7 @@
 </script>
 
 <button
+	type="button"
 	bind:this={buttonEl}
 	style="--transition-delay: {65 * (index + 1)}ms;"
 	class="cursor-pointer rounded-md bg-slate-900 px-2

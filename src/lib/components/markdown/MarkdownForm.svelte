@@ -6,32 +6,22 @@
 
 	interface Props {
 		name?: string;
+		value?: string;
 		placeholder?: string;
 		canSubmit?: boolean;
 		class?: string;
 		content?: string;
-		onSubmit?: (content: string) => void;
 	}
 
-	const mdState = new MarkdownFormState();
-	const isSubmitDisabled = $derived(!mdState?.content?.length);
 	let {
 		name,
-		content = "",
+		value = $bindable(""),
 		canSubmit = true,
 		class: className = "",
 		placeholder = "Write your comment...",
-		onSubmit,
 	}: Props = $props();
-
-	function submit(): void {
-		mdState.submitted = mdState.content;
-		onSubmit?.(mdState.content);
-	}
-
-	onMount(() => {
-		mdState.content = content;
-	});
+	const isSubmitDisabled = $derived(!value?.length);
+	let textAreaEl: HTMLTextAreaElement;
 </script>
 
 <div
@@ -44,17 +34,25 @@
 	bg-slate-700
 	 px-4 pt-6 pb-2 group-has-focus/comment:border-transparent"
 	>
-		<CommentFormToolbar {mdState} type="bold"><Bold size="18" /></CommentFormToolbar>
-		<CommentFormToolbar {mdState} type="italic"><Italic size="18" /></CommentFormToolbar>
-		<CommentFormToolbar {mdState} type="code"><Code size="18" /></CommentFormToolbar>
-		<CommentFormToolbar {mdState} type="link"><Link size="18" /></CommentFormToolbar>
+		<CommentFormToolbar {textAreaEl} onWrap={(t) => (value = t)} type="bold"
+			><Bold size="18" /></CommentFormToolbar
+		>
+		<CommentFormToolbar {textAreaEl} onWrap={(t) => (value = t)} type="italic"
+			><Italic size="18" /></CommentFormToolbar
+		>
+		<CommentFormToolbar {textAreaEl} onWrap={(t) => (value = t)} type="code"
+			><Code size="18" /></CommentFormToolbar
+		>
+		<CommentFormToolbar {textAreaEl} onWrap={(t) => (value = t)} type="link"
+			><Link size="18" /></CommentFormToolbar
+		>
 		<small class="ml-auto self-center text-white/70">Markdown</small>
 	</div>
 
 	<!-- Editor -->
 	<textarea
-		bind:this={mdState.textareaEl}
-		bind:value={mdState.content}
+		bind:this={textAreaEl}
+		bind:value
 		class="m2 min-h-55 w-full resize-y
 		border-0 bg-slate-950 p-4 font-mono text-sm
 		 text-slate-100 outline-none focus:ring-5
@@ -68,7 +66,6 @@
 		<div class="flex justify-end border-t border-slate-800 px-6 py-4">
 			<button
 				disabled={isSubmitDisabled}
-				onclick={submit}
 				class="rounded-md from-sky-500 to-indigo-600 px-5 py-2 font-semibold text-slate-100/85 transition not-disabled:cursor-pointer
 					not-disabled:bg-linear-to-r not-disabled:hover:brightness-110 disabled:bg-sky-500 disabled:grayscale-25 disabled:saturate-70"
 			>
