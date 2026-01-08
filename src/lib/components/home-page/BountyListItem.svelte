@@ -18,7 +18,7 @@
 		   bg-black/15 p-6 pb-3 transition hover:bg-black/10"
 >
 	<strong class="text-xl">{title} </strong>
-	<p class="line-clamp-3 text-sm text-white/70">{description}</p>
+	<p class=" text-sm text-white/70">{description}</p>
 	<span
 		class={[
 			"reward absolute top-2 right-4 rye-regular font-extrabold text-green-300",

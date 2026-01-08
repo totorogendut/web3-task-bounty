@@ -39,7 +39,6 @@ export const getBountyEscrowData = query(z.object({ id: z.string() }), async ({ 
 		},
 		columns: {
 			escrowAddress: true,
-			escrowBountyId: true,
 		},
 	});
 });

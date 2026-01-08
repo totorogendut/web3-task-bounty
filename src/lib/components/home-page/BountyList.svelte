@@ -1,10 +1,11 @@
 <script lang="ts">
 	import type { Bounty } from "$lib/server/db/schemas";
-	import { getContext } from "svelte";
+	import { getContext, onMount } from "svelte";
 	import { getBountyList } from "./index.remote";
 	import SkeletonShell from "../bid-page/SkeletonShell.svelte";
 	import BountyListItem from "./BountyListItem.svelte";
 	import Masonry from "svelte-bricks";
+	import { browser } from "$app/environment";
 
 	let isLoading = $state(false);
 	let offset = $state(0);
@@ -37,9 +38,9 @@
 			<div class="rounded-xl border border-white/10 bg-black/15 p-8 text-center text-white/50">
 				No bounties found.
 			</div>
-		{:else}
+		{:else if browser && list.length}
 			<Masonry
-				class="items-start justify-start"
+				class="justify-start!"
 				{minColWidth}
 				{maxColWidth}
 				{gap}
@@ -51,7 +52,6 @@
 					<BountyListItem {...item} />
 				{/snippet}
 			</Masonry>
-
 			<button
 				onclick={fetchMoreList}
 				disabled={isLoading}

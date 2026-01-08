@@ -21,14 +21,19 @@ export const actions: Actions = {
 
 		const files = formData.getAll("attachment").filter((f): f is File => f instanceof File);
 
-		const exist = await db.query.bid.findFirst({
-			where: {
-				bountyId: data.bountyId,
-				userId: event.locals.user.id,
-			},
-		});
+		try {
+			const exist = await db.query.bid.findFirst({
+				where: {
+					bountyId: data.bountyId,
+					userId: event.locals.user.id,
+				},
+			});
 
-		if (exist) throw error(400, "User can't bid multiple times");
+			if (exist) throw error(400, "User can't bid multiple times");
+		} catch (err) {
+			if (err instanceof ZodError) return { error: err.cause };
+			return { error: (err as any)?.message || err };
+		}
 
 		try {
 			bidSchemas.parse(data);
@@ -38,7 +43,6 @@ export const actions: Actions = {
 			});
 			return result;
 		} catch (err) {
-			console.error(err);
 			if (err instanceof ZodError) return { error: err.cause };
 			return { error: (err as any)?.message || err };
 		}

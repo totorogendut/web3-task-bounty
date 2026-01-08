@@ -68,6 +68,7 @@
 	{#if page.data.user}
 		<div class="flex items-center gap-2">
 			<a
+				data-sveltekit-preload-data={false}
 				class="flex grow items-center justify-center
 				 rounded-md border-3 border-amber-500 bg-white
 				 	p-2 font-extrabold text-black/80 shadow-2xl

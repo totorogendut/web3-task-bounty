@@ -2,6 +2,8 @@
 	import { getBidList } from "../bid-page/index.remote";
 	import Masonry from "svelte-bricks";
 	import BidListItem from "./BidListItem.svelte";
+	import { onMount } from "svelte";
+	import { browser } from "$app/environment";
 
 	interface Props {
 		bountyId: string;
@@ -38,9 +40,9 @@
 			<div class="rounded-xl border border-white/10 bg-white/5 p-8 text-center text-white/50">
 				No bids found for this bounty.
 			</div>
-		{:else}
+		{:else if browser}
 			<Masonry
-				class="items-start justify-start"
+				class="justify-start!"
 				items={list}
 				{minColWidth}
 				{maxColWidth}

@@ -34,6 +34,14 @@
 	<div class="flex grow flex-col gap-4">
 		<div class="">
 			<h1 class="mt-0! cowboy-text text-5xl">{data.bounty?.title}</h1>
+			{#if page.error}
+				<div
+					class="w-full rounded-md bg-red-700
+				p-4 text-white/90"
+				>
+					{page.error}
+				</div>
+			{/if}
 			<div class="mt-8 mb-5 flex gap-2">
 				<TabButton
 					onclick={() => tabClick("description")}
