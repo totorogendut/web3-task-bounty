@@ -2,6 +2,7 @@ import { seed } from "drizzle-seed";
 import { drizzle } from "drizzle-orm/better-sqlite3";
 import { relations } from "../src/lib/server/db/schemas";
 import { user } from "../src/lib/server/db/schemas/users";
+import { tokens } from "../src/lib/_eth-shared";
 import { skills } from "../src/lib/components/skills/skills-template";
 import { bid, bounty, comment } from "../src/lib/server/db/schemas/tasks";
 import "dotenv/config";
@@ -29,6 +30,9 @@ await seed(db, { bounty, user, bid, comment }).refine((f) => ({
 			}),
 			rewardAmount: f.valuesFromArray({
 				values: ["10.00", "5.00", "25.00", "3000.00", "500.00", "65.00"],
+			}),
+			rewardCurrency: f.valuesFromArray({
+				values: ["mnee"],
 			}),
 			deadline: f.timestamp(),
 			skills: f.valuesFromArray({

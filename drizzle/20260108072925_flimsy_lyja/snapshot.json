@@ -1,9 +1,9 @@
 {
   "version": "7",
   "dialect": "sqlite",
-  "id": "56e53078-e0e2-4e56-8f28-31029392833d",
+  "id": "c12329e5-85a6-4dc9-95cb-1d29d8d868b9",
   "prevIds": [
-    "308e666f-098f-4854-b470-0bcf6449bb02"
+    "00000000-0000-0000-0000-000000000000"
   ],
   "ddl": [
     {
@@ -365,16 +365,6 @@
       "table": "bounty"
     },
     {
-      "type": "integer",
-      "notNull": false,
-      "autoincrement": false,
-      "default": null,
-      "generated": null,
-      "name": "escrow_bounty_id",
-      "entityType": "columns",
-      "table": "bounty"
-    },
-    {
       "type": "text",
       "notNull": true,
       "autoincrement": false,
@@ -388,7 +378,7 @@
       "type": "text",
       "notNull": false,
       "autoincrement": false,
-      "default": "'MNEE'",
+      "default": "'mnee'",
       "generated": null,
       "name": "reward_currency",
       "entityType": "columns",
@@ -418,7 +408,7 @@
       "type": "integer",
       "notNull": false,
       "autoincrement": false,
-      "default": "true",
+      "default": "false",
       "generated": null,
       "name": "can_refund",
       "entityType": "columns",
@@ -862,7 +852,5 @@
       "table": "user"
     }
   ],
-  "renames": [
-    "bounty.escrow_contract_address->bounty.escrow_address"
-  ]
+  "renames": []
 }

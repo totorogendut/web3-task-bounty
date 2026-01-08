@@ -25,10 +25,17 @@ const getIcon = (token: keyof typeof tokens.mainnet) =>
 
 interface Tokens {
 	mainnet: {
-		[token: string]: ERC20Token;
+		mnee: ERC20Token;
+		usdc: ERC20Token;
+		usdt: ERC20Token;
+		dai: ERC20Token;
+		wbtc: ERC20Token;
+		link: ERC20Token;
+		shib: ERC20Token;
+		uni: ERC20Token;
 	};
 	testnet: {
-		[token: string]: ERC20Token;
+		wethSepolia: ERC20Token;
 	};
 }
 

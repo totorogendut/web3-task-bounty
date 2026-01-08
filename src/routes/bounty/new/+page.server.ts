@@ -8,6 +8,7 @@ import type { Hex } from "viem";
 import { publicClient } from "$lib/server/viem/contracts";
 import { eq } from "drizzle-orm";
 import { bountySchemas } from "$lib/schemas";
+import type { tokens } from "$lib/_eth-shared";
 
 export const actions: Actions = {
 	default: async (event) => {
@@ -20,7 +21,7 @@ export const actions: Actions = {
 			title: formData.get("title") as string,
 			rewardAmount: formData.get("rewardAmount") as `${number}.${number}`,
 			clientId: event.locals.user.id,
-			rewardCurrency: formData.get("rewardCurrency") as string,
+			rewardCurrency: formData.get("rewardCurrency") as keyof typeof tokens.mainnet,
 			deadline: daysAfter(parseInt(formData.get("deadline") as string)),
 		};
 

@@ -52,10 +52,10 @@
 					<enhanced:img
 						width="32"
 						class="rounded-full"
-						src={tokens.mainnet.mnee.icon!}
-						alt="mnee"
+						src={tokens.mainnet[bounty.rewardCurrency!]?.icon!}
+						alt={bounty.rewardCurrency}
 					/>
-					MNEE
+					<span class="uppercase">{bounty.rewardCurrency}</span>
 				</div>
 			</div>
 		</div>

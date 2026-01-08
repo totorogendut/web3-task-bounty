@@ -2,6 +2,7 @@
 	import { page } from "$app/state";
 	import { logout } from "$lib/user.svelte";
 	import { wallet } from "$lib/wallet.svelte";
+	import { LogIn } from "@lucide/svelte";
 	import Avatar from "../user/Avatar.svelte";
 	import UserOpts from "./UserOptions.svelte";
 </script>
@@ -15,10 +16,14 @@
 		<div class="group/usernav relative isolate flex items-center gap-3">
 			{#if !page.data.user}
 				<button
-					class="cursor-pointer rounded-sm bg-amber-200
-					px-4 py-1 text-black/90 hover:brightness-95"
-					onclick={wallet.connect}>Connect wallet</button
+					class="flex cursor-pointer items-center
+					gap-2 rounded-sm bg-amber-200 px-4 py-1
+					pr-2 font-bold text-amber-900/90 hover:brightness-95"
+					onclick={wallet.connect}
 				>
+					Connect wallet
+					<LogIn />
+				</button>
 			{:else}
 				{page.data.user.username}
 				<Avatar size={32} user={page.data.user} />

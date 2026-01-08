@@ -39,7 +39,7 @@
 			</div>
 		{:else}
 			<Masonry
-				class="grid w-full grid-cols-3"
+				class="items-start justify-start"
 				{minColWidth}
 				{maxColWidth}
 				{gap}

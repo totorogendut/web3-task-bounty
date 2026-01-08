@@ -40,6 +40,7 @@
 			</div>
 		{:else}
 			<Masonry
+				class="items-start justify-start"
 				items={list}
 				{minColWidth}
 				{maxColWidth}

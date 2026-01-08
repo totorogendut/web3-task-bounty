@@ -28,7 +28,9 @@ CREATE TABLE `bid` (
 	`user_id` text NOT NULL,
 	`bounty_id` text NOT NULL,
 	`content` text NOT NULL,
-	`submission` text,
+	`submittedAt` integer,
+	`signature` text,
+	`attachments` text DEFAULT '[]',
 	`state` text DEFAULT 'in_progress',
 	CONSTRAINT `fk_bid_user_id_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `user`(`id`),
 	CONSTRAINT `fk_bid_bounty_id_bounty_id_fk` FOREIGN KEY (`bounty_id`) REFERENCES `bounty`(`id`)
@@ -43,12 +45,12 @@ CREATE TABLE `bounty` (
 	`content` text,
 	`client_id` text NOT NULL,
 	`skills` text DEFAULT '[]',
-	`escrow_contract_address` text,
-	`factory_contract_address` text,
+	`escrow_address` text,
 	`reward_amount` text DEFAULT '0.00' NOT NULL,
+	`reward_currency` text DEFAULT 'mnee',
 	`is_claimed` integer DEFAULT false,
 	`deadline` integer,
-	`can_refund` integer DEFAULT true,
+	`can_refund` integer DEFAULT false,
 	CONSTRAINT `fk_bounty_client_id_user_id_fk` FOREIGN KEY (`client_id`) REFERENCES `user`(`id`)
 );
 --> statement-breakpoint
