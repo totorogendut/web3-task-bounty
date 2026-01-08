@@ -4,11 +4,13 @@
 	import { getBountyList } from "./index.remote";
 	import SkeletonShell from "../bid-page/SkeletonShell.svelte";
 	import BountyListItem from "./BountyListItem.svelte";
-	import Masonry from "../Masonry.svelte";
+	import Masonry from "svelte-bricks";
 
 	let isLoading = $state(false);
 	let offset = $state(0);
 	let list = $state(await getBountyList({ offset: 0 }));
+
+	$inspect(list);
 
 	async function fetchMoreList() {
 		isLoading = true;
@@ -23,6 +25,10 @@
 			isLoading = false;
 		}
 	}
+
+	let [minColWidth, maxColWidth, gap] = [300, 400, 12];
+	let width = $state(0),
+		height = $state(0);
 </script>
 
 <svelte:boundary>
@@ -32,16 +38,20 @@
 				No bounties found.
 			</div>
 		{:else}
-			<Masonry class="grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-				{#each list as data}
-					<BountyListItem {...data} />
-				{/each}
-				{#snippet pending()}
-					{#each Array(10) as item}
-						<SkeletonShell />
-					{/each}
+			<Masonry
+				class="grid w-full grid-cols-3"
+				{minColWidth}
+				{maxColWidth}
+				{gap}
+				items={list}
+				bind:masonryWidth={width}
+				bind:masonryHeight={height}
+			>
+				{#snippet children({ item })}
+					<BountyListItem {...item} />
 				{/snippet}
 			</Masonry>
+
 			<button
 				onclick={fetchMoreList}
 				disabled={isLoading}

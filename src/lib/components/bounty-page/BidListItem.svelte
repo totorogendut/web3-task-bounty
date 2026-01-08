@@ -38,8 +38,8 @@
 		{/if}
 	</div>
 	<div
-		class="rounded-md bg-amber-50 p-3 text-sm outline-amber-600
-		peer-hover:outline-4"
+		class="rounded-md bg-amber-50 p-3 text-sm text-amber-900
+		outline-amber-600 peer-hover:outline-4"
 	>
 		{content}
 	</div>

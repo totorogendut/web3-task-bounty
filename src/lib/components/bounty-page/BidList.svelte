@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { getBidList } from "../bid-page/index.remote";
-	import Masonry from "../Masonry.svelte";
+	import Masonry from "svelte-bricks";
 	import BidListItem from "./BidListItem.svelte";
 
 	interface Props {
@@ -26,6 +26,10 @@
 			isLoading = false;
 		}
 	}
+
+	let [minColWidth, maxColWidth, gap] = [300, 500, 12];
+	let width = $state(0),
+		height = $state(0);
 </script>
 
 <svelte:boundary>
@@ -35,10 +39,17 @@
 				No bids found for this bounty.
 			</div>
 		{:else}
-			<Masonry class="grid-cols-2 gap-4 gap-y-8 text-amber-900">
-				{#each list as { user, ...data }}
-					<BidListItem {...data} {user} />
-				{/each}
+			<Masonry
+				items={list}
+				{minColWidth}
+				{maxColWidth}
+				{gap}
+				bind:masonryWidth={width}
+				bind:masonryHeight={height}
+			>
+				{#snippet children({ item })}
+					<BidListItem {...item} />
+				{/snippet}
 			</Masonry>
 		{/if}
 	</section>

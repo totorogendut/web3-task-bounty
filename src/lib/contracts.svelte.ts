@@ -1,6 +1,6 @@
 import { PUBLIC_FACTORY_ADDRESS } from "$env/static/public";
 import { ESCROW_ABI, FACTORY_ABI } from "./_eth-abi";
-import { ethChain } from "./_eth-shared";
+import { ethChain, tokens } from "./_eth-shared";
 import { wallet } from "./wallet.svelte";
 import {
 	keccak256,
@@ -12,6 +12,7 @@ import {
 	parseEther,
 	decodeEventLog,
 	isHex,
+	parseUnits,
 } from "viem";
 
 const publicClient = createPublicClient({
@@ -23,19 +24,18 @@ export const SUBMISSION_TYPEHASH = keccak256(
 	toHex("Submission(uint256 bountyId,address freelancer,uint256 submittedAt,uint256 nonce)"),
 ) as Hex;
 
-export async function createBounty({
-	bountyId,
-	tokenAddress,
-	reward,
-	deadline,
-}: {
-	bountyId: string;
-	tokenAddress: Hex;
-	// ===========TOKEN ADDRESS============
-	// MNEE: 0x8ccedbAe4916b79da7F3F612EfB2EB93A2bFD6cF
-	reward: string;
-	deadline: Date;
-}) {
+export async function createBounty(
+	{
+		bountyId,
+		reward,
+		deadline,
+	}: {
+		bountyId: string;
+		reward: string;
+		deadline: Date;
+	},
+	token = tokens.testnet.wethSepolia,
+) {
 	if (!wallet.client) throw new Error("Wallet client error");
 	if (!isHex(PUBLIC_FACTORY_ADDRESS))
 		throw new Error("PUBLIC_FACTORY_ADDRESS is not Hex type (e.g. 0xabc123)");
@@ -46,10 +46,10 @@ export async function createBounty({
 		client: wallet.client,
 	});
 
-	const amount = parseEther(reward);
+	const amount = parseUnits(reward, token.decimal);
 
 	const txHash = await factory.write.createBounty(
-		[tokenAddress, keccak256(toHex(bountyId)), amount, BigInt(deadline.getTime() / 1000)],
+		[token.address, keccak256(toHex(bountyId)), amount, BigInt(deadline.getTime() / 1000)],
 		{ chain: ethChain, account: wallet.address },
 	);
 

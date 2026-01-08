@@ -11,27 +11,21 @@
 	import { signSubmission } from "$lib/contracts.svelte.js";
 	import { error } from "@sveltejs/kit";
 	import prettyBytes from "pretty-bytes";
+	import { z } from "zod/v4";
 
 	const { data, form } = $props();
 	let files: FileList | undefined = $state();
 
-	let fileNames = $derived.by(() => {
-		const names = [];
-		if (!files) return [];
-		for (const file of files) {
-			names.push(file.name);
-		}
-		return names;
-	});
-
 	if (!page.params.bountyId) throw error(404, "No bountyId found");
-	const escrowData = await getBountyEscrowData({ id: page.params.bountyId });
+	const bountyId = page.params.bountyId!;
+
+	const escrowData = await getBountyEscrowData({ id: bountyId });
 
 	let formEl: HTMLFormElement;
 	let openModal = $state(false);
 
 	$effect(() => {
-		if (form?.id) goto(`/bid/${form.id}`);
+		if (form?.id) goto(`/bounty/${bountyId}`);
 	});
 </script>
 
@@ -44,12 +38,12 @@
 	onsubmit={async (e) => {
 		e.preventDefault();
 
-		if (!escrowData?.escrowAddress || !escrowData?.escrowBountyId) return;
-		const formData = new FormData(formEl);
+		if (!escrowData?.escrowAddress) return;
+		const formData = new FormData(event?.target as HTMLFormElement);
 
 		const { signature, submittedAt } = await signSubmission({
 			escrowAddress: escrowData.escrowAddress,
-			bountyId: escrowData.escrowBountyId,
+			bountyId: bountyId,
 		});
 		formData.append("signature", signature);
 		formData.append("submittedAt", submittedAt.toString());

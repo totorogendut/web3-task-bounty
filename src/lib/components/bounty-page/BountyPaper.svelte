@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { page } from "$app/state";
+	import { tokens } from "$lib/_eth-shared";
 	import type { Bounty } from "$lib/server/db/schemas";
 	import { Link, Link2 } from "@lucide/svelte";
 	import { formatDistance } from "date-fns";
@@ -40,14 +41,22 @@
 				<strong>Smart contract:</strong>
 				<a
 					class="flex items-center gap-1 font-bold text-amber-700 underline"
-					href={bounty.escrowContractAddress}
+					href={bounty.escrowAddress}
 				>
 					<Link2 size={16} /> link
 				</a>
 			</div>
 			<div class="flex justify-between">
 				<strong>Currency:</strong>
-				MNEE crypto
+				<div class="relative flex items-center gap-2 font-bold">
+					<enhanced:img
+						width="32"
+						class="rounded-full"
+						src={tokens.mainnet.mnee.icon!}
+						alt="mnee"
+					/>
+					MNEE
+				</div>
 			</div>
 		</div>
 		<span class="mt-6 text-center rye-regular text-amber-800">reward</span>

@@ -1,16 +1,18 @@
 <script lang="ts">
-	import { format } from "date-fns";
-	import { SvelteDate } from "svelte/reactivity";
-	import { DatePicker } from "@svelte-plugins/datepicker";
 	import TextInput from "./TextInput.svelte";
+	import type { Snippet } from "svelte";
 
-	let deadline = $state(30);
+	interface Props {
+		value: number;
+	}
+
+	let { value = $bindable() }: Props = $props();
 </script>
 
 <TextInput
 	label="Deadline (in days)"
 	type="number"
 	placeholder="Select date"
-	bind:value={deadline}
+	bind:value
 	name="deadline"
 />

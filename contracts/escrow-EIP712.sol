@@ -43,7 +43,7 @@ contract FreelanceEscrowEIP712 is EIP712 {
 	}
 
 	Bounty public bounty;
-	address public freelancer; // Slot 3
+	address public freelancer;
 	bytes32 private constant SUBMISSION_TYPEHASH =
 		keccak256(
 			"Submission(bytes32 bountyId,address freelancer,uint256 submittedAt,uint256 nonce)"

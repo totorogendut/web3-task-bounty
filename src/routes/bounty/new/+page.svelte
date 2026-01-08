@@ -7,15 +7,38 @@
 	import SkillDropdown from "$lib/components/skills/SkillDropdown.svelte";
 	import TextArea from "$lib/components/TextArea.svelte";
 	import TextInput from "$lib/components/TextInput.svelte";
+	import { createBounty } from "$lib/contracts.svelte.js";
+	import { daysAfter } from "$lib/utils/date.js";
+	import { nanoid } from "nanoid";
 
 	let currency: string;
 	let openModal = $state(false);
 	let formEl: HTMLFormElement;
+	let reward = $state(0);
+	let deadline = $state(0);
 
 	const { form } = $props();
 </script>
 
-<form use:enhance bind:this={formEl} class="mx-auto mt-50 flex w-250 flex-col gap-4" method="post">
+<form
+	onsubmit={async (e) => {
+		e.preventDefault();
+		const formData = new FormData(event?.target as HTMLFormElement);
+		const id = nanoid(21);
+		const txHash = await createBounty({
+			bountyId: id,
+			reward: reward.toPrecision(),
+			deadline: daysAfter(deadline),
+		});
+		formData.append("id", id);
+		formData.append("txHash", txHash);
+		formEl.submit();
+	}}
+	use:enhance
+	bind:this={formEl}
+	class="mx-auto mt-50 flex w-250 flex-col gap-4"
+	method="post"
+>
 	{#if form?.error}
 		<div class="w-full rounded-md bg-red-800 p-4 text-white/90">
 			Error {form.error}
@@ -36,8 +59,14 @@
 		canSubmit={false}
 	/>
 	<div class="flex items-center gap-4">
-		<DeadlinePicker />
-		<TextInput label="Reward" type="number" placeholder="$0.00" name="rewardAmount" />
+		<DeadlinePicker bind:value={deadline} />
+		<TextInput
+			bind:value={reward}
+			label="Reward"
+			type="number"
+			placeholder="$0.00"
+			name="rewardAmount"
+		/>
 		<Dropdown
 			bind:value={currency}
 			label="Currency"
