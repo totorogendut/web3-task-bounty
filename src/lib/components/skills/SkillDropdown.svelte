@@ -1,7 +1,5 @@
 <script lang="ts">
-	import { skills } from "./skills-template";
 	import { SkillsTag } from "./skills.svelte";
-	import type { Snippet } from "svelte";
 
 	interface Props {
 		onSelect?: (skill: string) => void;

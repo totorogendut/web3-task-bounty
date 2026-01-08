@@ -1,8 +1,8 @@
 import { db } from "$lib/server/db";
-import { bounty, bid } from "$lib/server/db/schemas/tasks";
+import { bounty } from "$lib/server/db/schemas/tasks";
 import { error, redirect } from "@sveltejs/kit";
 import type { Actions } from "@sveltejs/kit";
-import { z, ZodError } from "zod/v4";
+import { ZodError } from "zod/v4";
 import { daysAfter } from "$lib/utils/date";
 import type { Hex } from "viem";
 import { publicClient } from "$lib/server/viem/contracts";

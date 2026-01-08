@@ -1,6 +1,4 @@
 <script lang="ts">
-	import type { User } from "$lib/server/db/schemas";
-	import type { Snippet } from "svelte";
 	import { minidenticon } from "minidenticons";
 	import type { UserClient } from "$lib/user.svelte";
 

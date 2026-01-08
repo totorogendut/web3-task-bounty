@@ -1,8 +1,5 @@
 <script lang="ts">
-	import type { Bounty } from "$lib/server/db/schemas";
-	import { getContext, onMount } from "svelte";
 	import { getBountyList } from "./index.remote";
-	import SkeletonShell from "../bid-page/SkeletonShell.svelte";
 	import BountyListItem from "./BountyListItem.svelte";
 	import Masonry from "svelte-bricks";
 	import { browser } from "$app/environment";

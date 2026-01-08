@@ -1,10 +1,6 @@
 <script lang="ts">
-	import { editBid } from "$lib/api/bounty.remote";
 	import { PencilLine } from "@lucide/svelte";
-
 	import MarkdownForm from "../markdown/MarkdownForm.svelte";
-	import { page } from "$app/state";
-	import type { Bounty } from "$lib/server/db/schemas";
 	import BidCTAButton from "./BidCTAButton.svelte";
 	import Modal from "../Modal.svelte";
 

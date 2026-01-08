@@ -2,7 +2,6 @@
 	import { getBidList } from "../bid-page/index.remote";
 	import Masonry from "svelte-bricks";
 	import BidListItem from "./BidListItem.svelte";
-	import { onMount } from "svelte";
 	import { browser } from "$app/environment";
 
 	interface Props {

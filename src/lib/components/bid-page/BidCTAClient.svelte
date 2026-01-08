@@ -1,7 +1,6 @@
 <script lang="ts">
-	import { Check, Download, DownloadCloud } from "@lucide/svelte";
+	import { Check, Download } from "@lucide/svelte";
 	import BidCTAButton from "./BidCTAButton.svelte";
-	import { approveBid, downloadBidAttachment } from "$lib/api/bounty.remote";
 	import Modal from "../ModalDialog.svelte";
 	import type { Bid } from "$lib/server/db/schemas";
 	import { PUBLIC_S3_ENDPOINT } from "$env/static/public";

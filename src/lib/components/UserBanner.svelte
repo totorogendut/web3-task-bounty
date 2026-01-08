@@ -1,5 +1,4 @@
 <script lang="ts">
-	import type { User } from "$lib/server/db/schemas";
 	import type { UserClient } from "$lib/user.svelte";
 	import Avatar from "./user/Avatar.svelte";
 

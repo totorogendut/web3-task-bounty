@@ -1,4 +1,4 @@
-import { getContext, setContext } from "svelte";
+import { getContext } from "svelte";
 
 export type TabState = {
 	tab: string;

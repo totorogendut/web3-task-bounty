@@ -9,7 +9,6 @@ import {
 	http,
 	toHex,
 	getContract,
-	parseEther,
 	decodeEventLog,
 	isHex,
 	parseUnits,

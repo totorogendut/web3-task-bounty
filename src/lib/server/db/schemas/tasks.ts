@@ -14,11 +14,11 @@ export const bounty = sqliteTable("bounty", {
 	clientId: text("client_id")
 		.notNull()
 		.references(() => user.id),
+	winningBidId: text("winning_bid_id"),
 	skills: text("skills", { mode: "json" }).$type<string[]>().default([]),
 	escrowAddress: text("escrow_address").$type<Hex>(),
 	rewardAmount: text("reward_amount").notNull().default("0.00").$type<`${number}.${number}`>(),
 	rewardCurrency: text("reward_currency").default("mnee").$type<keyof typeof tokens.mainnet>(),
-	isClaimed: integer("is_claimed", { mode: "boolean" }).default(false),
 	deadline: integer("deadline", { mode: "timestamp" }),
 	canRefund: integer("can_refund", { mode: "boolean" }).default(false),
 });

@@ -1,5 +1,4 @@
 <script lang="ts">
-	import type { Snippet } from "svelte";
 	import type { HTMLSelectAttributes } from "svelte/elements";
 
 	interface Props extends HTMLSelectAttributes {
@@ -8,7 +7,6 @@
 	}
 
 	let { value = $bindable(), label, options, ...data }: Props = $props();
-	let select = $state(options[0]) as (typeof options)[number];
 </script>
 
 <label class="flex flex-col gap-2 font-semibold">

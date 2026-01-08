@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { duration } from "drizzle-orm/gel-core";
 	import type { Snippet } from "svelte";
 	import { cubicIn, cubicOut } from "svelte/easing";
 	import { fade, fly } from "svelte/transition";

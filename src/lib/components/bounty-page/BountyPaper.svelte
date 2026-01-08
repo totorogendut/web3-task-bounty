@@ -2,7 +2,7 @@
 	import { page } from "$app/state";
 	import { tokens } from "$lib/_eth-shared";
 	import type { Bounty } from "$lib/server/db/schemas";
-	import { Link, Link2 } from "@lucide/svelte";
+	import { Link2 } from "@lucide/svelte";
 	import { formatDistance } from "date-fns";
 
 	interface Props {
@@ -41,7 +41,7 @@
 				<strong>Smart contract:</strong>
 				<a
 					class="flex items-center gap-1 font-bold text-amber-700 underline"
-					href={bounty.escrowAddress}
+					href="https://etherscan.io/address/{bounty.escrowAddress}"
 				>
 					<Link2 size={16} /> link
 				</a>
@@ -65,13 +65,20 @@
 				text-shadow-green-700 text-shadow-sm">${bounty?.rewardAmount}</strong
 		>
 	</div>
-	{#if page.data.user}
+	{#if !!bounty.winningBidId || isExpired}
+		<div
+			class="mx-auto mt-1 w-60 text-center text-lg leading-[1.4]
+ underline decoration-dashed decoration-2 underline-offset-5 opacity-80"
+		>
+			This bounty has ended
+		</div>
+	{:else if page.data.user}
 		<div class="flex items-center gap-2">
 			<a
 				data-sveltekit-preload-data={false}
 				class="flex grow items-center justify-center
 				 rounded-md border-3 border-amber-500 bg-white
-				 	p-2 font-extrabold text-black/80 shadow-2xl
+					 p-2 font-extrabold text-black/80 shadow-2xl
 					hover:bg-amber-50"
 				href="/bid/new/{bounty?.id}"
 			>
@@ -81,7 +88,7 @@
 	{:else}
 		<div
 			class="mx-auto mt-1 w-60 text-center text-lg leading-[1.4]
- underline decoration-dashed decoration-2 underline-offset-5 opacity-80"
+	underline decoration-dashed decoration-2 underline-offset-5 opacity-80"
 		>
 			connect wallet to participate in the bounty
 		</div>

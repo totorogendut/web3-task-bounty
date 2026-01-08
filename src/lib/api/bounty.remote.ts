@@ -1,8 +1,8 @@
 import { getRequestEvent, query } from "$app/server";
 import { db } from "$lib/server/db";
-import { bid } from "$lib/server/db/schemas/tasks";
+import { bid, bounty } from "$lib/server/db/schemas/tasks";
 import z from "zod/v4";
-import { COMMENTABLE_TYPE, BID_STATE } from "./_shared";
+import { BID_STATE } from "./_shared";
 import { and, eq } from "drizzle-orm";
 import type { Bid } from "$lib/server/db/schemas";
 import { error } from "@sveltejs/kit";
@@ -106,14 +106,16 @@ export const approveBid = query(
 		if (item.bounty?.clientId && item.bounty.clientId !== locals.user.id)
 			throw error(403, "You are not authorized to approve this bid.");
 
-		const [result] = await db
+		const [winningBid] = await db
 			.update(bid)
 			.set({ state: "approved" })
 			.where(eq(bid.id, id))
 			.returning();
-		if (!result) error(404, "Update failed. Item not found.");
 
-		await payApprovedBid(result.id);
+		if (!winningBid) error(404, "Update failed. Item not found.");
+		db.update(bounty).set({ winningBidId: winningBid.id }).where(eq(bounty.id, id));
+
+		await payApprovedBid(winningBid.id);
 
 		return { success: true };
 	},

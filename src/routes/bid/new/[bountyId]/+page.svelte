@@ -15,8 +15,6 @@
 	if (!page.params.bountyId) throw error(404, "No bountyId found");
 	const bountyId = page.params.bountyId!;
 
-	const escrowData = await getBountyEscrowData({ id: bountyId });
-
 	let formEl: HTMLFormElement;
 	let openModal = $state(false);
 
@@ -43,11 +41,11 @@
 	onsubmit={async (e) => {
 		e.preventDefault();
 
-		if (!escrowData?.escrowAddress) return;
+		if (!data.bounty?.escrowAddress) return;
 		const formData = new FormData(event?.target as HTMLFormElement);
 
 		const { signature, submittedAt } = await signSubmission({
-			escrowAddress: escrowData.escrowAddress,
+			escrowAddress: data.bounty.escrowAddress,
 			bountyId: bountyId,
 		});
 		formData.append("signature", signature);

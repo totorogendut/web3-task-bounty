@@ -1,10 +1,8 @@
 <script lang="ts">
 	import SkillTag from "../skills/SkillTag.svelte";
-	import { browser } from "$app/environment";
 	import { skills as skillsDemo } from "$lib/components/skills/skills-template.js";
 	import { isLocalUser, type UserClient } from "$lib/user.svelte.js";
 	import { CircleFadingPlus } from "@lucide/svelte";
-	import type { Snippet } from "svelte";
 
 	interface Props {
 		user: UserClient;

@@ -2,11 +2,10 @@ import { getRequestEvent, query } from "$app/server";
 import { COMMENTABLE_TYPE } from "$lib/api/_shared";
 import { db } from "$lib/server/db";
 import { USER_CLIENT_QUERY_DATA } from "$lib/user.svelte";
-import { comment, progress } from "$lib/server/db/schemas/tasks";
+import { comment } from "$lib/server/db/schemas/tasks";
 import { error } from "console";
 import { eq } from "drizzle-orm";
 import z from "zod/v4";
-import { PROGRESS_CONTENT_MAX_LENGTH } from "./_shared";
 import { fail } from "@sveltejs/kit";
 
 export const getBidList = query(

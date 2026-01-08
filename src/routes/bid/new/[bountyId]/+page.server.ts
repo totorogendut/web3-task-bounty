@@ -1,12 +1,30 @@
 import { db } from "$lib/server/db";
-import type { Bounty } from "$lib/server/db/schemas";
-import { bounty, bid } from "$lib/server/db/schemas/tasks";
-import { error, fail, redirect } from "@sveltejs/kit";
+import { bid } from "$lib/server/db/schemas/tasks";
+import { error } from "@sveltejs/kit";
 import type { Actions } from "@sveltejs/kit";
 import { ZodError } from "zod/v4";
 import { uploadFiles } from "$lib/server/attachments";
 import { eq } from "drizzle-orm";
 import { bidSchemas } from "$lib/schemas";
+
+export async function load(event) {
+	const bountyId = event.params.bountyId;
+	const user = event.locals.user;
+
+	if (!user) throw error(403, "You must log in to bid");
+	const bounty = await db.query.bounty.findFirst({
+		where: {
+			id: bountyId,
+		},
+	});
+	if (!bounty) throw error(404, "No bounty found to bid to");
+	if (!!bounty.winningBidId) throw error(403, "This bounty has already picked a winner");
+	if (Date.now() > bounty?.deadline!.getTime()) throw error(403, "This bounty has already expired");
+
+	return {
+		bounty,
+	};
+}
 
 export const actions: Actions = {
 	default: async (event) => {

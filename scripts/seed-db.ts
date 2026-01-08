@@ -2,7 +2,6 @@ import { seed } from "drizzle-seed";
 import { drizzle } from "drizzle-orm/better-sqlite3";
 import { relations } from "../src/lib/server/db/schemas";
 import { user } from "../src/lib/server/db/schemas/users";
-import { tokens } from "../src/lib/_eth-shared";
 import { skills } from "../src/lib/components/skills/skills-template";
 import { bid, bounty, comment } from "../src/lib/server/db/schemas/tasks";
 import "dotenv/config";

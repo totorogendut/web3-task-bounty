@@ -1,4 +1,3 @@
-import { nanoid } from "nanoid";
 import type { Actions } from "../$types";
 import sharp from "sharp";
 import { uploadFiles } from "$lib/server/attachments";

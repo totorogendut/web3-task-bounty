@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { tick, type Snippet } from "svelte";
-	import type { MarkdownFormState } from "./index.svelte";
 
 	type FormatType = "bold" | "italic" | "code" | "link";
 

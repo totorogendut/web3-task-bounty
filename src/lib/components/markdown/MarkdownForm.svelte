@@ -1,8 +1,6 @@
 <script lang="ts">
-	import { onMount } from "svelte";
 	import CommentFormToolbar from "./MarkdownFormToolbar.svelte";
 	import { Bold, Italic, Code, Link } from "@lucide/svelte";
-	import { MarkdownFormState } from "./index.svelte";
 
 	interface Props {
 		name?: string;
@@ -11,6 +9,7 @@
 		canSubmit?: boolean;
 		class?: string;
 		content?: string;
+		onSubmit?: (text: string) => void;
 	}
 
 	let {
@@ -19,6 +18,7 @@
 		canSubmit = true,
 		class: className = "",
 		placeholder = "Write your comment...",
+		onSubmit,
 	}: Props = $props();
 	const isSubmitDisabled = $derived(!value?.length);
 	let textAreaEl: HTMLTextAreaElement;
@@ -65,6 +65,8 @@
 	{#if canSubmit}
 		<div class="flex justify-end border-t border-slate-800 px-6 py-4">
 			<button
+				type="button"
+				onclick={() => onSubmit?.(value)}
 				disabled={isSubmitDisabled}
 				class="rounded-md from-sky-500 to-indigo-600 px-5 py-2 font-semibold text-slate-100/85 transition not-disabled:cursor-pointer
 					not-disabled:bg-linear-to-r not-disabled:hover:brightness-110 disabled:bg-sky-500 disabled:grayscale-25 disabled:saturate-70"
