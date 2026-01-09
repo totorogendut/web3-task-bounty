@@ -24,19 +24,11 @@ export const actions: Actions = {
 			deadline: daysAfter(parseInt(formData.get("deadline") as string)),
 		};
 
-		try {
-			bountySchemasServer.parse(data);
-			const [result] = await db.insert(bounty).values(data).returning();
-			if (!result) throw error(500, "Error inserting bounty data");
+		bountySchemasServer.parse(data);
+		const [result] = await db.insert(bounty).values(data).returning();
+		if (!result) throw error(500, "Error inserting bounty data");
 
-			return {
-				...result,
-			};
-		} catch (err) {
-			console.log(err);
-			if (err instanceof ZodError) throw error(400, err.message);
-			throw error(500, (err as any)?.body || err);
-		}
+		throw redirect(303, `/approve/${result.id}/`);
 	},
 };
 

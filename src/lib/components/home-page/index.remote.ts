@@ -14,6 +14,9 @@ export const getBountyList = query(
 			orderBy: {
 				createdAt: "desc",
 			},
+			where: {
+				escrowStatus: "bid_open",
+			},
 		});
 	},
 );

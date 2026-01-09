@@ -33,8 +33,6 @@
 	$effect(() => {
 		if (form?.id) goto(`/approve/${form.id}/`);
 	});
-
-	$inspect(form);
 </script>
 
 <form use:enhance bind:this={formEl} class="mx-auto mt-50 flex w-250 flex-col gap-4" method="post">

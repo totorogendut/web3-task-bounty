@@ -6,7 +6,7 @@
 		children: Snippet;
 	}
 
-	const { children, ...data }: Props = $props();
+	const { children, class: className, ...data }: Props = $props();
 </script>
 
 <button
@@ -14,7 +14,7 @@
 	class={[
 		`cursor-pointer rounded-full p-1.5 text-amber-300/80 
   hover:bg-amber-300/20 hover:text-amber-200`,
-		data.class,
+		className,
 	]}
 >
 	{@render children()}

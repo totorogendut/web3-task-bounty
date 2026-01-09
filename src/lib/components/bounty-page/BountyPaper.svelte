@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from "$app/state";
-	import { tokens } from "$lib/_eth-shared";
+	import { ethChain, tokens } from "$lib/_eth-shared";
 	import type { Bounty } from "$lib/server/db/schemas";
 	import { Link2 } from "@lucide/svelte";
 	import { formatDistance } from "date-fns";
@@ -41,7 +41,7 @@
 				<strong>Smart contract:</strong>
 				<a
 					class="flex items-center gap-1 font-bold text-amber-700 underline"
-					href="https://etherscan.io/address/{bounty.escrowAddress}"
+					href="{ethChain.blockExplorers.default.url}/address/{bounty.escrowAddress}"
 				>
 					<Link2 size={16} /> link
 				</a>

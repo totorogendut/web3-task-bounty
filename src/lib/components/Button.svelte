@@ -6,7 +6,7 @@
 		children?: Snippet;
 	}
 
-	const { children, ...data }: Props = $props();
+	const { children, class: className, ...data }: Props = $props();
 </script>
 
 <button
@@ -17,7 +17,7 @@
 			rounded-md bg-amber-700 px-4 py-2 font-bold shadow-lg
 			not-disabled:cursor-pointer hover:-translate-y-0.5
 			active:translate-y-0 disabled:grayscale-75`,
-		data.class,
+		className,
 	]}
 	{...data}
 >

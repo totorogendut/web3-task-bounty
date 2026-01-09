@@ -7,14 +7,14 @@
 		children?: Snippet;
 	}
 
-	const { title = "Unavailable", children, ...data }: Props = $props();
+	const { title = "Unavailable", class: className, children, ...data }: Props = $props();
 </script>
 
 <div
 	class={[
 		`mx-auto my-20 flex flex-col items-center
   justify-center gap-3`,
-		data.class,
+		className,
 	]}
 >
 	<div>
