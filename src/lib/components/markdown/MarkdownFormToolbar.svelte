@@ -50,6 +50,7 @@
 </script>
 
 <button
+	tabindex="-1"
 	type="button"
 	bind:this={buttonEl}
 	style="--transition-delay: {65 * (index + 1)}ms;"

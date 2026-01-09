@@ -7,6 +7,8 @@ import { error } from "console";
 import { eq } from "drizzle-orm";
 import z from "zod/v4";
 import { fail } from "@sveltejs/kit";
+import sanitize from "sanitize-html";
+import { marked } from "marked";
 
 export const getBidList = query(
 	z.object({
@@ -17,7 +19,7 @@ export const getBidList = query(
 	}),
 	async ({ bountyId, userId, offset, limit }) => {
 		if (!userId && !bountyId) throw fail(400, "Must provide userId or bountyId");
-		return db.query.bid.findMany({
+		const data = await db.query.bid.findMany({
 			offset,
 			limit: limit || 10,
 			orderBy: {
@@ -28,6 +30,13 @@ export const getBidList = query(
 				user: USER_CLIENT_QUERY_DATA,
 			},
 		});
+
+		return Promise.all(
+			data.map(async (bid) => {
+				bid.content = sanitize(await marked(bid.content));
+				return bid;
+			}),
+		);
 	},
 );
 

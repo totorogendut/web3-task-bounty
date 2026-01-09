@@ -4,10 +4,7 @@
 	import BidList from "$lib/components/bounty-page/BidList.svelte";
 	import TabButton from "$lib/components/TabButton.svelte";
 	import BountyPaper from "$lib/components/bounty-page/BountyPaper.svelte";
-	import { parseMarkdown } from "$lib/utils/content";
 	import DOMpurify from "dompurify";
-	import { browser } from "$app/environment";
-	import Avatar from "$lib/components/user/Avatar.svelte";
 	import UserBanner from "$lib/components/UserBanner.svelte";
 	import SkillTag from "$lib/components/skills/SkillTag.svelte";
 	import { setContext } from "svelte";
@@ -16,17 +13,10 @@
 	const tabState = $state({
 		tab: "description",
 	}) as { tab: "description" | "bids" };
-	let contentHTML = $state("");
 
 	setContext("tabState", tabState);
 	function tabClick(name: typeof tabState.tab) {
 		tabState.tab = name;
-		console.log(tabState.tab);
-	}
-
-	async function parseContent() {
-		if (contentHTML) return contentHTML;
-		return DOMpurify.sanitize(await parseMarkdown(data.bounty.content || ""));
 	}
 </script>
 
@@ -55,7 +45,7 @@
 			{#if tabState.tab === "description"}
 				<svelte:boundary>
 					<div class="min-h-75 max-w-180 text-lg leading-[1.1]">
-						{@html browser ? await parseContent() : ""}
+						{@html data.bounty?.content}
 					</div>
 					<div class="mt-8 flex gap-1">
 						{#each data.bounty?.skills || [] as skill}

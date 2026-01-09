@@ -20,7 +20,7 @@
 
 <div class="relative flex flex-col gap-1 self-start">
 	<div class="peer absolute right-0 bottom-0">
-		{#if isLocalUser(user?.id)}
+		<!-- {#if isLocalUser(user?.id)}
 			<BidCTAHunter
 				onEdit={async (text) => {
 					const prevContent = content;
@@ -33,7 +33,7 @@
 				}}
 				{content}
 			/>
-		{/if}
+		{/if} -->
 		{#if isLocalUser(bounty?.clientId)}
 			<BidCTAClient bid={{ id, content, ...data }} {id} />
 		{/if}
@@ -51,7 +51,7 @@
 				WIN
 			</div>
 		{/if}
-		{content}
+		{@html content}
 	</div>
 	<div class="mt-1 flex items-center gap-2">
 		<strong class="mr-2 cowboy-text">Hunter:</strong>

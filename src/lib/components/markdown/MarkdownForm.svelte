@@ -1,6 +1,8 @@
 <script lang="ts">
 	import CommentFormToolbar from "./MarkdownFormToolbar.svelte";
 	import { Bold, Italic, Code, Link } from "@lucide/svelte";
+	import DOMPurify from "dompurify";
+	import { marked } from "marked";
 
 	interface Props {
 		name?: string;
@@ -22,6 +24,8 @@
 	}: Props = $props();
 	const isSubmitDisabled = $derived(!value?.length);
 	let textAreaEl: HTMLTextAreaElement;
+	let showPreview = $state(false);
+	let textAreaHeight = $state(0);
 </script>
 
 <div
@@ -30,8 +34,8 @@
 	transition has-focus:-translate-y-1 {className}"
 >
 	<div
-		class="flex gap-2 border-t-4 border-cyan-500
-	bg-slate-700
+		class="flex items-center gap-2 border-t-4
+	border-cyan-500 bg-slate-700
 	 px-4 pt-6 pb-2 group-has-focus/comment:border-transparent"
 	>
 		<CommentFormToolbar {textAreaEl} onWrap={(t) => (value = t)} type="bold"
@@ -46,20 +50,36 @@
 		<CommentFormToolbar {textAreaEl} onWrap={(t) => (value = t)} type="link"
 			><Link size="18" /></CommentFormToolbar
 		>
+		<button
+			onclick={() => (showPreview = !showPreview)}
+			type="button"
+			class="mb-1 ml-2 cursor-pointer font-semibold
+			text-slate-300 underline decoration-2 underline-offset-4
+			hover:text-slate-400 active:text-amber-200">{showPreview ? "draft" : "preview"}</button
+		>
 		<small class="ml-auto self-center text-white/70">Markdown</small>
 	</div>
 
-	<!-- Editor -->
 	<textarea
+		bind:clientHeight={textAreaHeight}
 		bind:this={textAreaEl}
 		bind:value
 		class="m2 min-h-55 w-full resize-y
 		border-0 bg-slate-950 p-4 font-mono text-sm
 		 text-slate-100 outline-none focus:ring-5
 		 focus:ring-sky-500"
+		class:hidden={showPreview}
 		{placeholder}
 		{name}
 	></textarea>
+	{#if showPreview}
+		<div
+			class="min-h-55 w-full bg-slate-950 p-4 font-mono text-sm
+		 text-slate-100"
+		>
+			{@html DOMPurify.sanitize(await marked(value))}
+		</div>
+	{/if}
 
 	<!-- Actions -->
 	{#if canSubmit}
