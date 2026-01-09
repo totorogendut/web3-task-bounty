@@ -1,10 +1,9 @@
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
-import { nanoid } from "nanoid";
 import { user } from "./users";
 import { BASE_TABLE } from "./_shared";
 import type { COMMENTABLE_TYPE, BID_STATE } from "$lib/api/_shared";
 import type { Hex } from "viem";
-import type { tokens } from "$lib/_eth-shared";
+import type { EscrowStatus, tokens } from "$lib/_eth-shared";
 
 export const bounty = sqliteTable("bounty", {
 	...BASE_TABLE,
@@ -15,12 +14,14 @@ export const bounty = sqliteTable("bounty", {
 		.notNull()
 		.references(() => user.id),
 	winningBidId: text("winning_bid_id"),
+	winnerId: text("winnerId").references(() => user.id),
 	skills: text("skills", { mode: "json" }).$type<string[]>().default([]),
 	escrowAddress: text("escrow_address").$type<Hex>(),
 	rewardAmount: text("reward_amount").notNull().default("0.00").$type<`${number}.${number}`>(),
 	rewardCurrency: text("reward_currency").default("mnee").$type<keyof typeof tokens.mainnet>(),
 	deadline: integer("deadline", { mode: "timestamp" }),
 	canRefund: integer("can_refund", { mode: "boolean" }).default(false),
+	escrowStatus: text("escrow_status").$type<EscrowStatus>().default("approval_pending"),
 });
 
 export const bid = sqliteTable("bid", {

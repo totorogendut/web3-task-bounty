@@ -1,0 +1,1 @@
+ALTER TABLE `bounty` ADD `escrow_status` text DEFAULT 'approval_pending';

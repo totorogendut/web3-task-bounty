@@ -3,6 +3,7 @@
 	import { goto } from "$app/navigation";
 	import { page } from "$app/state";
 	import { getBountyEscrowData } from "$lib/components/bid-page/index.remote.js";
+	import Button from "$lib/components/Button.svelte";
 	import MarkdownForm from "$lib/components/markdown/MarkdownForm.svelte";
 	import ModalDialog from "$lib/components/ModalDialog.svelte";
 	import { signSubmission } from "$lib/contracts.svelte.js";
@@ -81,19 +82,15 @@
 				/>
 			</label>
 		</div>
-		<button
-			type="button"
+		<Button
 			disabled={!isValid}
-			class="not-disabled-hover:-translate-y-0.5 not-disabled-hover:bg-amber-600 not-disabled-active:translate-y-0
-				rounded-md bg-amber-700 px-4 py-2 font-bold shadow-lg
-				not-disabled:cursor-pointer disabled:grayscale-75"
 			onclick={(e) => {
 				e.preventDefault();
 				openModal = true;
 			}}
 		>
 			Post bid
-		</button>
+		</Button>
 	</div>
 	<div class="flex flex-col gap-2">
 		{#each input.files || [] as f}

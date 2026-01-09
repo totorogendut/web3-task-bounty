@@ -37,6 +37,10 @@ export const relations = defineRelations(
 				from: r.bounty.clientId,
 				to: r.user.id,
 			}),
+			winner: r.one.user({
+				from: r.bounty.winnerId,
+				to: r.user.id,
+			}),
 			winningBid: r.one.bid({
 				from: r.bounty.winningBidId,
 				to: r.bid.id,

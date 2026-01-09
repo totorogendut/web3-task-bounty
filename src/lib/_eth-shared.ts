@@ -3,7 +3,19 @@ import { mainnet, sepolia } from "viem/chains";
 
 export const ethChain = sepolia;
 export const factoryContractAddress = "0x0e5ac1741b47d03a3e1b491af1ec0576f13cb652" as const;
+export const escrowStatusEnum = [
+	"approval_pending",
+	"approval_reverted",
+	"approval_success",
+	"mint_pending",
+	"mint_reverted",
+	"mint_success",
+	"bid_open",
+	"bid_closed",
+	"finished",
+] as const;
 
+export type EscrowStatus = (typeof escrowStatusEnum)[number];
 interface ERC20Token {
 	address: Hex;
 	label: string;

@@ -14,7 +14,7 @@ import {
 } from "viem";
 import { erc20Abi } from "viem";
 
-const publicClient = createPublicClient({
+export const publicClient = createPublicClient({
 	chain: ethChain,
 	transport: http(),
 });
@@ -22,6 +22,22 @@ const publicClient = createPublicClient({
 export const SUBMISSION_TYPEHASH = keccak256(
 	toHex("Submission(uint256 bountyId,address freelancer,uint256 submittedAt,uint256 nonce)"),
 ) as Hex;
+
+export async function approveSpendingCap(reward: string, token = tokens.testnet.wethSepolia) {
+	if (!wallet.client) throw new Error("Wallet client error");
+	const amount = parseUnits(reward, token.decimal);
+	const approveHash = await wallet.client.writeContract({
+		address: token.address,
+		abi: erc20Abi,
+		functionName: "approve",
+		args: [factoryContractAddress, amount],
+		chain: ethChain,
+		account: wallet.address,
+	});
+
+	// wait until mined
+	return await publicClient.waitForTransactionReceipt({ hash: approveHash });
+}
 
 export async function createBounty(
 	{
@@ -41,18 +57,6 @@ export async function createBounty(
 
 	const amount = parseUnits(reward, token.decimal);
 	const deadlineInSeconds = BigInt(Math.floor(deadline.getTime() / 1000));
-
-	const approveHash = await wallet.client.writeContract({
-		address: token.address,
-		abi: erc20Abi,
-		functionName: "approve",
-		args: [factoryContractAddress, amount],
-		chain: ethChain,
-		account: wallet.address,
-	});
-
-	// wait until mined
-	await publicClient.waitForTransactionReceipt({ hash: approveHash });
 
 	const txHash = await wallet.client.writeContract({
 		address: factoryContractAddress,

@@ -1,18 +1,16 @@
 <script lang="ts">
 	import { enhance } from "$app/forms";
-	import { page } from "$app/state";
+	import { goto } from "$app/navigation";
 	import { tokens } from "$lib/_eth-shared.js";
+	import Button from "$lib/components/Button.svelte";
 	import DeadlinePicker from "$lib/components/DeadlinePicker.svelte";
 	import Dropdown from "$lib/components/Dropdown.svelte";
 	import MarkdownForm from "$lib/components/markdown/MarkdownForm.svelte";
 	import ModalDialog from "$lib/components/ModalDialog.svelte";
 	import TextArea from "$lib/components/TextArea.svelte";
 	import TextInput from "$lib/components/TextInput.svelte";
-	import { createBounty } from "$lib/contracts.svelte.js";
 	import { bountySchemas } from "$lib/schemas.js";
-	import { daysAfter } from "$lib/utils/date.js";
-	import { wallet } from "$lib/wallet.svelte.js";
-	import { nanoid } from "nanoid";
+	import { z } from "zod/v4";
 
 	let openModal = $state(false);
 	let formEl: HTMLFormElement;
@@ -24,34 +22,22 @@
 		description: "",
 		content: "",
 		deadline: 0,
-		reward: 0,
+		rewardAmount: 0,
 		currency: "mnee",
 	});
 
-	const isValid = $derived(bountySchemas.safeParse(input).success);
+	const schemaParse = $derived(bountySchemas.safeParse(input));
+	const isValid = $derived(schemaParse.success);
+	const schemaErrors = $derived(schemaParse.error?.issues);
 
-	async function submit() {
-		const formData = new FormData(formEl);
-		const id = nanoid(21);
-		const txHash = await createBounty({
-			bountyId: id,
-			reward: input.reward.toPrecision(),
-			deadline: daysAfter(input.deadline),
-		});
-		formData.append("id", id);
-		formData.append("txHash", txHash);
-		formEl.submit();
-	}
+	$effect(() => {
+		if (form?.id) goto(`/approve/${form.id}/`);
+	});
 
-	$inspect(wallet.client);
+	$inspect(form);
 </script>
 
 <form use:enhance bind:this={formEl} class="mx-auto mt-50 flex w-250 flex-col gap-4" method="post">
-	{#if form?.error}
-		<div class="w-full rounded-md bg-red-800 p-4 text-white/90">
-			Error {form.error}
-		</div>
-	{/if}
 	<h1 class=" cowboy-text text-5xl">Write a new bounty</h1>
 	<TextInput
 		bind:value={input.title}
@@ -75,9 +61,15 @@
 		canSubmit={false}
 	/>
 	<div class="flex items-center gap-4">
-		<DeadlinePicker bind:value={input.deadline} />
 		<TextInput
-			bind:value={input.reward}
+			label="Deadline (in days)"
+			type="number"
+			placeholder="Select date"
+			bind:value={input.deadline}
+			name="deadline"
+		/>
+		<TextInput
+			bind:value={input.rewardAmount}
 			label="Reward"
 			type="number"
 			placeholder="$0.00"
@@ -96,25 +88,32 @@
 			*Posting bounty will run a small contract for a gas fee on top of putting ER20 based crypto
 			over the smart contract. You might need to incur additional gas fee for further interactions
 			with the smart contract like releasing funds or set a winning bid for the bounty.
+			{#if schemaErrors?.length}
+				<div class="mt-4 text-red-300">
+					<strong>Can't post yet</strong>
+					<div class="flex flex-col leading-[1.2]">
+						{#each schemaErrors as error}
+							<span>> {error.message}</span>
+						{/each}
+					</div>
+				</div>
+			{/if}
 		</small>
-		<button
+		<Button
 			type="button"
 			disabled={!isValid}
-			class="not-disabled-hover:-translate-y-0.5 not-disabled-hover:bg-amber-600 not-disabled-active:translate-y-0
-				rounded-md bg-amber-700 px-4 py-2 font-bold shadow-lg
-				not-disabled:cursor-pointer disabled:grayscale-75"
 			onclick={(e) => {
-				e.preventDefault();
+				console.log(e);
 				openModal = true;
 			}}
 		>
 			Post bounty
-		</button>
+		</Button>
 	</div>
 </form>
 
 {#if openModal}
-	<ModalDialog onClose={() => (openModal = false)} onYes={() => submit()}>
-		Bidding for bounty. Are you sure?
+	<ModalDialog onClose={() => (openModal = false)} onYes={() => formEl.submit()}>
+		Create a bounty. Are you sure?
 	</ModalDialog>
 {/if}
