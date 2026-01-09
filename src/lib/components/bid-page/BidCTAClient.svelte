@@ -4,6 +4,7 @@
 	import Modal from "../ModalDialog.svelte";
 	import type { Bid } from "$lib/server/db/schemas";
 	import { PUBLIC_S3_ENDPOINT } from "$env/static/public";
+	import Tooltip from "../Tooltip.svelte";
 
 	interface Props {
 		id: string;
@@ -15,12 +16,16 @@
 	let openAttachmentsModal = $state(false);
 </script>
 
-<BidCTAButton onclick={() => (openAttachmentsModal = true)}>
-	<Download size={20} />
-</BidCTAButton>
-<BidCTAButton onclick={() => (openApproveModal = true)}>
-	<Check size={20} />
-</BidCTAButton>
+<Tooltip label="Download attachments">
+	<BidCTAButton onclick={() => (openAttachmentsModal = true)}>
+		<Download size={20} />
+	</BidCTAButton>
+</Tooltip>
+<Tooltip label="Award bounty to this bid">
+	<BidCTAButton onclick={() => (openApproveModal = true)}>
+		<Check size={20} />
+	</BidCTAButton>
+</Tooltip>
 
 {#if openApproveModal}
 	<Modal

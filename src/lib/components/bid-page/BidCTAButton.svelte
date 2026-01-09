@@ -13,7 +13,8 @@
 	{...data}
 	class={[
 		`cursor-pointer rounded-full p-1.5 text-amber-300/80 
-  hover:bg-amber-300/20 hover:text-amber-200`,
+  group-hover/bid:bg-amber-300/35 group-hover/bid:text-amber-100/90
+	 hover:bg-amber-300/60 	hover:text-white`,
 		className,
 	]}
 >

@@ -18,7 +18,7 @@
 	const bounty: Bounty = $derived(data?.bounty || page.data.bounty);
 </script>
 
-<div class="relative flex flex-col gap-1 self-start">
+<div class="group/bid relative flex flex-col gap-1 self-start">
 	<div class="peer absolute right-0 bottom-0">
 		<!-- {#if isLocalUser(user?.id)}
 			<BidCTAHunter
