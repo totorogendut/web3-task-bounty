@@ -30,19 +30,10 @@
 	$effect(() => {
 		if (form?.id) goto(`/bounty/${bountyId}`);
 	});
-</script>
 
-<form
-	use:enhance
-	enctype="multipart/form-data"
-	bind:this={formEl}
-	class="mx-auto mt-50 flex w-250 flex-col gap-4"
-	method="post"
-	onsubmit={async (e) => {
-		e.preventDefault();
-
+	async function submit() {
 		if (!data.bounty?.escrowAddress) return;
-		const formData = new FormData(event?.target as HTMLFormElement);
+		const formData = new FormData(formEl as HTMLFormElement);
 
 		const { signature, submittedAt } = await signSubmission({
 			escrowAddress: data.bounty.escrowAddress,
@@ -51,7 +42,15 @@
 		formData.append("signature", signature);
 		formData.append("submittedAt", submittedAt.toString());
 		formEl.submit();
-	}}
+	}
+</script>
+
+<form
+	use:enhance
+	enctype="multipart/form-data"
+	bind:this={formEl}
+	class="mx-auto mt-50 flex w-250 flex-col gap-4"
+	method="post"
 >
 	{#if form?.error}
 		<div class="w-full rounded-md bg-red-800 p-4 text-white/90">
@@ -108,7 +107,7 @@
 </form>
 
 {#if openModal}
-	<ModalDialog onClose={() => (openModal = false)} onYes={() => formEl.submit()}>
+	<ModalDialog onClose={() => (openModal = false)} onYes={() => submit()}>
 		Bidding for bounty. Are you sure?
 	</ModalDialog>
 {/if}

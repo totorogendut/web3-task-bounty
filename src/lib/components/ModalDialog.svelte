@@ -38,6 +38,7 @@
 		{#if hasOptions}
 			<div class="mt-8 flex justify-end gap-2">
 				<button
+					type="button"
 					class="cursor-pointer rounded-md bg-red-200
 						 px-4 py-1 font-semibold hover:bg-red-300"
 					onclick={() => {
@@ -46,6 +47,7 @@
 					}}>Cancel</button
 				>
 				<button
+					type="button"
 					class="cursor-pointer rounded-md bg-green-200
 						 px-4 py-1 font-semibold hover:bg-green-300"
 					onclick={() => {

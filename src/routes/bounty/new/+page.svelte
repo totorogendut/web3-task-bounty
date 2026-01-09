@@ -27,12 +27,9 @@
 	});
 
 	const isValid = $derived(bountySchemas.safeParse(input).success);
-</script>
 
-<form
-	onsubmit={async (e) => {
-		e.preventDefault();
-		const formData = new FormData(event?.target as HTMLFormElement);
+	async function submit() {
+		const formData = new FormData(formEl);
 		const id = nanoid(21);
 		const txHash = await createBounty({
 			bountyId: id,
@@ -42,12 +39,10 @@
 		formData.append("id", id);
 		formData.append("txHash", txHash);
 		formEl.submit();
-	}}
-	use:enhance
-	bind:this={formEl}
-	class="mx-auto mt-50 flex w-250 flex-col gap-4"
-	method="post"
->
+	}
+</script>
+
+<form use:enhance bind:this={formEl} class="mx-auto mt-50 flex w-250 flex-col gap-4" method="post">
 	{#if form?.error}
 		<div class="w-full rounded-md bg-red-800 p-4 text-white/90">
 			Error {form.error}
@@ -115,7 +110,7 @@
 </form>
 
 {#if openModal}
-	<ModalDialog onClose={() => (openModal = false)} onYes={() => formEl.submit()}>
+	<ModalDialog onClose={() => (openModal = false)} onYes={() => submit()}>
 		Bidding for bounty. Are you sure?
 	</ModalDialog>
 {/if}
