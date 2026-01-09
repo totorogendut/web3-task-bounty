@@ -166,6 +166,7 @@ export async function awardSubmission({
 		abi: ESCROW_ABI,
 		functionName: "awardSubmission",
 		args: [freelancer, BigInt(submittedAt), signature],
+		chain: ethChain,
 	});
 
 	return wallet.client.writeContract(request);

@@ -1,11 +1,8 @@
 <script lang="ts">
 	import { enhance } from "$app/forms";
-	import { goto } from "$app/navigation";
 	import { page } from "$app/state";
-	import { getBountyEscrowData } from "$lib/components/bid-page/index.remote.js";
 	import Button from "$lib/components/Button.svelte";
 	import MarkdownForm from "$lib/components/markdown/MarkdownForm.svelte";
-	import ModalDialog from "$lib/components/ModalDialog.svelte";
 	import Spinner from "$lib/components/ui/spinner/spinner.svelte";
 	import { signSubmission } from "$lib/contracts.svelte.js";
 	import { bidSchemas } from "$lib/schemas.js";
@@ -19,7 +16,6 @@
 	const bountyId = page.params.bountyId!;
 
 	let formEl: HTMLFormElement;
-	let openModal = $state(false);
 	let loadingState = $state("");
 	let signingData: Awaited<ReturnType<typeof signSubmission>> = $state({
 		signature: "0x",

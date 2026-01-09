@@ -6,7 +6,6 @@ import { BID_STATE } from "./_shared";
 import { and, eq } from "drizzle-orm";
 import type { Bid } from "$lib/server/db/schemas";
 import { error } from "@sveltejs/kit";
-import { payApprovedBid } from "$lib/server/payment";
 import { bidSchemas } from "$lib/schemas";
 
 export const editBid = query(
@@ -88,7 +87,7 @@ export const downloadBidAttachment = query(
 	},
 );
 
-export const approveBid = query(
+export const setWinningBid = query(
 	z.object({
 		id: z.string(),
 	}),
@@ -106,16 +105,16 @@ export const approveBid = query(
 		if (item.bounty?.clientId && item.bounty.clientId !== locals.user.id)
 			throw error(403, "You are not authorized to approve this bid.");
 
-		const [winningBid] = await db
-			.update(bid)
-			.set({ state: "approved" })
-			.where(eq(bid.id, id))
-			.returning();
+		const bidQ = db.update(bid).set({ state: "approved" }).where(eq(bid.id, id)).returning();
+		const bountyQ = db
+			.update(bounty)
+			.set({ winnerId: item.userId, winningBidId: item.id })
+			.where(eq(bounty.id, id));
+
+		const [[winningBid]] = await Promise.all([bidQ, bountyQ]);
 
 		if (!winningBid) error(404, "Update failed. Item not found.");
 		db.update(bounty).set({ winningBidId: winningBid.id }).where(eq(bounty.id, id));
-
-		await payApprovedBid(winningBid.id);
 
 		return { success: true };
 	},

@@ -40,17 +40,6 @@ export const getBidList = query(
 	},
 );
 
-export const getBountyEscrowData = query(z.object({ id: z.string() }), async ({ id }) => {
-	return db.query.bounty.findFirst({
-		where: {
-			id,
-		},
-		columns: {
-			escrowAddress: true,
-		},
-	});
-});
-
 export const createComment = query(
 	z.object({
 		commentableType: z.enum(COMMENTABLE_TYPE),

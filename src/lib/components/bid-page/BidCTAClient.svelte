@@ -5,6 +5,9 @@
 	import type { Bid } from "$lib/server/db/schemas";
 	import { PUBLIC_S3_ENDPOINT } from "$env/static/public";
 	import Tooltip from "../Tooltip.svelte";
+	import { page } from "$app/state";
+	import { awardSubmission } from "$lib/contracts.svelte";
+	import { error } from "@sveltejs/kit";
 
 	interface Props {
 		id: string;
@@ -14,6 +17,17 @@
 	const { id, bid }: Props = $props();
 	let openApproveModal = $state(false);
 	let openAttachmentsModal = $state(false);
+
+	if (!bid.submittedAt) throw error(400, "Bid has no submittedAt value");
+	if (!bid.signature) throw error(400, "Bid has no signature value");
+	if (!page.data.bounty?.escrowAddress) throw error(400, "Bounty has no escrowAddress value");
+
+	const bidData: Parameters<typeof awardSubmission>[0] = {
+		escrowAddress: page.data.bounty?.escrowAddress,
+		freelancer: "",
+		submittedAt: bid.submittedAt,
+		signature: bid.signature,
+	};
 </script>
 
 <Tooltip label="Download attachments">
@@ -31,11 +45,12 @@
 	<Modal
 		onYes={() => {
 			// console.log("Yes");
+			awardSubmission(bidData);
 		}}
 		onClose={() => (openApproveModal = false)}
 	>
 		<strong class="text-xl leading-none">Are you sure you want to grant bounty?</strong>
-		<p class="mt-4 text-lg">
+		<p class="mt-2 text-lg">
 			This will end your bounty and release the payment. Might requires a gas fee.
 		</p>
 	</Modal>
