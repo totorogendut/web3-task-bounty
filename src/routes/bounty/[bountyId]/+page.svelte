@@ -54,7 +54,7 @@
 			</div>
 			{#if tabState.tab === "description"}
 				<svelte:boundary>
-					<div class="max-w-180 text-lg leading-[1.1]">
+					<div class="min-h-75 max-w-180 text-lg leading-[1.1]">
 						{@html browser ? await parseContent() : ""}
 					</div>
 					<div class="mt-8 flex gap-1">

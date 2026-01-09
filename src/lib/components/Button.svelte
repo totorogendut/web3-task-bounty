@@ -12,11 +12,12 @@
 <button
 	type={data.type || "button"}
 	class={[
-		`not-disabled-hover:-translate-y-0.5 not-disabled-hover:bg-amber-600 
-      not-disabled-active:translate-y-0
-			rounded-md bg-amber-700 px-4 py-2 font-bold shadow-lg
-			not-disabled:cursor-pointer hover:-translate-y-0.5
-			active:translate-y-0 disabled:grayscale-75`,
+		`rounded-md bg-amber-700 
+      px-4
+			py-2 font-bold shadow-lg not-disabled:cursor-pointer 
+			not-disabled:hover:-translate-y-0.5
+			not-disabled:hover:bg-amber-600 
+			not-disabled:active:translate-y-0 disabled:grayscale-75`,
 		className,
 	]}
 	{...data}

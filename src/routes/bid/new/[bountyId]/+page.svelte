@@ -6,10 +6,12 @@
 	import Button from "$lib/components/Button.svelte";
 	import MarkdownForm from "$lib/components/markdown/MarkdownForm.svelte";
 	import ModalDialog from "$lib/components/ModalDialog.svelte";
+	import Spinner from "$lib/components/ui/spinner/spinner.svelte";
 	import { signSubmission } from "$lib/contracts.svelte.js";
 	import { bidSchemas } from "$lib/schemas.js";
 	import { error } from "@sveltejs/kit";
 	import prettyBytes from "pretty-bytes";
+	import { tick } from "svelte";
 
 	const { data, form } = $props();
 
@@ -18,6 +20,11 @@
 
 	let formEl: HTMLFormElement;
 	let openModal = $state(false);
+	let loadingState = $state("");
+	let signingData: Awaited<ReturnType<typeof signSubmission>> = $state({
+		signature: "0x",
+		submittedAt: 0,
+	});
 
 	const input = $state({
 		content: "",
@@ -28,20 +35,17 @@
 		bidSchemas.safeParse(input).success && (input.files as any)?.length >= 1,
 	);
 
-	$effect(() => {
-		if (form?.id) goto(`/bounty/${bountyId}`);
-	});
-
 	async function submit() {
 		if (!data.bounty?.escrowAddress) return;
-		const formData = new FormData(formEl as HTMLFormElement);
 
-		const { signature, submittedAt } = await signSubmission({
+		loadingState = "Signing bid...";
+		signingData = await signSubmission({
 			escrowAddress: data.bounty.escrowAddress,
 			bountyId: bountyId,
 		});
-		formData.append("signature", signature);
-		formData.append("submittedAt", submittedAt.toString());
+
+		loadingState = "Uploading bid...";
+		await tick();
 		formEl.submit();
 	}
 </script>
@@ -82,14 +86,15 @@
 				/>
 			</label>
 		</div>
-		<Button
-			disabled={!isValid}
-			onclick={(e) => {
-				e.preventDefault();
-				openModal = true;
-			}}
-		>
-			Post bid
+		<input type="hidden" bind:value={signingData.signature} name="signature" />
+		<input type="hidden" bind:value={signingData.submittedAt} name="submittedAt" />
+		<Button class="flex items-center gap-2" disabled={!isValid || !!loadingState} onclick={submit}>
+			{#if loadingState}
+				<Spinner />
+				{loadingState}
+			{:else}
+				Post bid
+			{/if}
 		</Button>
 	</div>
 	<div class="flex flex-col gap-2">
@@ -103,8 +108,8 @@
 	</div>
 </form>
 
-{#if openModal}
+<!-- {#if openModal}
 	<ModalDialog onClose={() => (openModal = false)} onYes={() => submit()}>
 		Bidding for bounty. Are you sure?
 	</ModalDialog>
-{/if}
+{/if} -->

@@ -1,7 +1,8 @@
+import { dev } from "$app/environment";
 import type { Hex } from "viem";
 import { mainnet, sepolia } from "viem/chains";
 
-export const ethChain = sepolia;
+export const ethChain = dev ? sepolia : mainnet;
 export const factoryContractAddress = "0x0e5ac1741b47d03a3e1b491af1ec0576f13cb652" as const;
 export const escrowStatusEnum = [
 	"approval_pending",
@@ -51,6 +52,8 @@ interface Tokens {
 		wethSepolia: ERC20Token;
 	};
 }
+
+export type TokenSymbol = keyof typeof tokens.mainnet;
 
 export const tokens: Tokens = {
 	mainnet: {

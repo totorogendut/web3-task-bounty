@@ -2,12 +2,8 @@ import { db } from "$lib/server/db";
 import { bounty } from "$lib/server/db/schemas/tasks";
 import { error, redirect } from "@sveltejs/kit";
 import type { Actions } from "@sveltejs/kit";
-import { z, ZodError } from "zod/v4";
 import { daysAfter } from "$lib/utils/date";
-import type { Hex } from "viem";
-import { publicClient } from "$lib/server/viem/contracts";
-import { eq } from "drizzle-orm";
-import { bountySchemas, bountySchemasServer } from "$lib/schemas";
+import { bountySchemasServer } from "$lib/schemas";
 import type { tokens } from "$lib/_eth-shared";
 
 export const actions: Actions = {
@@ -31,10 +27,3 @@ export const actions: Actions = {
 		throw redirect(303, `/approve/${result.id}/`);
 	},
 };
-
-async function applyEscrowContract(bountyId: string, txHash: Hex) {
-	const t = await publicClient.waitForTransactionReceipt({ hash: txHash });
-	const log = t.logs.find((log) => log.transactionHash === txHash);
-	if (!log) throw error(500, "Smart contract transaction failed");
-	await db.update(bounty).set({ escrowAddress: log.address }).where(eq(bounty.id, bountyId));
-}

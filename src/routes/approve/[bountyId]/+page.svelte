@@ -1,7 +1,9 @@
 <script lang="ts">
+	import { dev } from "$app/environment";
 	import { goto } from "$app/navigation";
-	import { tokens, type EscrowStatus } from "$lib/_eth-shared";
+	import { tokens, type EscrowStatus, type TokenSymbol } from "$lib/_eth-shared";
 	import Button from "$lib/components/Button.svelte";
+	import Spinner from "$lib/components/ui/spinner/spinner.svelte";
 	import { approveSpendingCap, createBounty, publicClient } from "$lib/contracts.svelte.js";
 	import { daysAfter } from "$lib/utils/date.js";
 	import { isBountyContractPending, isEscrowApprovalPending } from "$lib/utils/escrow.js";
@@ -15,28 +17,31 @@
 	let isContractPending = $derived(isBountyContractPending(escrowStatus as EscrowStatus));
 	let isBusy = $state(false);
 	let isWaitingForContract = $state(false);
+	const token = dev
+		? tokens.testnet.wethSepolia
+		: tokens.mainnet[bounty.rewardCurrency as TokenSymbol];
 
 	async function createContract() {
 		try {
 			isBusy = true;
 			changeStatus("mint_pending");
-			const hash = await createBounty({
-				bountyId: bounty.id,
-				reward: bounty.rewardAmount,
-				deadline: bounty.deadline!,
-			});
+			const hash = await createBounty(
+				{
+					bountyId: bounty.id,
+					reward: bounty.rewardAmount,
+					deadline: bounty.deadline!,
+				},
+				token,
+			);
 			isWaitingForContract = true;
 
 			const tx = await waitCreatingContract({ id: bounty.id, hash });
 			if (tx.success) {
 				goto(`/bounty/${bounty.id}/`);
-				escrowStatus === "bid_open";
-			} else {
-				escrowStatus === "mint_reverted";
+				return;
 			}
-		} catch (error) {
-			escrowStatus === "mint_reverted";
 		} finally {
+			escrowStatus === "mint_reverted";
 			isBusy = false;
 		}
 	}
@@ -44,7 +49,7 @@
 	async function approve() {
 		try {
 			isBusy = true;
-			const tx = await approveSpendingCap(bounty.rewardAmount);
+			const tx = await approveSpendingCap(bounty.rewardAmount, token);
 			if (tx.status === "success") {
 				changeStatus("approval_success");
 			} else {
@@ -68,7 +73,7 @@
 </script>
 
 {#snippet coin()}
-	<div class="relative flex h-[32px] items-center gap-2 font-bold">
+	<div class="relative flex h-8 items-center gap-2 font-bold">
 		<strong>{bounty.rewardAmount}</strong>
 		<enhanced:img
 			width="32"
@@ -92,7 +97,11 @@
 			<span> Before continuing, you need to approve spending cap </span>
 			{@render coin()}
 			{#if isBusy}
-				<div class="w-fit rounded-md bg-amber-400 px-3 py-2 text-black/90">
+				<div
+					class="flex w-fit items-center gap-2 rounded-md border-2 border-transparent
+					 bg-amber-400 px-3 py-2 font-semibold text-black/90"
+				>
+					<Spinner />
 					Don't close the page....
 				</div>
 			{:else}
@@ -107,7 +116,11 @@
 			<span> Create smart contract for your bounty </span>
 			{@render coin()}
 			{#if isBusy}
-				<div class="w-fit rounded-md bg-amber-400 px-3 py-2 text-black/90">
+				<div
+					class="flex w-fit items-center gap-2 rounded-md border-2 border-transparent
+					 bg-amber-400 px-3 py-2 font-semibold text-black/90"
+				>
+					<Spinner />
 					Creating smart contract....
 				</div>
 			{:else}

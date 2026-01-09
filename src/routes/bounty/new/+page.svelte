@@ -10,7 +10,6 @@
 	import TextArea from "$lib/components/TextArea.svelte";
 	import TextInput from "$lib/components/TextInput.svelte";
 	import { bountySchemas } from "$lib/schemas.js";
-	import { z } from "zod/v4";
 
 	let openModal = $state(false);
 	let formEl: HTMLFormElement;
@@ -29,10 +28,6 @@
 	const schemaParse = $derived(bountySchemas.safeParse(input));
 	const isValid = $derived(schemaParse.success);
 	const schemaErrors = $derived(schemaParse.error?.issues);
-
-	$effect(() => {
-		if (form?.id) goto(`/approve/${form.id}/`);
-	});
 </script>
 
 <form use:enhance bind:this={formEl} class="mx-auto mt-50 flex w-250 flex-col gap-4" method="post">
