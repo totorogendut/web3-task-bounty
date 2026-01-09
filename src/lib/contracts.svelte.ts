@@ -1,6 +1,5 @@
-import { PUBLIC_FACTORY_ADDRESS } from "$env/static/public";
 import { ESCROW_ABI, FACTORY_ABI } from "./_eth-abi";
-import { ethChain, tokens } from "./_eth-shared";
+import { ethChain, factoryContractAddress, tokens } from "./_eth-shared";
 import { wallet } from "./wallet.svelte";
 import {
 	keccak256,
@@ -13,6 +12,7 @@ import {
 	isHex,
 	parseUnits,
 } from "viem";
+import { erc20Abi } from "viem";
 
 const publicClient = createPublicClient({
 	chain: ethChain,
@@ -36,21 +36,35 @@ export async function createBounty(
 	token = tokens.testnet.wethSepolia,
 ) {
 	if (!wallet.client) throw new Error("Wallet client error");
-	if (!isHex(PUBLIC_FACTORY_ADDRESS))
-		throw new Error("PUBLIC_FACTORY_ADDRESS is not Hex type (e.g. 0xabc123)");
-
-	const factory = getContract({
-		address: PUBLIC_FACTORY_ADDRESS,
-		abi: FACTORY_ABI,
-		client: wallet.client,
-	});
+	if (!isHex(factoryContractAddress))
+		throw new Error("factoryContractAddress is not Hex type (e.g. 0xabc123)");
 
 	const amount = parseUnits(reward, token.decimal);
+	const deadlineInSeconds = BigInt(Math.floor(deadline.getTime() / 1000));
 
-	const txHash = await factory.write.createBounty(
-		[token.address, keccak256(toHex(bountyId)), amount, BigInt(deadline.getTime() / 1000)],
-		{ chain: ethChain, account: wallet.address },
-	);
+	const approveHash = await wallet.client.writeContract({
+		address: token.address,
+		abi: erc20Abi,
+		functionName: "approve",
+		args: [factoryContractAddress, amount],
+		chain: ethChain,
+		account: wallet.address,
+	});
+
+	// wait until mined
+	await publicClient.waitForTransactionReceipt({ hash: approveHash });
+
+	const txHash = await wallet.client.writeContract({
+		address: factoryContractAddress,
+		abi: FACTORY_ABI,
+		functionName: "createBounty",
+		args: [token.address, keccak256(toHex(bountyId)), amount, deadlineInSeconds],
+		gas: 3_000_000n,
+		chain: ethChain,
+		account: wallet.address,
+	});
+
+	console.log(txHash);
 
 	return txHash;
 }
@@ -59,7 +73,7 @@ export async function getEscrowAddress(txHash: Hex) {
 	const receipt = await publicClient.waitForTransactionReceipt({ hash: txHash });
 
 	const log = receipt.logs.find(
-		(l) => l.address.toLowerCase() === PUBLIC_FACTORY_ADDRESS.toLowerCase(),
+		(l) => l.address.toLowerCase() === factoryContractAddress.toLowerCase(),
 	);
 
 	if (!log) throw new Error("Receipt log not found");

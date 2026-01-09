@@ -2,6 +2,7 @@ import { createWalletClient, custom, type Hex, type WalletClient } from "viem";
 import { mainnet, sepolia } from "viem/chains";
 import { page } from "$app/state";
 import { logout } from "./user.svelte";
+import { tick } from "svelte";
 
 class WalletState {
 	address = $state<Hex | null>(null);
@@ -31,7 +32,8 @@ class WalletState {
 
 		// Check if already connected
 
-		if (!page.data.user) return;
+		console.log(page.data.user);
+		// if (!page.data.user) return;
 		try {
 			const { address } = await setupClient(this);
 			this.address = address;

@@ -1,7 +1,8 @@
 import type { Hex } from "viem";
-import { mainnet } from "viem/chains";
+import { mainnet, sepolia } from "viem/chains";
 
-export const ethChain = mainnet;
+export const ethChain = sepolia;
+export const factoryContractAddress = "0x0e5ac1741b47d03a3e1b491af1ec0576f13cb652" as const;
 
 interface ERC20Token {
 	address: Hex;

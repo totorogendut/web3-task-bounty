@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from "$app/forms";
+	import { page } from "$app/state";
 	import { tokens } from "$lib/_eth-shared.js";
 	import DeadlinePicker from "$lib/components/DeadlinePicker.svelte";
 	import Dropdown from "$lib/components/Dropdown.svelte";
@@ -10,6 +11,7 @@
 	import { createBounty } from "$lib/contracts.svelte.js";
 	import { bountySchemas } from "$lib/schemas.js";
 	import { daysAfter } from "$lib/utils/date.js";
+	import { wallet } from "$lib/wallet.svelte.js";
 	import { nanoid } from "nanoid";
 
 	let openModal = $state(false);
@@ -40,6 +42,8 @@
 		formData.append("txHash", txHash);
 		formEl.submit();
 	}
+
+	$inspect(wallet.client);
 </script>
 
 <form use:enhance bind:this={formEl} class="mx-auto mt-50 flex w-250 flex-col gap-4" method="post">
