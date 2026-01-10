@@ -2,7 +2,7 @@
 	import CommentFormToolbar from "./MarkdownFormToolbar.svelte";
 	import { Bold, Italic, Code, Link } from "@lucide/svelte";
 	import DOMPurify from "dompurify";
-	import { marked } from "marked";
+	import { micromark } from "micromark";
 
 	interface Props {
 		name?: string;
@@ -78,7 +78,7 @@
 			class="min-h-55 w-full bg-slate-950 p-4 font-mono
 		 text-sm text-slate-100"
 		>
-			{@html DOMPurify.sanitize(await marked(value))}
+			{@html DOMPurify.sanitize(micromark(value))}
 		</div>
 	{/if}
 

@@ -8,7 +8,7 @@ import { eq } from "drizzle-orm";
 import z from "zod/v4";
 import { fail } from "@sveltejs/kit";
 import sanitize from "sanitize-html";
-import { marked } from "marked";
+import { micromark } from "micromark";
 import type { Hex } from "viem";
 
 export const getBidList = query(
@@ -32,12 +32,10 @@ export const getBidList = query(
 			},
 		});
 
-		return Promise.all(
-			data.map(async (bid) => {
-				bid.content = sanitize(await marked(bid.content));
-				return bid;
-			}),
-		);
+		return data.map((bid) => {
+			bid.content = sanitize(micromark(bid.content));
+			return bid;
+		});
 	},
 );
 
