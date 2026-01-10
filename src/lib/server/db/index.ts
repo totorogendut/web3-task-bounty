@@ -1,4 +1,3 @@
-import { drizzle } from "drizzle-orm/better-sqlite3";
 import * as userSchema from "./schemas/users";
 import * as taskSchema from "./schemas/tasks";
 import * as paymentSchema from "./schemas/payments";
@@ -6,10 +5,18 @@ import { relations, keyvalSchema } from "./schemas";
 import { env } from "$env/dynamic/private";
 import { eq } from "drizzle-orm";
 import { error } from "node:console";
+import { DATABASE_TOKEN, DATABASE_URL } from "$env/static/private";
+import { drizzle } from "drizzle-orm/libsql";
+import { createClient } from "@libsql/client";
 
-if (!env.DATABASE_URL) throw new Error("DATABASE_URL is not set");
+if (!DATABASE_URL) throw new Error("DATABASE_URL is not set");
+const client = createClient({
+	url: DATABASE_URL,
+	authToken: DATABASE_TOKEN,
+});
 
-export const db = drizzle(env.DATABASE_URL, {
+export const db = drizzle({
+	client,
 	schema: {
 		...userSchema,
 		...taskSchema,
