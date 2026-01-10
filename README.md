@@ -1,8 +1,8 @@
 # Web3 Bounty
 
 ### Prerequisite:
-- Node v24 or newer
-- Bun v1.35 or newer (might be optional but development primary on bun)
+- [Node v24](https://nodejs.org/en) or newer
+- [Bun v1.35](https://bun.sh/) or newer (might be optional but this repo developed primarily on Bun)
 
 ## What is this?
 
