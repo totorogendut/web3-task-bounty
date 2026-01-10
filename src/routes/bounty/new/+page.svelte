@@ -7,6 +7,7 @@
 	import Dropdown from "$lib/components/Dropdown.svelte";
 	import MarkdownForm from "$lib/components/markdown/MarkdownForm.svelte";
 	import ModalDialog from "$lib/components/ModalDialog.svelte";
+	import SkillsSelector from "$lib/components/SkillsSelector.svelte";
 	import TextArea from "$lib/components/TextArea.svelte";
 	import TextInput from "$lib/components/TextInput.svelte";
 	import { bountySchemas } from "$lib/schemas.js";
@@ -53,6 +54,7 @@
 		placeholder="Write the instruction and details of your bounty"
 		canSubmit={false}
 	/>
+	<SkillsSelector />
 	<div class="flex items-center gap-4">
 		<TextInput
 			label="Deadline (in days)"

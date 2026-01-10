@@ -14,6 +14,7 @@ export const actions: Actions = {
 			description: formData.get("description") as string,
 			content: formData.get("content") as string,
 			title: formData.get("title") as string,
+			skills: JSON.parse(formData.get("skills") as string) as string[],
 			rewardAmount: formData.get("rewardAmount") as `${number}.${number}`,
 			clientId: event.locals.user.id,
 			rewardCurrency: formData.get("rewardCurrency") as keyof typeof tokens.mainnet,
