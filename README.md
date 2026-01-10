@@ -47,8 +47,8 @@ escrowImplementation = 0xabc123   # the address of previous smart contract
 Once both of the Solidity files ready, you can go to `src/lib/_eth-shared.ts` file and set
 ```typescript
 export const factoryContractAddress: Hex = dev
-	? "0x81e23606717dcc353e673412a9c0f79a066dbf8d" // Sepolia
-	: "0x8bd5c06f1aa76e86186852f8df20fa7db9ac4738"; // Mainnet
+	? "0x81e23606717dcc353e673412a9c0f79a066dbf8d" // Sepolia network
+	: "0x8bd5c06f1aa76e86186852f8df20fa7db9ac4738"; // Mainnet network
 ```
 
 Alternatively, you can skip deploying smart contract and use smart contracts that I deployed without making change to the file. (While the smart contract is live, I haven't yet verify and publish the .sol files so the smart contract might be tagged as scam in Ethereum mainnet)
