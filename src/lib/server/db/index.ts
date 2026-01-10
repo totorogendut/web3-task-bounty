@@ -2,21 +2,36 @@ import * as userSchema from "./schemas/users";
 import * as taskSchema from "./schemas/tasks";
 import * as paymentSchema from "./schemas/payments";
 import { relations, keyvalSchema } from "./schemas";
-import { env } from "$env/dynamic/private";
 import { eq } from "drizzle-orm";
 import { error } from "node:console";
-import { DATABASE_AUTH_TOKEN, DATABASE_URL } from "$env/static/private";
-import { drizzle } from "drizzle-orm/libsql";
+import { DATABASE_URL } from "$env/static/private";
+import { drizzle as libsqlDrizzle } from "drizzle-orm/libsql";
+import { drizzle as nodeDrizzle } from "drizzle-orm/better-sqlite3";
 import { createClient } from "@libsql/client";
 
 if (!DATABASE_URL) throw new Error("DATABASE_URL is not set");
-const client = createClient({
-	url: DATABASE_URL,
-	authToken: DATABASE_AUTH_TOKEN,
-});
 
-export const db = drizzle({
-	client,
+// =========== TURSO Setup ==================
+// const client = createClient({
+// 	url: DATABASE_URL,
+// 	authToken: DATABASE_AUTH_TOKEN,
+// });
+
+// export const db = libsqlDrizzle({
+// 	client,
+// 	schema: {
+// 		...userSchema,
+// 		...taskSchema,
+// 		...paymentSchema,
+// 		keyval: keyvalSchema,
+// 	},
+// 	relations,
+// });
+// ==========================================
+
+// =========== Nodejs better-sqlite3 ========
+
+export const db = nodeDrizzle(DATABASE_URL, {
 	schema: {
 		...userSchema,
 		...taskSchema,
@@ -25,6 +40,8 @@ export const db = drizzle({
 	},
 	relations,
 });
+
+// ===========================================
 
 export const keyval = {
 	get: async (key: string) => {
