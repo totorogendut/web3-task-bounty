@@ -47,13 +47,13 @@
 					<BountyListItem {...item} />
 				{/snippet}
 			</Masonry>
-			<button
+			<!-- <button
 				onclick={fetchMoreList}
 				disabled={isLoading}
 				class="mt-4 self-center rounded-xl bg-amber-600 px-6 py-2 font-semibold transition hover:bg-amber-500 disabled:opacity-50"
 			>
 				{isLoading ? "Loading..." : "Load More"}
-			</button>
+			</button> -->
 		{/if}
 	</section>
 </svelte:boundary>

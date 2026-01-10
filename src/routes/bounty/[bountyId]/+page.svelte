@@ -13,6 +13,7 @@
 	const tabState = $state({
 		tab: "description",
 	}) as { tab: "description" | "bids" };
+	const status = $derived(data.bounty.escrowStatus);
 
 	setContext("tabState", tabState);
 	function tabClick(name: typeof tabState.tab) {
@@ -23,6 +24,16 @@
 <div class="mx-auto mt-40 flex w-300 gap-4">
 	<div class="flex grow flex-col gap-4">
 		<div class="">
+			<div
+				class={[
+					`-mt-10 mb-4 w-fit rounded-sm px-3  py-0.5 text-sm font-semibold text-black/60`,
+					status === "bid open" && "bg-green-100/70",
+					status === "bid closed" && "bg-red-200/70",
+					status === "finished" && "bg-black text-white/90",
+				]}
+			>
+				{data.bounty.escrowStatus}
+			</div>
 			<h1 class="mt-0! cowboy-text text-5xl">{data.bounty?.title}</h1>
 			{#if page.error}
 				<div
@@ -44,7 +55,7 @@
 			</div>
 			{#if tabState.tab === "description"}
 				<svelte:boundary>
-					<div class="min-h-75 max-w-180 text-lg leading-[1.1]">
+					<div class="content min-h-75 max-w-180 text-lg leading-[1.1] text-white/90">
 						{@html data.bounty?.content}
 					</div>
 					<div class="mt-8 flex gap-1">

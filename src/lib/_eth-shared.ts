@@ -5,7 +5,7 @@ import { mainnet, sepolia } from "viem/chains";
 export const ethChain = dev ? sepolia : mainnet;
 export const factoryContractAddress: Hex = dev
 	? "0x81e23606717dcc353e673412a9c0f79a066dbf8d" // Sepolia
-	: "0x81e23606717dcc353e673412a9c0f79a066dbf8d";
+	: "0x8bd5c06f1aa76e86186852f8df20fa7db9ac4738"; // Mainnet
 
 export const escrowStatusEnum = [
 	"approval pending",
@@ -20,7 +20,7 @@ export const escrowStatusEnum = [
 ] as const;
 
 export type EscrowStatus = (typeof escrowStatusEnum)[number];
-interface ERC20Token {
+export interface ERC20Token {
 	address: Hex;
 	label: string;
 	decimal: number;

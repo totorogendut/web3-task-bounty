@@ -33,6 +33,7 @@ await seed(db, { bounty, user, bid, comment }).refine((f) => ({
 			rewardCurrency: f.valuesFromArray({
 				values: ["mnee"],
 			}),
+			escrowStatus: f.default({ defaultValue: "bid open" }),
 			deadline: f.timestamp(),
 			skills: f.valuesFromArray({
 				values: skills,

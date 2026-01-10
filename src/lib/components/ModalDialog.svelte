@@ -10,9 +10,18 @@
 		onCancel?: () => void;
 		hasOptions?: boolean;
 		width?: number;
+		closeOnYesButton?: boolean;
 	}
 
-	let { children, onClose, onYes, onCancel, hasOptions = true, width = 400 }: Props = $props();
+	let {
+		children,
+		onClose,
+		onYes,
+		onCancel,
+		hasOptions = true,
+		width = 400,
+		closeOnYesButton = true,
+	}: Props = $props();
 </script>
 
 <dialog
@@ -51,7 +60,7 @@
 					class="cursor-pointer rounded-md bg-green-200
 						 px-4 py-1 font-semibold hover:bg-green-300"
 					onclick={() => {
-						onClose();
+						if (closeOnYesButton) onClose();
 						onYes?.();
 					}}>Yes</button
 				>

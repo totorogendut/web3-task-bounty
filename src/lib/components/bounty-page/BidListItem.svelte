@@ -39,12 +39,12 @@
 		{/if}
 	</div>
 	<div
-		class="rounded-md bg-amber-50 p-3 text-sm text-amber-900
-		outline-amber-600 peer-hover:outline-4"
+		class="content rounded-md bg-amber-50 p-3 text-sm
+		text-amber-900 outline-amber-600 peer-hover:outline-4"
 	>
 		{#if bounty.winningBidId === id}
 			<div
-				class="mb-2 flex w-fit items-center
+				class="mb-4 flex w-fit items-center
 				gap-2 rounded-full bg-amber-600 py-1 pr-4 pl-3 font-bold text-white"
 			>
 				<Trophy size={18} />

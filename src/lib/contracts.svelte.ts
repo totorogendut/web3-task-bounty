@@ -1,6 +1,6 @@
 import { page } from "$app/state";
 import { ESCROW_ABI, FACTORY_ABI } from "./_eth-abi";
-import { ethChain, factoryContractAddress, tokens } from "./_eth-shared";
+import { ethChain, factoryContractAddress, tokens, type ERC20Token } from "./_eth-shared";
 import { wallet } from "./wallet.svelte";
 import {
 	keccak256,
@@ -24,7 +24,7 @@ export const SUBMISSION_TYPEHASH = keccak256(
 	toHex("Submission(uint256 bountyId,address freelancer,uint256 submittedAt,uint256 nonce)"),
 ) as Hex;
 
-export async function approveSpendingCap(reward: string, token = tokens.testnet.wethSepolia) {
+export async function approveSpendingCap(reward: string, token: ERC20Token) {
 	if (!wallet.client) throw new Error("Wallet client error");
 	const amount = parseUnits(reward, token.decimal);
 	const approveHash = await wallet.client.writeContract({
@@ -50,7 +50,7 @@ export async function createBounty(
 		reward: string;
 		deadline: Date;
 	},
-	token = tokens.testnet.wethSepolia,
+	token: ERC20Token,
 ) {
 	const account = page.data.user?.id || wallet.address;
 	if (!wallet.client) throw new Error("Wallet client error");

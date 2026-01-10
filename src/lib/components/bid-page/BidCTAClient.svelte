@@ -2,7 +2,7 @@
 	import { Check, Download } from "@lucide/svelte";
 	import BidCTAButton from "./BidCTAButton.svelte";
 	import Modal from "../ModalDialog.svelte";
-	import type { Bid } from "$lib/server/db/schemas";
+	import type { Bid, Bounty } from "$lib/server/db/schemas";
 	import { PUBLIC_S3_ENDPOINT } from "$env/static/public";
 	import Tooltip from "../Tooltip.svelte";
 	import { page } from "$app/state";
@@ -18,13 +18,14 @@
 	const { id, bid }: Props = $props();
 	let openApproveModal = $state(false);
 	let openAttachmentsModal = $state(false);
+	const bounty = page.data.bounty as Bounty;
 
 	if (!bid.submittedAt) throw error(400, "Bid has no submittedAt value");
 	if (!bid.signature) throw error(400, "Bid has no signature value");
-	if (!page.data.bounty?.escrowAddress) throw error(400, "Bounty has no escrowAddress value");
+	if (!bounty?.escrowAddress) throw error(400, "Bounty has no escrowAddress value");
 
 	const bidData: Parameters<typeof awardSubmission>[0] = {
-		escrowAddress: page.data.bounty?.escrowAddress,
+		escrowAddress: bounty?.escrowAddress,
 		freelancer: bid.userId,
 		submittedAt: bid.submittedAt,
 		signature: bid.signature,
@@ -36,11 +37,13 @@
 		<Download size={20} />
 	</BidCTAButton>
 </Tooltip>
-<Tooltip label="Award bounty to this bid">
-	<BidCTAButton onclick={() => (openApproveModal = true)}>
-		<Check size={20} />
-	</BidCTAButton>
-</Tooltip>
+{#if bounty?.escrowStatus !== "finished"}
+	<Tooltip label="Award bounty to this bid">
+		<BidCTAButton onclick={() => (openApproveModal = true)}>
+			<Check size={20} />
+		</BidCTAButton>
+	</Tooltip>
+{/if}
 
 {#if openApproveModal}
 	<Modal
