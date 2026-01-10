@@ -16,7 +16,9 @@ It is a simplified version of traditional freelancing platform (for now) but wit
 
 Check `.env.example` for environment variable needed to setup. For testing purpose, ENV needed to configure mainly S3 env for storage and `JWT_SECRET`. For JWT secret you can generate it with something like `openssl rand -base64 32`.
 
-Once ENV variables done, you need to setup database tables with `bunx drizzle-kit push`. To run dev server simply use `bun run dev`.
+Once ENV variables done, you need to setup database tables. Web3 Bounty uses SQLite as its database. By default, this repo uses [Turso](https://turso.tech/) as cloud database. Sign up for Turso to create database and get db auth token, or alternatively use different SQLite with Drizzle ([for more information](https://orm.drizzle.team/docs/get-started-sqlite)) by changing database client in `src/lib/server/db/index.ts` and in `drizzle.config.ts`.
+
+Once database is ready, continue with `bunx drizzle-kit push`. Browse database with `bunx drizzle-kit studio` to ensure the database schema is ready and set. To run dev server simply use `bun run dev`.
 
 In the dev environment, smart contract will use Sepolia and WETH as ERC20 Token for testing purpose. In production this will be switched with various ERC20 tokens including MNEE Stablecoin. MNEE token implementation is hardcoded in the app so there should be no or minimal stuff needed to configure to get them done.
 
