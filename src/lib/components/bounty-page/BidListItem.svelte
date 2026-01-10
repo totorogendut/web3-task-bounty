@@ -15,7 +15,7 @@
 
 	const { id, content: textContent, user, ...data }: Props = $props();
 	let content = $state(textContent);
-	const bounty: Bounty = $derived(data?.bounty || page.data.bounty);
+	const bounty: Bounty = $derived(page.data.bounty);
 </script>
 
 <div class="group/bid relative flex flex-col gap-1 self-start">

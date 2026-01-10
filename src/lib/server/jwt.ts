@@ -6,8 +6,7 @@ import type { Hex } from "viem";
 const secret = new TextEncoder().encode(JWT_SECRET);
 
 export type JwtPayload = {
-	userId: string;
-	walletAddress: Hex;
+	userId: Hex;
 };
 
 export async function createJwt(payload: JwtPayload) {

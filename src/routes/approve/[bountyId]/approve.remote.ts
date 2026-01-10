@@ -43,20 +43,20 @@ export const waitCreatingContract = query(
 		const escrowAddress = logs?.[0]?.args?.escrow as Hex;
 
 		if (tx.status === "reverted") {
-			changeEscrowStatus({ id, escrowStatus: "mint_reverted" });
+			changeEscrowStatus({ id, escrowStatus: "mint reverted" });
 			console.log("Reverted");
 			throw error(500, "Contract is reverted");
 		}
 
 		if (!escrowAddress) {
-			changeEscrowStatus({ id, escrowStatus: "mint_reverted" });
+			changeEscrowStatus({ id, escrowStatus: "mint reverted" });
 			console.log("No contractAddress");
 			throw error(500, "Contract address is invalid");
 		}
 
 		await db
 			.update(bounty)
-			.set({ escrowAddress, escrowStatus: "bid_open" })
+			.set({ escrowAddress, escrowStatus: "bid open" })
 			.where(eq(bounty.id, id));
 
 		return {

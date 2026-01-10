@@ -10,7 +10,7 @@ export async function POST(event: RequestEvent) {
 	const { address, signature }: { address: Hex; signature: Hex } = await event.request.json();
 	const user = await db.query.user.findFirst({
 		where: {
-			walletAddress: address,
+			id: address || "0x",
 		},
 	});
 
@@ -28,11 +28,10 @@ export async function POST(event: RequestEvent) {
 			nonce: crypto.randomUUID(),
 			lastLoginAt: new Date(),
 		})
-		.where(eq(userSchema.walletAddress, address));
+		.where(eq(userSchema.id, address));
 
 	const token = await createJwt({
-		userId: user.id,
-		walletAddress: address,
+		userId: address,
 	});
 
 	event.cookies.set("session", token, {

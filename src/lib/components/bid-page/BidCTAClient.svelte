@@ -8,6 +8,7 @@
 	import { page } from "$app/state";
 	import { awardSubmission } from "$lib/contracts.svelte";
 	import { error } from "@sveltejs/kit";
+	import { setWinningBid } from "$lib/api/bounty.remote";
 
 	interface Props {
 		id: string;
@@ -24,7 +25,7 @@
 
 	const bidData: Parameters<typeof awardSubmission>[0] = {
 		escrowAddress: page.data.bounty?.escrowAddress,
-		freelancer: "",
+		freelancer: bid.userId,
 		submittedAt: bid.submittedAt,
 		signature: bid.signature,
 	};
@@ -43,9 +44,9 @@
 
 {#if openApproveModal}
 	<Modal
-		onYes={() => {
-			// console.log("Yes");
-			awardSubmission(bidData);
+		onYes={async () => {
+			const hash = await awardSubmission(bidData);
+			setWinningBid({ hash, id });
 		}}
 		onClose={() => (openApproveModal = false)}
 	>

@@ -8,10 +8,11 @@ import { eq } from "drizzle-orm";
 export async function load({ params, url, locals }) {
 	const user = await db.query.user.findFirst({
 		where: {
-			id: locals.user?.id || "",
+			id: locals.user?.id || "0x",
 		},
 		...USER_CLIENT_QUERY_DATA,
 	});
+	console.log("user:", { id: locals.user?.id, user });
 
 	if (locals.user && user && !user?.username && !url.pathname.startsWith("/onboarding")) {
 		redirect(302, "/onboarding/");

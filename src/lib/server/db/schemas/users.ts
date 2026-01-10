@@ -1,13 +1,10 @@
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { nanoid } from "nanoid";
+import type { Hex } from "viem";
 
 export const user = sqliteTable("user", {
-	id: text("id")
-		.primaryKey()
-		.$default(() => nanoid()),
+	id: text("id").primaryKey().$type<Hex>(),
 	username: text("username").unique(),
-	// passwordHash: text("password_hash").notNull(),
-	walletAddress: text("wallet_address").$type<`0x${string}`>(),
 	avatar: text("avatar"),
 	skills: text("skills", { mode: "json" }).$type<string[]>().default([]),
 	email: text("email"),

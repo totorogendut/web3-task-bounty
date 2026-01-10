@@ -12,7 +12,7 @@ export const db = drizzle(process.env.DATABASE_URL!, { relations });
 await seed(db, { bounty, user, bid, comment }).refine((f) => ({
 	user: {
 		columns: {
-			walletAddress: f.bitString(),
+			id: f.bitString(),
 			avatar: f.default({ defaultValue: "" }),
 			skills: f.valuesFromArray({
 				values: skills,

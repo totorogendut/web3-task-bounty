@@ -24,10 +24,10 @@
 	async function createContract() {
 		try {
 			isBusy = true;
-			changeStatus("mint_pending");
+			changeStatus("mint pending");
 			const hash = await createBounty(
 				{
-					bountyId: bounty.id,
+					idBytes32: bounty.idBytes32,
 					reward: bounty.rewardAmount,
 					deadline: bounty.deadline!,
 				},
@@ -41,7 +41,7 @@
 				return;
 			}
 		} finally {
-			escrowStatus === "mint_reverted";
+			escrowStatus === "mint reverted";
 			isBusy = false;
 		}
 	}
@@ -51,12 +51,12 @@
 			isBusy = true;
 			const tx = await approveSpendingCap(bounty.rewardAmount, token);
 			if (tx.status === "success") {
-				changeStatus("approval_success");
+				changeStatus("approval success");
 			} else {
-				changeStatus("approval_reverted");
+				changeStatus("approval reverted");
 			}
 		} catch (error) {
-			changeStatus("approval_reverted");
+			changeStatus("approval reverted");
 		} finally {
 			isBusy = false;
 		}
@@ -68,7 +68,7 @@
 	}
 
 	$effect(() => {
-		if (escrowStatus === "bid_open") goto(`/bounty/${bounty.id}/`);
+		if (escrowStatus === "bid open") goto(`/bounty/${bounty.id}/`);
 	});
 </script>
 

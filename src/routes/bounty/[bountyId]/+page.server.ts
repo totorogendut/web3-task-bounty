@@ -10,7 +10,7 @@ import sanitizeHtml from "sanitize-html";
 export async function load({ params, locals }) {
 	const bounty = await db.query.bounty.findFirst({
 		where: {
-			id: params.bountyId,
+			id: params.bountyId || "",
 		},
 		with: {
 			bids: {

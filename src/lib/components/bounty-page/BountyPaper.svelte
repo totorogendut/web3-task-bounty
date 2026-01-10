@@ -2,7 +2,7 @@
 	import { page } from "$app/state";
 	import { ethChain, tokens } from "$lib/_eth-shared";
 	import type { Bounty } from "$lib/server/db/schemas";
-	import { Link2 } from "@lucide/svelte";
+	import { Link2, Trophy } from "@lucide/svelte";
 	import { formatDistance } from "date-fns";
 
 	interface Props {
@@ -15,6 +15,7 @@
 		? formatDistance(bounty.deadline, new Date(), { addSuffix: true })
 		: "Indefinitely";
 	const isExpired = $derived(bounty.deadline && Date.now() > bounty.deadline?.getTime());
+	const isFinish = $derived(!!bounty.winnerId);
 </script>
 
 <div class="sticky top-20 flex flex-col gap-4 self-start">
@@ -27,12 +28,22 @@
 		]}
 	>
 		<div class="flex flex-col leading-[1.2] text-amber-950/90">
-			<div class="flex justify-between">
-				<strong>Deadline:</strong>
-				<span class={[isExpired ? "font-bold text-red-800/90" : "font-semibold"]}>
-					{isExpired ? "Expired" : expiredAt}
-				</span>
-			</div>
+			{#if isFinish}
+				<div
+					class="mb-4 flex gap-3 rounded-sm bg-amber-500 px-4 py-2
+					text-sm leading-none"
+				>
+					<Trophy size={24} />
+					<span class="w-54"> The client already picked a winner for this bounty. </span>
+				</div>
+			{:else}
+				<div class="flex justify-between">
+					<strong>Deadline:</strong>
+					<span class={[isExpired ? "font-bold text-red-800/90" : "font-semibold"]}>
+						{isExpired ? "Expired" : expiredAt}
+					</span>
+				</div>
+			{/if}
 			<div class="flex justify-between">
 				<strong>Can refund:</strong>
 				{bounty.canRefund ? "Yes" : "No"}
@@ -65,7 +76,7 @@
 				text-shadow-green-700 text-shadow-sm">${bounty?.rewardAmount}</strong
 		>
 	</div>
-	{#if !!bounty.winningBidId || isExpired}
+	{#if isFinish || isExpired}
 		<div
 			class="mx-auto mt-1 w-60 text-center text-lg leading-[1.4]
  underline decoration-dashed decoration-2 underline-offset-5 opacity-80"

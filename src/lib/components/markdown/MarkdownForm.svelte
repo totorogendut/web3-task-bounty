@@ -51,9 +51,10 @@
 			><Link size="18" /></CommentFormToolbar
 		>
 		<button
+			tabindex="-1"
 			onclick={() => (showPreview = !showPreview)}
 			type="button"
-			class="mb-1 ml-2 cursor-pointer font-semibold
+			class="mb-1.5 ml-2 cursor-pointer font-semibold
 			text-slate-300 underline decoration-2 underline-offset-4
 			hover:text-slate-400 active:text-amber-200">{showPreview ? "draft" : "preview"}</button
 		>
@@ -74,8 +75,8 @@
 	></textarea>
 	{#if showPreview}
 		<div
-			class="min-h-55 w-full bg-slate-950 p-4 font-mono text-sm
-		 text-slate-100"
+			class="min-h-55 w-full bg-slate-950 p-4 font-mono
+		 text-sm text-slate-100"
 		>
 			{@html DOMPurify.sanitize(await marked(value))}
 		</div>

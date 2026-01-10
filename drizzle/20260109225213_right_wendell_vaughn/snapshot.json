@@ -1,9 +1,9 @@
 {
   "version": "7",
   "dialect": "sqlite",
-  "id": "a48410a9-953e-4a34-b875-17eef414ca85",
+  "id": "54595490-d5a5-4b51-8969-f958774de5cc",
   "prevIds": [
-    "4fe3a1b1-bf95-4c46-b879-df701532fa64"
+    "00000000-0000-0000-0000-000000000000"
   ],
   "ddl": [
     {
@@ -306,6 +306,16 @@
     },
     {
       "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "id_bytes_32",
+      "entityType": "columns",
+      "table": "bounty"
+    },
+    {
+      "type": "text",
       "notNull": false,
       "autoincrement": false,
       "default": null,
@@ -601,16 +611,6 @@
       "default": null,
       "generated": null,
       "name": "username",
-      "entityType": "columns",
-      "table": "user"
-    },
-    {
-      "type": "text",
-      "notNull": false,
-      "autoincrement": false,
-      "default": null,
-      "generated": null,
-      "name": "wallet_address",
       "entityType": "columns",
       "table": "user"
     },

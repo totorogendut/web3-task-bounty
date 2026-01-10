@@ -1,3 +1,4 @@
+import { page } from "$app/state";
 import { ESCROW_ABI, FACTORY_ABI } from "./_eth-abi";
 import { ethChain, factoryContractAddress, tokens } from "./_eth-shared";
 import { wallet } from "./wallet.svelte";
@@ -41,16 +42,18 @@ export async function approveSpendingCap(reward: string, token = tokens.testnet.
 
 export async function createBounty(
 	{
-		bountyId,
+		idBytes32,
 		reward,
 		deadline,
 	}: {
-		bountyId: string;
+		idBytes32: Hex;
 		reward: string;
 		deadline: Date;
 	},
 	token = tokens.testnet.wethSepolia,
 ) {
+	const account = page.data.user?.id || wallet.address;
+	if (!wallet.client) throw new Error("Wallet client error");
 	if (!wallet.client) throw new Error("Wallet client error");
 	if (!isHex(factoryContractAddress))
 		throw new Error("factoryContractAddress is not Hex type (e.g. 0xabc123)");
@@ -62,13 +65,11 @@ export async function createBounty(
 		address: factoryContractAddress,
 		abi: FACTORY_ABI,
 		functionName: "createBounty",
-		args: [token.address, keccak256(toHex(bountyId)), amount, deadlineInSeconds],
+		args: [token.address, idBytes32, amount, deadlineInSeconds],
 		gas: 3_000_000n,
 		chain: ethChain,
-		account: wallet.address,
+		account,
 	});
-
-	console.log(txHash);
 
 	return txHash;
 }
@@ -93,14 +94,15 @@ export async function getEscrowAddress(txHash: Hex) {
 
 export async function signSubmission({
 	escrowAddress,
-	bountyId,
+	idBytes32,
 }: {
 	escrowAddress: Hex;
-	bountyId: string;
+	idBytes32: Hex;
 }): Promise<{
 	submittedAt: number;
 	signature: Hex;
 }> {
+	const account = page.data.user?.id || wallet.address;
 	if (!wallet.client || !wallet.address || !wallet.chainId) throw new Error("Wallet not connected");
 
 	const nonce = await publicClient.readContract({
@@ -116,7 +118,7 @@ export async function signSubmission({
 	const domain = {
 		name: "FreelanceEscrow",
 		version: "1",
-		chainId: wallet.chainId,
+		chainId: ethChain.id,
 		verifyingContract: escrowAddress,
 	};
 
@@ -130,14 +132,16 @@ export async function signSubmission({
 	};
 
 	const message = {
-		bountyId: keccak256(toHex(bountyId)),
-		freelancer: wallet.address,
+		bountyId: idBytes32,
+		freelancer: account,
 		submittedAt,
 		nonce,
 	} as const;
 
+	console.log(message);
+
 	const signature = await wallet.client.signTypedData({
-		account: wallet.address,
+		account: account,
 		domain,
 		types,
 		primaryType: "Submission",
@@ -159,30 +163,20 @@ export async function awardSubmission({
 	signature: Hex;
 }) {
 	if (!wallet.client || !wallet.address) throw new Error("Wallet not connected");
+	const account: Hex = page.data.user?.id || wallet.address;
+	if (!account) throw new Error("No valid user detected");
 
 	const { request } = await publicClient.simulateContract({
-		account: wallet.address,
+		account,
 		address: escrowAddress,
 		abi: ESCROW_ABI,
-		functionName: "awardSubmission",
+		functionName: "awardWinningBid",
 		args: [freelancer, BigInt(submittedAt), signature],
 		chain: ethChain,
 	});
 
-	return wallet.client.writeContract(request);
-}
-
-export async function releasePayment(escrowAddress: Hex) {
-	if (!wallet.client || !wallet.address) throw new Error("Wallet not connected");
-
-	const { request } = await publicClient.simulateContract({
-		account: wallet.address,
-		address: escrowAddress,
-		abi: ESCROW_ABI,
-		functionName: "releasePayment",
-	});
-
-	return wallet.client.writeContract(request);
+	const hash = await wallet.client.writeContract(request);
+	return hash;
 }
 
 export async function autoRefund(escrowAddress: Hex) {

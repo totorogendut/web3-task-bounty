@@ -7,6 +7,9 @@ import { and, eq } from "drizzle-orm";
 import type { Bid } from "$lib/server/db/schemas";
 import { error } from "@sveltejs/kit";
 import { bidSchemas } from "$lib/schemas";
+import { decodeEventLog, type Hex } from "viem";
+import { publicClient } from "$lib/contracts.svelte";
+import { ESCROW_ABI } from "$lib/_eth-abi";
 
 export const editBid = query(
 	z.object({
@@ -90,8 +93,9 @@ export const downloadBidAttachment = query(
 export const setWinningBid = query(
 	z.object({
 		id: z.string(),
+		hash: z.custom<Hex>(),
 	}),
-	async ({ id }) => {
+	async ({ id, hash }) => {
 		// check if manager has permision
 		const { locals } = getRequestEvent();
 		if (!locals.user?.id) throw error(403, "You must login to continue.");
@@ -105,17 +109,46 @@ export const setWinningBid = query(
 		if (item.bounty?.clientId && item.bounty.clientId !== locals.user.id)
 			throw error(403, "You are not authorized to approve this bid.");
 
+		await waitForPayout(hash);
+
 		const bidQ = db.update(bid).set({ state: "approved" }).where(eq(bid.id, id)).returning();
 		const bountyQ = db
 			.update(bounty)
-			.set({ winnerId: item.userId, winningBidId: item.id })
-			.where(eq(bounty.id, id));
+			.set({ winnerId: item.userId, winningBidId: item.id, escrowStatus: "finished" })
+			.where(eq(bounty.id, item.bountyId));
 
 		const [[winningBid]] = await Promise.all([bidQ, bountyQ]);
 
 		if (!winningBid) error(404, "Update failed. Item not found.");
-		db.update(bounty).set({ winningBidId: winningBid.id }).where(eq(bounty.id, id));
 
 		return { success: true };
 	},
 );
+
+async function waitForPayout(hash: Hex) {
+	const receipt = await publicClient.waitForTransactionReceipt({
+		hash,
+	});
+	const paymentEvents = receipt.logs
+		.map((log) => {
+			try {
+				return decodeEventLog({
+					abi: ESCROW_ABI,
+					data: log.data,
+					topics: log.topics,
+				});
+			} catch {
+				return null;
+			}
+		})
+		.filter(
+			(e): e is { eventName: "PaymentReleased"; args: any } => e?.eventName === "PaymentReleased",
+		);
+
+	if (!paymentEvents?.[0]?.args) throw new Error("Failed to parse transaction logs");
+
+	return paymentEvents[0].args as {
+		payout: bigint;
+		freelancer: Hex;
+	};
+}

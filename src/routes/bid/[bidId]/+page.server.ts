@@ -5,7 +5,7 @@ import { error } from "@sveltejs/kit";
 export const load = async ({ params, url }) => {
 	const bid = await db.query.bid.findFirst({
 		where: {
-			id: params.bidId,
+			id: params.bidId || "",
 		},
 		with: {
 			bounty: true,

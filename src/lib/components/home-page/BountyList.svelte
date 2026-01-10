@@ -8,8 +8,6 @@
 	let offset = $state(0);
 	let list = $state(await getBountyList({ offset: 0 }));
 
-	$inspect(list);
-
 	async function fetchMoreList() {
 		isLoading = true;
 		try {

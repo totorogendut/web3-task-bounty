@@ -1,1 +1,0 @@
-ALTER TABLE `bounty` ADD `winnerId` text REFERENCES user(id);

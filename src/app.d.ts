@@ -1,14 +1,14 @@
 // See https://svelte.dev/docs/kit/types#app.d.ts
 // for information about these interfaces
 import { MetaMaskInpageProvider } from "@metamask/providers";
+import type { Hex } from "viem";
 
 declare global {
 	namespace App {
 		// interface Error {}
 		interface Locals {
 			user: {
-				id: string;
-				walletAddress: string;
+				id: Hex;
 			} | null;
 		}
 		// interface PageData {}

@@ -40,18 +40,22 @@ CREATE TABLE `bounty` (
 	`id` text PRIMARY KEY,
 	`created_at` integer,
 	`updated_at` integer,
+	`id_bytes_32` text NOT NULL,
 	`title` text,
 	`description` text,
 	`content` text,
 	`client_id` text NOT NULL,
+	`winning_bid_id` text,
+	`winnerId` text,
 	`skills` text DEFAULT '[]',
 	`escrow_address` text,
 	`reward_amount` text DEFAULT '0.00' NOT NULL,
 	`reward_currency` text DEFAULT 'mnee',
-	`is_claimed` integer DEFAULT false,
 	`deadline` integer,
 	`can_refund` integer DEFAULT false,
-	CONSTRAINT `fk_bounty_client_id_user_id_fk` FOREIGN KEY (`client_id`) REFERENCES `user`(`id`)
+	`escrow_status` text DEFAULT 'approval_pending',
+	CONSTRAINT `fk_bounty_client_id_user_id_fk` FOREIGN KEY (`client_id`) REFERENCES `user`(`id`),
+	CONSTRAINT `fk_bounty_winnerId_user_id_fk` FOREIGN KEY (`winnerId`) REFERENCES `user`(`id`)
 );
 --> statement-breakpoint
 CREATE TABLE `comment` (
@@ -81,7 +85,6 @@ CREATE TABLE `progress` (
 CREATE TABLE `user` (
 	`id` text PRIMARY KEY,
 	`username` text UNIQUE,
-	`wallet_address` text,
 	`avatar` text,
 	`skills` text DEFAULT '[]',
 	`email` text,

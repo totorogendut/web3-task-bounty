@@ -32,11 +32,11 @@ class WalletState {
 
 		// Check if already connected
 
-		console.log(page.data.user);
 		// if (!page.data.user) return;
 		try {
 			const { address } = await setupClient(this);
 			this.address = address;
+			console.log(page.data.user?.id, address);
 			const chainId = (await window.ethereum!.request({ method: "eth_chainId" })) as Hex;
 			this.chainId = parseInt(chainId, 16);
 		} catch (error) {

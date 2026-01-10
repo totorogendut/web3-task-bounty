@@ -6,7 +6,7 @@ import { error, redirect } from "@sveltejs/kit";
 export async function load({ params, locals }) {
 	const bounty = await db.query.bounty.findFirst({
 		where: {
-			id: params.bountyId,
+			id: params.bountyId || "",
 		},
 	});
 

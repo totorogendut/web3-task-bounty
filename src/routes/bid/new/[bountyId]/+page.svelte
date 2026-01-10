@@ -37,7 +37,7 @@
 		loadingState = "Signing bid...";
 		signingData = await signSubmission({
 			escrowAddress: data.bounty.escrowAddress,
-			bountyId: bountyId,
+			idBytes32: data.bounty.idBytes32,
 		});
 
 		loadingState = "Uploading bid...";

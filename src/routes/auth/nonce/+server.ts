@@ -10,15 +10,15 @@ export async function POST(event: RequestEvent) {
 
 	const existing = await db.query.user.findFirst({
 		where: {
-			walletAddress: address as Hex,
+			id: (address as Hex) || "0x",
 		},
 	});
 
 	if (existing) {
-		await db.update(userSchema).set({ nonce }).where(eq(userSchema.walletAddress, address));
+		await db.update(userSchema).set({ nonce }).where(eq(userSchema.id, address));
 	} else {
 		await db.insert(userSchema).values({
-			walletAddress: address,
+			id: address,
 			nonce,
 		});
 	}

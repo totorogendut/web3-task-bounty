@@ -16,6 +16,7 @@ contract FreelanceEscrowEIP712 is EIP712 {
 	error NotOpen();
 	error DeadlinePassed();
 	error InvalidSignature();
+	error SignatureExpired();
 	error NotAwarded();
 	error TooEarly();
 
@@ -92,55 +93,48 @@ contract FreelanceEscrowEIP712 is EIP712 {
 	/* ================= CORE ================= */
 
 	/// Client selects winner using signed submission
-	function awardSubmission(
+	function awardWinningBid(
 		address _freelancer,
 		uint256 submittedAt,
 		bytes calldata signature
 	) external {
 		Bounty storage t = bounty;
 
+		// -------- Checks --------
 		if (msg.sender != t.client) revert NotClient();
 		if (t.status != Status.Open) revert NotOpen();
 		if (submittedAt > t.deadline) revert DeadlinePassed();
-		if (submittedAt > block.timestamp + 5 minutes) revert InvalidSignature();
+
+		uint256 nonce = nonces[_freelancer];
 
 		bytes32 digest = _hashTypedDataV4(
-			keccak256(abi.encode(SUBMISSION_TYPEHASH, t.bountyId, _freelancer, nonces[_freelancer]))
+			keccak256(abi.encode(SUBMISSION_TYPEHASH, t.bountyId, _freelancer, submittedAt, nonce))
 		);
 
 		address signer = ECDSA.recover(digest, signature);
 		if (signer != _freelancer) revert InvalidSignature();
-		nonces[_freelancer]++;
 
-		t.status = Status.Awarded;
+		// -------- Effects --------
+		nonces[_freelancer] = nonce + 1;
+		t.status = Status.Completed;
 		freelancer = _freelancer;
 
-		emit BountyAwarded(_freelancer);
-	}
-
-	function releasePayment() external {
-		Bounty storage t = bounty;
-		if (t.status != Status.Awarded) revert NotAwarded();
-
-		// Effects
-		t.status = Status.Completed;
-		address _freelancer = freelancer;
 		uint256 totalReward = uint256(t.reward);
 		IERC20 token = t.token;
 
-		// Interactions
 		uint256 fee;
 		unchecked {
 			fee = (totalReward * uint256(platformFeeBps)) / 10_000;
 		}
 		uint256 payout = totalReward - fee;
 
+		// -------- Interactions --------
 		if (fee > 0) {
 			token.safeTransfer(feeRecipient, fee);
 		}
-
 		token.safeTransfer(_freelancer, payout);
 
+		emit BountyAwarded(_freelancer);
 		emit PaymentReleased(_freelancer, payout);
 	}
 
@@ -149,6 +143,7 @@ contract FreelanceEscrowEIP712 is EIP712 {
 		Bounty storage t = bounty;
 		if (t.status != Status.Open) revert NotOpen();
 		if (block.timestamp <= t.deadline) revert TooEarly();
+		if (msg.sender != t.client) revert NotClient();
 
 		// Effects
 		t.status = Status.Refunded;

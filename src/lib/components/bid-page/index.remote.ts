@@ -9,13 +9,14 @@ import z from "zod/v4";
 import { fail } from "@sveltejs/kit";
 import sanitize from "sanitize-html";
 import { marked } from "marked";
+import type { Hex } from "viem";
 
 export const getBidList = query(
 	z.object({
 		offset: z.number(),
 		limit: z.number().optional(),
 		bountyId: z.string().optional(),
-		userId: z.string().optional(),
+		userId: z.custom<Hex>().optional(),
 	}),
 	async ({ bountyId, userId, offset, limit }) => {
 		if (!userId && !bountyId) throw fail(400, "Must provide userId or bountyId");

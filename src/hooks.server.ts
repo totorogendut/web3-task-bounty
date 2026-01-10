@@ -11,7 +11,6 @@ export const handle: Handle = async ({ event, resolve }) => {
 
 			event.locals.user = {
 				id: payload.userId,
-				walletAddress: payload.walletAddress,
 			};
 		} catch {
 			event.cookies.delete("session", { path: "/" });

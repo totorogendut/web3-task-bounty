@@ -3,16 +3,19 @@ import type { Hex } from "viem";
 import { mainnet, sepolia } from "viem/chains";
 
 export const ethChain = dev ? sepolia : mainnet;
-export const factoryContractAddress = "0x0e5ac1741b47d03a3e1b491af1ec0576f13cb652" as const;
+export const factoryContractAddress: Hex = dev
+	? "0x81e23606717dcc353e673412a9c0f79a066dbf8d" // Sepolia
+	: "0x81e23606717dcc353e673412a9c0f79a066dbf8d";
+
 export const escrowStatusEnum = [
-	"approval_pending",
-	"approval_reverted",
-	"approval_success",
-	"mint_pending",
-	"mint_reverted",
-	"mint_success",
-	"bid_open",
-	"bid_closed",
+	"approval pending",
+	"approval reverted",
+	"approval success",
+	"mint pending",
+	"mint reverted",
+	"mint success",
+	"bid open",
+	"bid closed",
 	"finished",
 ] as const;
 

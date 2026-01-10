@@ -15,7 +15,7 @@ export async function load(event) {
 	if (!user) throw error(403, "You must log in to bid");
 	const bounty = await db.query.bounty.findFirst({
 		where: {
-			id: bountyId,
+			id: bountyId || "",
 		},
 	});
 	if (!bounty) throw error(404, "No bounty found to bid to");
